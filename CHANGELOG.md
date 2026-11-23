@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 — Demo and polish
+
+- `npm run demo:forbidden`: calls the API directly as the wrong role and shows the server's `403`/`401` answers.
+- README: what each role can do, `.env` setup, demo steps, validation and UX notes.
+- Favicon.
+
 ## 0.4.0 — Bookings
 
 - Attendees book and cancel seats. Booking runs in a transaction and is refused when the event is full, already started, or already booked (`409`).

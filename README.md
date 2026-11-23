@@ -4,6 +4,20 @@ Interim MVP for Web Programming (Team 02). Organizers publish events at
 venues around Tbilisi, attendees book a seat, and admins look after the
 venue and category lists.
 
+**Design (Figma):** _link added once the Figma file is shared_
+
+## What each role can do
+
+| Role      | Can do |
+| --------- | ------ |
+| Attendee  | Browse and search events, book a seat, cancel a booking, see "My tickets" |
+| Organizer | Create events, edit and delete **only their own** events, see who booked their events |
+| Admin     | Manage venues and categories, edit or delete any event, see any attendee list |
+
+Roles are checked on the server for every request (`requireAuth` +
+`requireRole` middleware and an ownership check for events). The React app
+only hides buttons; it is not what protects the data.
+
 ## Stack
 
 | Part     | Technology                                |
@@ -29,7 +43,8 @@ Open two terminals.
 # terminal 1 — API
 cd server
 npm install
-npm run seed      # creates server/data/doorlist.db with test data
+copy .env.example .env   # macOS/Linux: cp .env.example .env
+npm run seed             # creates server/data/doorlist.db with test data
 npm run dev
 ```
 
@@ -42,6 +57,28 @@ npm run dev
 
 Then open http://localhost:5173. The Vite dev server forwards `/api`
 requests to the Express server.
+
+If `.env` is missing, the server falls back to the values in `.env.example`
+so it still starts; put your own `JWT_SECRET` in `.env` for anything real.
+The real `.env` is ignored by git.
+
+### Showing a forbidden action
+
+With the API running, in another terminal:
+
+```bash
+cd server
+npm run demo:forbidden
+```
+
+It logs in as organizer Giorgi and attendee Ana and calls the API directly,
+skipping the React app. The server answers `403` when Giorgi tries to edit,
+delete or read the attendee list of Nino's event, `403` when Ana tries to
+create an event or a venue, and `401` without a token.
+
+In the browser: log in as `giorgi.lomidze@doorlist.test` and open
+"Late Jazz at the Courtyard". There are no Edit/Delete buttons, and opening
+`/events/1/edit` directly shows "You can only edit events that you organize".
 
 ## Test accounts
 
@@ -116,6 +153,24 @@ All responses are JSON. Validation errors return `400` with
 | GET    | `/api/events/:id/registrations`    | owner organizer, admin | Attendee list |
 | GET    | `/api/registrations/mine`          | attendee | Own bookings |
 
+## Validation and UX
+
+- All input is checked on the server (`server/utils/validate.mjs`); the form
+  shows each message under its field with a red border.
+- Deleting a venue, category or event and cancelling a booking ask for confirmation first.
+- Every list has a loading, empty and error state.
+- Layout works from 360px phones to desktop (tables turn into cards on small screens).
+
 ## Versions
 
-See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request.
+See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request:
+
+| Version | Pull request |
+| ------- | ------------ |
+| 0.0.1 | Project setup (Express, React + Vite, design tokens) |
+| 0.0.2 | SQLite schema and seed data |
+| 0.1.0 | Registration, login, logout, roles |
+| 0.2.0 | Venues and categories CRUD (admin) |
+| 0.3.0 | Events CRUD with organizer ownership |
+| 0.4.0 | Bookings, capacity limit, attendee list |
+| 0.5.0 | Forbidden-action demo, README, polish |
