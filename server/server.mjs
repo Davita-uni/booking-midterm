@@ -1,10 +1,7 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-// .env holds real values; .env.example is the fallback so the
-// project also starts right after cloning.
-dotenv.config({ path: [".env", ".env.example"], quiet: true });
+import "./config/env.mjs";
+import "./db/index.mjs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
