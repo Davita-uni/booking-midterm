@@ -7,6 +7,7 @@ import Events from "./pages/Events.jsx";
 import EventDetail from "./pages/EventDetail.jsx";
 import EventForm from "./pages/EventForm.jsx";
 import MyEvents from "./pages/MyEvents.jsx";
+import MyTickets from "./pages/MyTickets.jsx";
 import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
 
@@ -23,6 +24,7 @@ function Header() {
           <NavLink to="/" exact>
             Events
           </NavLink>
+          {user?.role === "attendee" && <NavLink to="/my/tickets">My tickets</NavLink>}
           {user?.role === "organizer" && <NavLink to="/my/events">My events</NavLink>}
           {user?.role === "admin" && (
             <>
@@ -83,6 +85,7 @@ const routes = [
   ["/events/:id", EventDetail],
   ["/events/:id/edit", EventForm, ["organizer", "admin"]],
   ["/my/events", MyEvents, ["organizer"]],
+  ["/my/tickets", MyTickets, ["attendee"]],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/venues", AdminVenues, ["admin"]],

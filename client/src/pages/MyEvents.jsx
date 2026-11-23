@@ -70,6 +70,9 @@ export default function MyEvents() {
                     {event.booked} / {event.capacity}
                   </td>
                   <td className="table__actions">
+                    <Link to={`/events/${event.id}`} className="btn btn--small">
+                      Attendees
+                    </Link>
                     <Link to={`/events/${event.id}/edit`} className="btn btn--small">
                       Edit
                     </Link>

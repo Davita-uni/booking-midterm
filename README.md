@@ -111,6 +111,10 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/events`        | organizer | Create an event          |
 | PUT    | `/api/events/:id`    | owner organizer, admin | Update an event |
 | DELETE | `/api/events/:id`    | owner organizer, admin | Delete an event |
+| POST   | `/api/events/:id/registrations`    | attendee | Book a seat |
+| DELETE | `/api/events/:id/registrations/me` | attendee | Cancel own booking |
+| GET    | `/api/events/:id/registrations`    | owner organizer, admin | Attendee list |
+| GET    | `/api/registrations/mine`          | attendee | Own bookings |
 
 ## Versions
 

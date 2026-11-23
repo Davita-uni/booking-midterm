@@ -4,6 +4,8 @@ import { useApi } from "../hooks.js";
 import { Link, navigate } from "../router.jsx";
 import { longDate, seatsLabel } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
+import BookingBox from "../components/BookingBox.jsx";
+import AttendeeList from "../components/AttendeeList.jsx";
 import { Loading, ErrorState } from "../components/States.jsx";
 
 export default function EventDetail({ id }) {
@@ -82,8 +84,12 @@ export default function EventDetail({ id }) {
             <span style={{ width: `${percent}%` }} />
           </div>
           <p className={`seats mono${event.seats_left === 0 ? " seats--out" : ""}`}>{seatsLabel(event)}</p>
+          <BookingBox event={event} onChange={reload} />
         </aside>
       </div>
+
+      {/* key: reload the list when the booked count changes */}
+      {event.can_manage && <AttendeeList key={event.booked} eventId={event.id} />}
 
       <ConfirmDialog
         open={confirmDelete}

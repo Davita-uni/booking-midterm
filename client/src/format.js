@@ -27,3 +27,9 @@ export function seatsLabel(event) {
   if (event.seats_left <= Math.max(3, Math.ceil(event.capacity * 0.1))) return `${event.seats_left} left`;
   return `${event.seats_left} of ${event.capacity} free`;
 }
+
+// created_at values are stored by SQLite in UTC: "YYYY-MM-DD HH:MM:SS"
+export function bookedOn(value) {
+  const d = new Date(value.replace(" ", "T") + "Z");
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
