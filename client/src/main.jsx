@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./styles/base.css";
 import "./styles/forms.css";
 import "./styles/manage.css";
+import "./styles/events.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -105,6 +105,12 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/categories`    | admin     | Create a category       |
 | PUT    | `/api/categories/:id`| admin     | Rename a category       |
 | DELETE | `/api/categories/:id`| admin     | Delete an unused category |
+| GET    | `/api/events`        | public    | Upcoming events (`?q=`, `?category=`) |
+| GET    | `/api/events/mine`   | organizer | Own events with booking counts |
+| GET    | `/api/events/:id`    | public    | One event                |
+| POST   | `/api/events`        | organizer | Create an event          |
+| PUT    | `/api/events/:id`    | owner organizer, admin | Update an event |
+| DELETE | `/api/events/:id`    | owner organizer, admin | Delete an event |
 
 ## Versions
 

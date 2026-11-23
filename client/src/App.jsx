@@ -3,6 +3,10 @@ import { useEffect } from "react";
 import { Link, NavLink, navigate, usePath, matchPath } from "./router.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Events from "./pages/Events.jsx";
+import EventDetail from "./pages/EventDetail.jsx";
+import EventForm from "./pages/EventForm.jsx";
+import MyEvents from "./pages/MyEvents.jsx";
 import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
 
@@ -19,6 +23,7 @@ function Header() {
           <NavLink to="/" exact>
             Events
           </NavLink>
+          {user?.role === "organizer" && <NavLink to="/my/events">My events</NavLink>}
           {user?.role === "admin" && (
             <>
               <NavLink to="/admin/venues">Venues</NavLink>
@@ -69,22 +74,15 @@ function NotFound() {
   );
 }
 
-function Home() {
-  return (
-    <div className="page-head">
-      <div>
-        <p className="eyebrow">Tbilisi · what's on</p>
-        <h1>Upcoming events</h1>
-      </div>
-    </div>
-  );
-}
-
 // [pattern, component, who can open it]
 // "guest" = only when logged out, "user" = any logged-in user,
 // a list of roles = only those roles. The server checks roles again.
 const routes = [
-  ["/", Home],
+  ["/", Events],
+  ["/events/new", EventForm, ["organizer"]],
+  ["/events/:id", EventDetail],
+  ["/events/:id/edit", EventForm, ["organizer", "admin"]],
+  ["/my/events", MyEvents, ["organizer"]],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/venues", AdminVenues, ["admin"]],
@@ -114,7 +112,8 @@ function Routes() {
         </div>
       );
     }
-    return <Page {...params} />;
+    // key: a new page instance per address, so forms never keep old state
+    return <Page key={path} {...params} />;
   }
   return <NotFound />;
 }

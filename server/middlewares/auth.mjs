@@ -34,6 +34,18 @@ export function requireAuth(req, res, next) {
   next();
 }
 
+// Like requireAuth, but lets visitors without a token through (req.user stays undefined).
+// Used on public pages that show extra details to logged-in users.
+export function optionalAuth(req, res, next) {
+  if (!req.get("authorization")) return next();
+  try {
+    requireAuth(req, res, () => {});
+  } catch {
+    // an old or broken token just means "not logged in" here
+  }
+  next();
+}
+
 // Use after requireAuth: requireRole("admin") or requireRole("organizer", "admin")
 export function requireRole(...roles) {
   return (req, res, next) => {
