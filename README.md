@@ -43,6 +43,30 @@ npm run dev
 Then open http://localhost:5173. The Vite dev server forwards `/api`
 requests to the Express server.
 
+## Test accounts
+
+Created by `npm run seed`:
+
+| Role      | Email                     | Password        |
+| --------- | ------------------------- | --------------- |
+| Admin     | `admin@doorlist.test`     | `Admin123!`     |
+| Organizer | `organizer@doorlist.test` | `Organizer123!` |
+| Attendee  | `attendee@doorlist.test`  | `Attendee123!`  |
+
+A second organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
+some of the events. It is useful for showing that one organizer can't change
+another organizer's event.
+
+## Authentication
+
+- Passwords are hashed with bcrypt (`bcryptjs`, 10 rounds) and never sent back.
+- Login returns a JWT that the client sends as `Authorization: Bearer <token>`.
+- Every protected request loads the user from the database, so role changes
+  apply immediately.
+- Logout increases the user's `token_version`, so the old token stops working
+  on the server too, not only in the browser.
+- Sign-up allows the attendee and organizer roles. Admin accounts come only from the seed.
+
 ## Database
 
 SQLite file at `server/data/doorlist.db` (ignored by git). The schema is in
@@ -60,6 +84,18 @@ server starts. `npm run seed` resets the data.
 One-to-many relations: an organizer has many events, a venue has many
 events, a category has many events, and an event has many registrations.
 All queries use prepared statements with `?` parameters.
+
+## API
+
+All responses are JSON. Validation errors return `400` with
+`{ message, errors: { field: "message" } }`.
+
+| Method | Path                 | Access    | Description             |
+| ------ | -------------------- | --------- | ----------------------- |
+| POST   | `/api/auth/register` | public    | Create an account       |
+| POST   | `/api/auth/login`    | public    | Log in, returns a token |
+| GET    | `/api/auth/me`       | logged in | Current user            |
+| POST   | `/api/auth/logout`   | logged in | End the session         |
 
 ## Versions
 

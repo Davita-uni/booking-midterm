@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0 — Accounts and roles
+
+- `POST /api/auth/register`, `/login`, `/logout`, `GET /api/auth/me`.
+- Passwords hashed with bcrypt; JWT sessions; logout invalidates the token on the server.
+- `requireAuth` and `requireRole(...)` middleware for server-side role checks.
+- Server-side validation with per-field error messages; consistent JSON error format.
+- Login and sign-up pages (attendee or organizer), red field borders with the error under the field.
+- Header shows the user's name, role and a red Log out button.
+
 ## 0.0.2 — Database
 
 - SQLite schema (`server/db/schema.sql`): users, categories, venues, events, registrations.

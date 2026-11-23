@@ -1,6 +1,6 @@
 {
   "name": "doorlist-server",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "private": true,
   "description": "REST API for the Doorlist event booking platform",
   "type": "module",
@@ -17,7 +17,8 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
