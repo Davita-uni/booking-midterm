@@ -96,6 +96,15 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/auth/login`    | public    | Log in, returns a token |
 | GET    | `/api/auth/me`       | logged in | Current user            |
 | POST   | `/api/auth/logout`   | logged in | End the session         |
+| GET    | `/api/venues`        | public    | List venues             |
+| GET    | `/api/venues/:id`    | public    | One venue               |
+| POST   | `/api/venues`        | admin     | Create a venue          |
+| PUT    | `/api/venues/:id`    | admin     | Update a venue          |
+| DELETE | `/api/venues/:id`    | admin     | Delete an unused venue  |
+| GET    | `/api/categories`    | public    | List categories         |
+| POST   | `/api/categories`    | admin     | Create a category       |
+| PUT    | `/api/categories/:id`| admin     | Rename a category       |
+| DELETE | `/api/categories/:id`| admin     | Delete an unused category |
 
 ## Versions
 

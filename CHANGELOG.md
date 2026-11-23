@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — Venues and categories (admin)
+
+- CRUD API for venues and categories; only admins can create, edit or delete.
+- A venue or category that events still use can't be deleted (409 with a clear message).
+- A venue's seats can't go below its largest event; duplicate names are rejected.
+- Admin pages with a table, an add/edit form and a confirm dialog before deleting.
+- Shared loading, empty and error states; tables turn into cards on phones.
+
 ## 0.1.0 — Accounts and roles
 
 - `POST /api/auth/register`, `/login`, `/logout`, `GET /api/auth/me`.
