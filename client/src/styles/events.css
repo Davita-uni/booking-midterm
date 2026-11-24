@@ -483,13 +483,14 @@ h1 .badge svg {
   text-transform: none;
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.12s;
+  /* not just invisible: a hidden tooltip near the screen edge would still make
+     the page scroll sideways on phones, so it only exists while hovered */
+  display: none;
   z-index: 5;
 }
 
 .badge:hover::after {
-  opacity: 1;
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {

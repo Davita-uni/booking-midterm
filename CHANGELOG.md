@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.2 — Phones
+
+- Fix: on a phone-width screen the events list and some event pages scrolled sideways (390 px screen, 419–441 px page) for users with ✓ / organizer badges. The badges' hidden hover tooltips still took up space past the screen edge. They now only exist while hovered.
+
 ## 0.20.1 — Matching footer
 
 - The footer now has the same background as the header (the page background) instead of the lighter card colour, in light and dark mode. The thin purple → light-blue line still marks where it starts.
