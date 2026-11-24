@@ -284,3 +284,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.11.0 | Organizer requests to admins (reply + status) |
 | 0.12.0 | Notifications (bell in the header) |
 | 0.12.1 | Organizers waiting for approval can book events like attendees |
+| 0.12.2 | Event times in 15-minute steps |

@@ -46,6 +46,8 @@ function readEvent(body = {}, { existing } = {}) {
 
   if (!event.starts_at) errors.starts_at = "Date and time are required";
   else if (!isValidLocal(event.starts_at)) errors.starts_at = "Enter a valid date and time";
+  else if (Number(event.starts_at.slice(14, 16)) % 15 !== 0)
+    errors.starts_at = "Choose a time in 15-minute steps (:00, :15, :30 or :45)";
   else if (event.starts_at <= nowLocal() && event.starts_at !== existing?.starts_at)
     errors.starts_at = "The event must start in the future";
 
