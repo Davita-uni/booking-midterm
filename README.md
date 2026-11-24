@@ -39,9 +39,9 @@ can create events. Active organizers can be **Suspended**, which logs them out
 at once and blocks login (the login page explains why). Suspended organizers
 can be **Reactivated**.
 
-## My account
+## Account menu
 
-Logged-in users open **My account** in the top right corner. The menu shows
+Logged-in users open **Account** in the top right corner. The menu shows
 their name (with an Admin, Organizer or Pending tag) and:
 
 - **My profile**: email, account type, status, organization, member since, and
@@ -67,7 +67,7 @@ their name (with an Admin, Organizer or Pending tag) and:
 
 ## Notifications
 
-The bell next to My account shows unread notifications (checked every 10
+The bell next to Account shows unread notifications (checked every 10
 seconds). Clicking one opens the related page and marks it read.
 
 | Who | Gets a notification when |

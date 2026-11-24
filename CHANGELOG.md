@@ -6,7 +6,7 @@
 - New status **Cancelled** (tab on the admin page; struck-through label).
 - Requests show the date and time they were sent (24-hour).
 - Databases from 0.11–0.12 are upgraded automatically on start: the requests table is rebuilt with the new status and the old single reply moves into `request_replies`.
-- My account menu: order is My profile, My events, My requests; the menu is as wide as its content, with the same padding left and right.
+- The header button is now called **Account** (was "My account"). Menu order: My profile, My events, My requests; the menu is as wide as its content, with the same padding left and right.
 
 ## 0.12.5 — Notification tweaks
 
