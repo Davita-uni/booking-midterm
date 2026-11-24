@@ -35,6 +35,9 @@ export default function EventForm({ id }) {
   if (existing.loading || venues.loading || categories.loading) return <Loading label="Loading form…" />;
   const loadError = existing.error || venues.error || categories.error;
   if (loadError) return <ErrorState error={loadError} />;
+  if (editing && existing.data.is_past) {
+    return <ErrorState error={{ status: 403, message: "This event has already taken place, so it can't be edited." }} />;
+  }
   if (editing && !existing.data.can_manage) {
     return <ErrorState error={{ status: 403, message: "You can only edit events that you organize." }} />;
   }

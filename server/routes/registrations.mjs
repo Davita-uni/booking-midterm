@@ -47,6 +47,8 @@ router.post("/events/:id/registrations", requireAuth, requireRole(...BOOKERS), (
 // Cancel your own booking.
 router.delete("/events/:id/registrations/me", requireAuth, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
+  const event = findEvent(eventId);
+  if (event && event.starts_at <= nowLocal()) throw conflict("This event has already taken place");
   const { changes } = db
     .prepare("DELETE FROM registrations WHERE event_id = ? AND user_id = ?")
     .run(eventId, req.user.id);

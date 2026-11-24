@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0 — Past events
+
+- Events page title is now a switch: "Upcoming events / Past events". The selected one is the big title, the other is smaller after the slash. The choice is kept in the address (`/?when=past`), so reload and Back keep it.
+- `GET /api/events?when=past` lists events that already took place, newest first. Search and category filter work for both.
+- Past events are read-only: no Edit/Delete buttons, no booking or cancelling, and the server refuses changes with `409`. The organizer (and admin) can still see the attendee list.
+- Past rows show "N attended"; the event page shows a "Past event · read-only" tag.
+- Seed adds three past events with attendees.
+- The role label in the account menu is now centred on the letters of the name (trimmed text boxes), so it lines up exactly.
+
 ## 0.8.0 — My profile and organizer bookings
 
 - My account menu: "Account details" removed; "My profile" opens the overview page.

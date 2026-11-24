@@ -189,7 +189,7 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/categories`    | admin     | Create a category       |
 | PUT    | `/api/categories/:id`| admin     | Rename a category       |
 | DELETE | `/api/categories/:id`| admin     | Delete an unused category |
-| GET    | `/api/events`        | public    | Upcoming events (`?q=`, `?category=`) |
+| GET    | `/api/events`        | public    | Upcoming events, or past ones with `?when=past` (`?q=`, `?category=`) |
 | GET    | `/api/events/mine`   | organizer | Own events with booking counts |
 | GET    | `/api/events/:id`    | public    | One event                |
 | POST   | `/api/events`        | organizer | Create an event          |
@@ -212,6 +212,9 @@ All responses are JSON. Validation errors return `400` with
   shows each message under its field with a red border.
 - Deleting a venue, category or event and cancelling a booking ask for confirmation first.
 - Every list has a loading, empty and error state.
+- The events page switches between **Upcoming events / Past events**. Past
+  events are read-only: no booking, cancelling, editing or deleting (the server
+  answers `409`), but organizers still see who attended.
 - The attendee list can be sorted by name, email or booking date; the # column always counts from 1.
 - Layout works from 360px phones to desktop (tables turn into cards on small screens).
 
@@ -239,3 +242,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.7.1 | Email is read-only; role label aligned with the name |
 | 0.7.2 | "My events" moved into the My account menu |
 | 0.8.0 | One My profile page (events organized / attended); organizers can book other events |
+| 0.9.0 | Upcoming / Past events switch; past events read-only |
