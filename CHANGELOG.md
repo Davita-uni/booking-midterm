@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.19.0 — Footer and policies
+
+- New footer on every page, always at the bottom of the window even on short pages: Doorlist logo and tagline, **Legal** links and **Contact** with email and phone icons (inline SVG). A thin purple → light-blue line on top.
+- Four policy pages, open to everyone: Terms & Conditions (`/terms`), Privacy Policy (`/privacy`), Cookie Policy (`/cookies`) and Refund Policy (`/refunds`). Sample texts for the project, marked as such, written to match the app (e.g. no tracking cookies; organizers see only their own attendee lists; refunds by cancelling before the event).
+- Contact: davit.kvikvinia.1@iliauni.edu.ge (a mailto link) and +995 597 XX XX XX. The phone becomes a call link once the X's are replaced in `client/src/config.js`.
+- The help-center number on the "waiting for approval" pages and server messages is now the same +995 597 XX XX XX.
+- The events page header no longer shows Create an Account / Log In buttons (they are in the top bar already).
+
 ## 0.18.2 — Clean login page
 
 - The login and sign-up pages no longer show a ticket next to the "Your Name on the Door" intro. The next-event ticket stays on the events page only.

@@ -1,5 +1,6 @@
-// Help center number shown to organizers waiting for approval.
-export const HELP_PHONE = "+995 555 XX XX XX";
+// Contact details: in the footer and on the "waiting for approval" pages.
+export const HELP_PHONE = "+995 597 XX XX XX";
+export const HELP_EMAIL = "davit.kvikvinia.1@iliauni.edu.ge";
 
 // Prices are set in Georgian lari (GEL). Users can also see them in USD or EUR.
 // Fixed, approximate rates for display only (1 GEL = …).

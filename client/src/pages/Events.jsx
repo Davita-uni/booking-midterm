@@ -72,16 +72,6 @@ export default function Events({ audience = "public" }) {
               Your Name <span className="tagline__glow">on the Door</span>
             </h1>
             <p className="hero__lead">{TAGLINE}</p>
-            {!user && (
-              <div className="hero__actions">
-                <Link to="/register" className="btn btn--primary">
-                  Create an Account
-                </Link>
-                <Link to="/login" className="btn btn--ghost">
-                  Log In
-                </Link>
-              </div>
-            )}
           </div>
           <NextEventTicket />
         </section>
