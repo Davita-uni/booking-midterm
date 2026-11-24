@@ -30,12 +30,38 @@ export default function AccountStatus() {
   }, [refresh]);
 
   const pending = user.status === "pending";
+  // a rejected sign-up becomes a regular attendee account
+  const denied = user.role === "attendee";
 
   useEffect(() => {
     if (!pending) return;
     const id = setInterval(check, CHECK_EVERY_MS);
     return () => clearInterval(id);
   }, [pending, check]);
+
+  if (denied) {
+    return (
+      <div className="status-page">
+        <p className="eyebrow">Organizer application</p>
+        <h1>Application denied</h1>
+        <section className="panel status-card">
+          <div className="notice notice--error">
+            <p className="notice__title">Your organizer application was denied</p>
+            <p>Please contact the administrator if you think this is a mistake.</p>
+            <p>
+              Help center: <strong className="mono">{HELP_PHONE}</strong>
+            </p>
+          </div>
+          <p>Your account stays active as a regular attendee account, so you can keep browsing and booking events.</p>
+          <div className="form__actions">
+            <Link to="/" className="btn btn--primary">
+              Browse events
+            </Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="status-page">

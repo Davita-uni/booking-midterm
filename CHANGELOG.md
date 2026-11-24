@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.2 — Rejecting an organizer sign-up
+
+- Rejecting a pending organizer no longer deletes the account: it becomes a regular attendee account (attendees never need approval).
+- The person gets a notification: "Your organizer application was denied. Please contact the administrator."
+- Their account status page shows "Application denied" with the help center number and a link to browse events; it switches by itself if they are watching it.
+- API: `POST /api/admin/organizers/:id/reject` replaces `DELETE /api/admin/organizers/:id`.
+
 ## 0.13.1 — Simpler sign-up
 
 - Sign up is now one simple form that creates an attendee account (no account-type step). Most users are attendees.

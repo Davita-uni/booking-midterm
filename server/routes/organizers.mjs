@@ -63,15 +63,21 @@ router.patch("/:id", (req, res) => {
   res.json(findOrganizer(id));
 });
 
-// Reject a sign-up: only pending accounts (they have no events yet) can be removed.
-router.delete("/:id", (req, res) => {
+// Reject a sign-up. The account is kept but becomes a regular attendee
+// account (attendees never need approval), and the person is told why.
+router.post("/:id/reject", (req, res) => {
   const id = parseId(req.params.id);
   const organizer = findOrganizer(id);
   if (!organizer) throw notFound("Organizer not found");
   if (organizer.status !== "pending") {
     throw conflict("Only pending sign-ups can be rejected. Suspend an active organizer instead.");
   }
-  db.prepare("DELETE FROM users WHERE id = ?").run(id);
+  db.prepare("UPDATE users SET role = 'attendee', status = 'active', organization = NULL WHERE id = ?").run(id);
+  notify(
+    [id],
+    "Your organizer application was denied. Please contact the administrator. You can keep using Doorlist as an attendee.",
+    "/account/status"
+  );
   res.status(204).end();
 });
 
