@@ -1,6 +1,6 @@
 {
   "name": "doorlist-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "REST API for the Doorlist event booking platform",
   "type": "module",
@@ -10,9 +10,11 @@
   },
   "scripts": {
     "start": "node server.mjs",
-    "dev": "nodemon server.mjs"
+    "dev": "nodemon server.mjs",
+    "seed": "node db/seed.mjs"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0"
