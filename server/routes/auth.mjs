@@ -17,6 +17,7 @@ const SIGNUP_ROLES = ["attendee", "organizer"];
 
 const publicUser = (u) => ({
   id: u.id, name: u.name, email: u.email, role: u.role, status: u.status, organization: u.organization,
+  currency: u.currency,
 });
 
 router.post("/register", async (req, res) => {

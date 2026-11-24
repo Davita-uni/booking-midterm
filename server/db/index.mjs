@@ -25,6 +25,21 @@ if (!userColumns.includes("status")) {
 if (!userColumns.includes("organization")) {
   db.exec("ALTER TABLE users ADD COLUMN organization TEXT");
 }
+if (!userColumns.includes("currency")) {
+  db.exec(`ALTER TABLE users ADD COLUMN currency TEXT NOT NULL DEFAULT 'GEL'
+           CHECK (currency IN ('GEL', 'USD', 'EUR'))`);
+}
+
+// Databases created before v0.15.0 have no ticket price or entry rules yet.
+const eventColumns = db.prepare("PRAGMA table_info(events)").all().map((c) => c.name);
+if (!eventColumns.includes("price")) {
+  db.exec(`
+    ALTER TABLE events ADD COLUMN price REAL NOT NULL DEFAULT 0 CHECK (price >= 0);
+    ALTER TABLE events ADD COLUMN face_control INTEGER CHECK (face_control IN (0, 1));
+    ALTER TABLE events ADD COLUMN age_limit INTEGER CHECK (age_limit IN (16, 18, 21, 25));
+    ALTER TABLE events ADD COLUMN dress_code TEXT;
+  `);
+}
 
 // Databases from v0.11/v0.12 have one admin_reply per request and no
 // "cancelled" status. Rebuild the table and move each reply into request_replies.

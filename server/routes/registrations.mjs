@@ -29,13 +29,13 @@ router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS)
   const registration = transaction(() => {
     const event = findEvent(eventId);
     if (!event) throw notFound("Event not found");
-    if (event.organizer_id === req.user.id) throw forbidden("You organize this event, so you can't book a seat at it");
+    if (event.organizer_id === req.user.id) throw forbidden("You organize this event, so you can't buy a ticket for it");
     if (event.starts_at <= nowLocal()) throw conflict("This event has already started");
 
     const already = db
       .prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?")
       .get(eventId, req.user.id);
-    if (already) throw conflict("You already have a seat for this event");
+    if (already) throw conflict("You already have a ticket for this event");
     if (event.booked >= event.capacity) throw conflict("Sorry, this event is sold out");
 
     const { lastInsertRowid } = db
@@ -43,7 +43,7 @@ router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS)
       .run(eventId, req.user.id);
     // this booking took the last seat
     if (event.booked + 1 === event.capacity) {
-      notify([event.organizer_id], `“${event.title}” is fully booked: all ${event.capacity} seats are taken.`, `/events/${event.id}`);
+      notify([event.organizer_id], `“${event.title}” is sold out: all ${event.capacity} tickets are gone.`, `/events/${event.id}`);
     }
     return db.prepare("SELECT id, event_id, user_id, created_at FROM registrations WHERE id = ?").get(lastInsertRowid);
   });
@@ -59,7 +59,7 @@ router.delete("/events/:id/registrations/me", requireSession, requireRole(...BOO
   const { changes } = db
     .prepare("DELETE FROM registrations WHERE event_id = ? AND user_id = ?")
     .run(eventId, req.user.id);
-  if (changes === 0) throw notFound("You don't have a booking for this event");
+  if (changes === 0) throw notFound("You don't have a ticket for this event");
   res.status(204).end();
 });
 

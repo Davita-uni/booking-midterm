@@ -163,8 +163,8 @@ export default function Register() {
                 noValidate
               >
                 <p className="step-note">
-                  Organizers publish events and see who booked. An admin approves new organizer accounts; you can
-                  book events while you wait.
+                  Organizers publish events and see who has tickets. An admin approves new organizer accounts; you
+                  can get tickets for events while you wait.
                 </p>
                 <Field
                   label="Organization or project"

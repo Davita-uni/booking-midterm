@@ -52,7 +52,7 @@ export default function AccountStatus() {
               Help center: <strong className="mono">{HELP_PHONE}</strong>
             </p>
           </div>
-          <p>Your account stays active as a regular attendee account, so you can keep browsing and booking events.</p>
+          <p>Your account stays active as a regular attendee account, so you can keep browsing events and getting tickets.</p>
           <div className="form__actions">
             <Link to="/" className="btn btn--primary">
               Browse events
@@ -99,7 +99,7 @@ export default function AccountStatus() {
                 it. Please wait — this page checks your status automatically, so you don't need to log in again.
               </p>
               <p>
-                Meanwhile you can browse and book events like an attendee. Your bookings show up under My profile.
+                Meanwhile you can browse events and get tickets like an attendee. Your tickets show up under My profile.
               </p>
               <p>
                 If it takes too long, call our help center: <strong className="mono">{HELP_PHONE}</strong>
@@ -115,7 +115,7 @@ export default function AccountStatus() {
                 {checking ? "Checking…" : "Check status now"}
               </button>
               <Link to="/" className="btn">
-                Browse and book events
+                Browse events
               </Link>
             </div>
             <p className="status-card__checked mono">

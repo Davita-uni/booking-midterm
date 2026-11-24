@@ -35,82 +35,98 @@ const events = [
     title: "Late Jazz at the Courtyard",
     description: "A trio from the Tbilisi Jazz Club plays two sets of standards and new Georgian jazz. Doors at 19:30, the first set starts at 20:00.",
     starts_at: "2026-12-04T20:00", capacity: 150, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 35, face_control: 0, age_limit: null, dress_code: null,
   },
   {
     title: "Frontend Meetup #14: React Server Components",
     description: "Two 25-minute talks on moving a real product to server components, then open Q&A. Bring a laptop if you want to follow the demo.",
     starts_at: "2026-12-09T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 1,
+    price: 0, face_control: 0, age_limit: null, dress_code: null,
   },
   {
     title: "Natural Wine Tasting: Kakheti Qvevri",
     description: "Six qvevri wines from small Kakheti producers, introduced by the winemakers. Cheese and bread included.",
     starts_at: "2026-12-12T18:30", capacity: 50, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    price: 60, face_control: 0, age_limit: 18, dress_code: null,
   },
   {
     title: "Writing Short Fiction — Saturday Workshop",
     description: "A three-hour workshop on openings and endings. Short exercises, feedback in small groups. Notebook required, laptops optional.",
     starts_at: "2026-12-19T12:00", capacity: 50, venue: "Biblusi Reading Room", category: "Workshop", organizer: 2,
+    price: 25, face_control: null, age_limit: 16, dress_code: null,
   },
   {
     title: "The Cherry Orchard (in Georgian, English surtitles)",
     description: "A new chamber production of Chekhov's play by a young company. Running time is about two hours with one interval.",
     starts_at: "2026-12-22T19:00", capacity: 110, venue: "Rustaveli Theatre, Small Stage", category: "Theatre", organizer: 2,
+    price: 30, face_control: null, age_limit: null, dress_code: "Formal",
   },
   {
     title: "Postgres Performance Clinic",
     description: "Bring a slow query and we will look at it together on the projector. Covers EXPLAIN, indexes and connection pooling.",
     starts_at: "2027-01-14T18:30", capacity: 80, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
   },
   {
     title: "Winter Electronic Night",
     description: "Three local DJs, a long night and a proper sound system. 18+ only, ID checked at the door.",
     starts_at: "2027-01-23T22:00", capacity: 280, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 45, face_control: 1, age_limit: 21, dress_code: "Black, no sportswear",
   },
   {
     title: "Khinkali Folding Class",
     description: "Learn to fold khinkali with a chef from Racha, then eat what you made. All ingredients and aprons provided.",
     starts_at: "2027-02-06T13:00", capacity: 60, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    price: 40, face_control: null, age_limit: null, dress_code: null,
   },
   // already happened, shown under "Past events" (read-only)
   {
     title: "Tbilisi Startup Pitch Night",
     description: "Eight early-stage teams pitched for five minutes each, followed by questions from a panel of local investors.",
     starts_at: "2026-09-25T19:00", capacity: 70, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    price: 0, face_control: null, age_limit: 18, dress_code: "Smart casual",
   },
   {
     title: "Autumn Jazz in the Courtyard",
     description: "An open-air afternoon set to close the summer season, with a guest saxophonist from Batumi.",
     starts_at: "2026-10-10T17:00", capacity: 200, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 30, face_control: 0, age_limit: null, dress_code: null,
   },
   {
     title: "Frontend Meetup #13: Accessibility in Practice",
     description: "Screen readers, focus management and colour contrast, shown on real Georgian websites.",
     starts_at: "2026-11-11T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 1,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
   },
   {
     title: "Rtveli Harvest Supper",
     description: "A long-table dinner after the grape harvest: chacha tasting, mtsvadi from the grill and supra toasts led by a tamada.",
     starts_at: "2026-09-19T19:30", capacity: 60, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    price: 80, face_control: null, age_limit: 18, dress_code: null,
   },
   {
     title: "Hamlet (rehearsed reading)",
     description: "Six actors read the play in a new Georgian translation, followed by a talk with the translator.",
     starts_at: "2026-10-03T19:00", capacity: 110, venue: "Rustaveli Theatre, Small Stage", category: "Theatre", organizer: 2,
+    price: 20, face_control: null, age_limit: 16, dress_code: "Formal",
   },
   {
     title: "Zine-Making Afternoon",
     description: "Cut, paste, photocopy: everyone left with a stapled eight-page zine about their own street.",
     starts_at: "2026-10-17T14:00", capacity: 50, venue: "Biblusi Reading Room", category: "Workshop", organizer: 1,
+    price: 15, face_control: null, age_limit: null, dress_code: null,
   },
   {
     title: "Node.js Performance Night",
     description: "Profiling a slow Express API live on stage, plus a short talk on worker threads.",
     starts_at: "2026-10-28T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
   },
   {
     title: "Polyphony Evening: Georgian Folk Choir",
     description: "A twelve-voice choir sang traditional songs from Guria and Svaneti, with a short introduction to each region's style.",
     starts_at: "2026-11-07T20:00", capacity: 250, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 25, face_control: null, age_limit: null, dress_code: null,
   },
 ];
 
@@ -188,13 +204,14 @@ transaction(() => {
   for (const v of venues) venueIds[v.name] = Number(insertVenue.run(v.name, v.address, v.capacity).lastInsertRowid);
 
   const insertEvent = db.prepare(`
-    INSERT INTO events (title, description, starts_at, capacity, venue_id, category_id, organizer_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO events (title, description, starts_at, capacity, price, face_control, age_limit, dress_code,
+                        venue_id, category_id, organizer_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const eventIds = events.map((e) =>
     Number(
       insertEvent.run(
-        e.title, e.description, e.starts_at, e.capacity,
+        e.title, e.description, e.starts_at, e.capacity, e.price, e.face_control, e.age_limit, e.dress_code,
         venueIds[e.venue], categoryIds[e.category], organizerIds[e.organizer]
       ).lastInsertRowid
     )
@@ -283,8 +300,8 @@ transaction(() => {
   const insert = db.prepare("INSERT INTO notifications (user_id, message, link, read_at, created_at) VALUES (?, ?, ?, ?, ?)");
   const wine = eventId("Natural Wine Tasting: Kakheti Qvevri");
   const jazz = eventId("Late Jazz at the Courtyard");
-  insert.run(userId("attendee@doorlist.test"), "“Late Jazz at the Courtyard”, which you booked, was updated. Click to view new details.", `/events/${jazz}`, null, "2026-11-23 18:20:00");
-  insert.run(userId("organizer@doorlist.test"), "“Natural Wine Tasting: Kakheti Qvevri” is fully booked: all 50 seats are taken.", `/events/${wine}`, null, "2026-11-22 12:05:00");
+  insert.run(userId("attendee@doorlist.test"), "“Late Jazz at the Courtyard”, which you have a ticket for, was updated. Click to view new details.", `/events/${jazz}`, null, "2026-11-23 18:20:00");
+  insert.run(userId("organizer@doorlist.test"), "“Natural Wine Tasting: Kakheti Qvevri” is sold out: all 50 tickets are gone.", `/events/${wine}`, null, "2026-11-22 12:05:00");
   insert.run(userId("organizer@doorlist.test"), "Your request “Wine Factory cellar seats”: the admin replied and status is now Work in progress.", "/my/requests", "2026-11-19 10:00:00", "2026-11-19 09:30:00");
   insert.run(userId("admin@doorlist.test"), "New request from Giorgi Lomidze: “New category: Film screenings”", "/admin/requests", null, "2026-11-23 09:05:00");
   insert.run(userId("admin@doorlist.test"), "New organizer sign-up: Keti Mamaladze (Sololaki Photo Walks) is waiting for approval.", "/admin/organizers", null, "2026-11-22 15:40:00");

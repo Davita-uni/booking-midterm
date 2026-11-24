@@ -3,7 +3,7 @@ import { Link } from "../router.jsx";
 import { parts } from "../format.js";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
-// Attendee's bookings, shown as ticket stubs.
+// Attendee's tickets, shown as ticket stubs.
 export default function MyTickets() {
   const tickets = useApi("/registrations/mine");
 
@@ -31,7 +31,7 @@ export default function MyTickets() {
             </Link>
           }
         >
-          When you book a seat, it shows up here.
+          When you get a ticket, it shows up here.
         </Empty>
       ) : (
         <>

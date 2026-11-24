@@ -13,7 +13,7 @@ router.use(requireSession);
 
 function accountOf(id) {
   const user = db
-    .prepare("SELECT id, name, email, role, status, organization, created_at FROM users WHERE id = ?")
+    .prepare("SELECT id, name, email, role, status, organization, currency, created_at FROM users WHERE id = ?")
     .get(id);
   // Events this user organizes (organizers only)
   const organized =
@@ -31,7 +31,7 @@ function accountOf(id) {
   // Events this user booked a seat at. Organizing an event never adds it here.
   const attended = db
     .prepare(`
-      SELECT e.id, e.title, e.starts_at, ve.name AS venue_name, r.created_at AS booked_at
+      SELECT e.id, e.title, e.starts_at, e.price, ve.name AS venue_name, r.created_at AS booked_at
       FROM registrations r
       JOIN events e ON e.id = r.event_id
       JOIN venues ve ON ve.id = e.venue_id
@@ -61,9 +61,13 @@ router.put("/profile", (req, res) => {
     req.user.role === "organizer"
       ? v.text(errors, body, "organization", "Organization or project name", { min: 2, max: 80 })
       : null;
+  const currency = body.currency ?? req.user.currency;
+  if (!["GEL", "USD", "EUR"].includes(currency)) errors.currency = "Choose GEL, USD or EUR";
   if (v.hasErrors(errors)) throw badRequest(errors);
 
-  db.prepare("UPDATE users SET name = ?, organization = ? WHERE id = ?").run(name, organization, req.user.id);
+  db.prepare("UPDATE users SET name = ?, organization = ?, currency = ? WHERE id = ?").run(
+    name, organization, currency, req.user.id
+  );
   res.json(accountOf(req.user.id));
 });
 

@@ -5,7 +5,7 @@ import { PENDING_MESSAGE } from "../config/app.mjs";
 
 const SECRET = () => process.env.JWT_SECRET;
 
-const findUser = db.prepare("SELECT id, name, email, role, status, organization, token_version FROM users WHERE id = ?");
+const findUser = db.prepare("SELECT id, name, email, role, status, organization, currency, token_version FROM users WHERE id = ?");
 
 export function signToken(user) {
   return jwt.sign({ sub: user.id, ver: user.token_version }, SECRET(), { expiresIn: "7d" });
@@ -37,7 +37,7 @@ function loadSession(req) {
 
   req.user = {
     id: user.id, name: user.name, email: user.email, role: user.role,
-    status: user.status, organization: user.organization,
+    status: user.status, organization: user.organization, currency: user.currency,
   };
 }
 

@@ -8,7 +8,7 @@ import { Loading, ErrorState, Empty } from "./States.jsx";
 const COLUMNS = [
   ["name", "Name"],
   ["email", "Email"],
-  ["created_at", "Booked"],
+  ["created_at", "Ticket from"],
 ];
 
 const compare = (a, b, key) =>
@@ -39,7 +39,7 @@ export default function AttendeeList({ eventId }) {
       ) : attendees.error ? (
         <ErrorState error={attendees.error} onRetry={attendees.reload} />
       ) : rows.length === 0 ? (
-        <Empty title="No bookings yet">Share the event page to get your first attendees.</Empty>
+        <Empty title="No tickets sold yet">Share the event page to get your first attendees.</Empty>
       ) : (
         <table className="table table--sortable">
           <thead>
