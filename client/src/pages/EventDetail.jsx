@@ -32,14 +32,17 @@ export default function EventDetail({ id }) {
         <article className="detail__main">
           <p className="eyebrow">{event.category_name}</p>
           <h1>{event.title}</h1>
-          <p className="detail__when mono">{longDate(event.starts_at)}</p>
+          <p className="detail__when mono">
+            {longDate(event.starts_at)}
+            {event.is_past && <span className="past-tag">Past event · read-only</span>}
+          </p>
           {event.description ? (
             <p className="detail__text">{event.description}</p>
           ) : (
             <p className="detail__text muted">The organizer hasn't added a description.</p>
           )}
 
-          {event.can_manage && (
+          {event.can_edit && (
             <div className="detail__owner">
               <Link to={`/events/${event.id}/edit`} className="btn">
                 Edit event

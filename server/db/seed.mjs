@@ -71,6 +71,22 @@ const events = [
     description: "Learn to fold khinkali with a chef from Racha, then eat what you made. All ingredients and aprons provided.",
     starts_at: "2027-02-06T13:00", capacity: 16, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
   },
+  // already happened, shown under "Past events" (read-only)
+  {
+    title: "Tbilisi Startup Pitch Night",
+    description: "Eight early-stage teams pitched for five minutes each, followed by questions from a panel of local investors.",
+    starts_at: "2026-09-25T19:00", capacity: 70, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+  },
+  {
+    title: "Autumn Jazz in the Courtyard",
+    description: "An open-air afternoon set to close the summer season, with a guest saxophonist from Batumi.",
+    starts_at: "2026-10-10T17:00", capacity: 200, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+  },
+  {
+    title: "Frontend Meetup #13: Accessibility in Practice",
+    description: "Screen readers, focus management and colour contrast, shown on real Georgian websites.",
+    starts_at: "2026-11-11T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 1,
+  },
 ];
 
 // [event index, attendee emails]
@@ -84,6 +100,10 @@ const bookings = [
   [7, ["saba.javakhishvili@doorlist.test", "luka.tsiklauri@doorlist.test"]],
   // organizers can book other organizers' events too: Nino goes to Giorgi's clinic
   [5, ["organizer@doorlist.test"]],
+  // past events
+  [8, ["luka.tsiklauri@doorlist.test", "elene.abashidze@doorlist.test", "organizer@doorlist.test"]],
+  [9, ["attendee@doorlist.test", "mariam.chikovani@doorlist.test", "saba.javakhishvili@doorlist.test", "luka.tsiklauri@doorlist.test"]],
+  [10, ["attendee@doorlist.test", "elene.abashidze@doorlist.test"]],
 ];
 
 transaction(() => {

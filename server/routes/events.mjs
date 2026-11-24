@@ -1,7 +1,7 @@
 import express from "express";
 import { db } from "../db/index.mjs";
 import { requireAuth, requireRole, optionalAuth } from "../middlewares/auth.mjs";
-import { badRequest, forbidden, notFound, parseId } from "../utils/http.mjs";
+import { badRequest, conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal, isValidLocal } from "../utils/time.mjs";
 import * as v from "../utils/validate.mjs";
 
@@ -62,9 +62,12 @@ function readEvent(body = {}, { existing } = {}) {
   return { event, errors };
 }
 
-// Public list of upcoming events. Filters: ?q=text&category=id
+// Public list of events. ?when=past lists events that already started
+// (newest first); anything else lists upcoming ones (soonest first).
+// Filters: ?q=text&category=id
 router.get("/", (req, res) => {
-  const where = ["e.starts_at >= ?"];
+  const past = req.query.when === "past";
+  const where = [past ? "e.starts_at < ?" : "e.starts_at >= ?"];
   const params = [nowLocal()];
 
   const q = String(req.query.q ?? "").trim();
@@ -78,9 +81,15 @@ router.get("/", (req, res) => {
     params.push(category);
   }
 
-  const rows = db.prepare(`${SELECT} WHERE ${where.join(" AND ")} ORDER BY e.starts_at`).all(...params);
-  res.json(rows.map(withSeats));
+  const order = past ? "e.starts_at DESC" : "e.starts_at";
+  const rows = db.prepare(`${SELECT} WHERE ${where.join(" AND ")} ORDER BY ${order}`).all(...params);
+  res.json(rows.map((e) => ({ ...withSeats(e), is_past: past })));
 });
+
+// Past events are read-only for everyone, admins included.
+function assertNotPast(event) {
+  if (event.starts_at <= nowLocal()) throw conflict("This event has already taken place and can't be changed");
+}
 
 // The logged-in organizer's own events, past ones included.
 router.get("/mine", requireAuth, requireRole("organizer"), (req, res) => {
@@ -100,6 +109,8 @@ router.get("/:id", optionalAuth, (req, res) => {
     user && db.prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?").get(event.id, user.id)
   );
   event.is_past = event.starts_at <= nowLocal();
+  // past events are read-only: the organizer still sees who came, but can't edit
+  event.can_edit = event.can_manage && !event.is_past;
   res.json(event);
 });
 
@@ -122,6 +133,7 @@ router.put("/:id", requireAuth, requireRole("organizer", "admin"), (req, res) =>
   const existing = findEvent(id);
   if (!existing) throw notFound("Event not found");
   assertCanManage(req.user, existing);
+  assertNotPast(existing);
 
   const { event, errors } = readEvent(req.body, { existing });
   if (v.hasErrors(errors)) throw badRequest(errors);
@@ -140,6 +152,7 @@ router.delete("/:id", requireAuth, requireRole("organizer", "admin"), (req, res)
   const event = findEvent(id);
   if (!event) throw notFound("Event not found");
   assertCanManage(req.user, event);
+  assertNotPast(event);
 
   // registrations are removed with it (ON DELETE CASCADE)
   db.prepare("DELETE FROM events WHERE id = ?").run(id);

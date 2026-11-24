@@ -5,9 +5,13 @@ import { Link } from "../router.jsx";
 import EventRow from "../components/EventRow.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
+// Read ?when=past from the address so the choice survives a reload or Back.
+const initialWhen = () => (new URLSearchParams(window.location.search).get("when") === "past" ? "past" : "upcoming");
+
 export default function Events() {
   const { user } = useAuth();
   const categories = useApi("/categories");
+  const [when, setWhen] = useState(initialWhen);
   const [q, setQ] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -18,7 +22,13 @@ export default function Events() {
     return () => clearTimeout(t);
   }, [q]);
 
+  const choose = (next) => {
+    setWhen(next);
+    window.history.replaceState(null, "", next === "past" ? "/?when=past" : "/");
+  };
+
   const params = new URLSearchParams();
+  if (when === "past") params.set("when", "past");
   if (search) params.set("q", search);
   if (category) params.set("category", category);
   const events = useApi(`/events${params.size ? `?${params}` : ""}`);
@@ -29,9 +39,30 @@ export default function Events() {
       <div className="page-head">
         <div>
           <p className="eyebrow">Tbilisi · what's on</p>
-          <h1>Upcoming events</h1>
+          {/* the chosen list is the big title; the other one is the small link after the slash */}
+          <h1 className="when-switch">
+            <button
+              type="button"
+              className={`when-switch__opt${when === "upcoming" ? " is-active" : ""}`}
+              aria-pressed={when === "upcoming"}
+              onClick={() => choose("upcoming")}
+            >
+              Upcoming events
+            </button>
+            <span className="when-switch__slash" aria-hidden="true">
+              /
+            </span>
+            <button
+              type="button"
+              className={`when-switch__opt${when === "past" ? " is-active" : ""}`}
+              aria-pressed={when === "past"}
+              onClick={() => choose("past")}
+            >
+              Past events
+            </button>
+          </h1>
         </div>
-        {user?.role === "organizer" && (
+        {user?.role === "organizer" && user.status === "active" && when === "upcoming" && (
           <Link to="/events/new" className="btn btn--primary">
             New event
           </Link>
@@ -85,7 +116,11 @@ export default function Events() {
             Try another word or category.
           </Empty>
         ) : (
-          <Empty title="Nothing scheduled yet">New events will show up here.</Empty>
+          when === "past" ? (
+            <Empty title="No past events yet">Events move here once they have taken place.</Empty>
+          ) : (
+            <Empty title="Nothing scheduled yet">New events will show up here.</Empty>
+          )
         )
       ) : (
         <ul className="event-list" aria-busy={events.loading}>

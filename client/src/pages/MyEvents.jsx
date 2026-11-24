@@ -73,9 +73,11 @@ export default function MyEvents() {
                     <Link to={`/events/${event.id}`} className="btn btn--small">
                       Attendees
                     </Link>
-                    <Link to={`/events/${event.id}/edit`} className="btn btn--small">
-                      Edit
-                    </Link>
+                    {new Date(event.starts_at) >= now && (
+                      <Link to={`/events/${event.id}/edit`} className="btn btn--small">
+                        Edit
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -409,6 +409,17 @@ a:hover {
   color: var(--text);
 }
 
+/* Trim the extra space above capitals and below the baseline, so the name
+   and the label are centred on their letters, not on their line boxes. */
+.account__who .account__name,
+.account__who .chip {
+  text-box: trim-both cap alphabetic;
+}
+
+.account__who .chip {
+  padding: 5px 8px;
+}
+
 .account__item {
   display: block;
   width: 100%;
