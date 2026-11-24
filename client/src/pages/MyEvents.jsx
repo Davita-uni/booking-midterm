@@ -55,12 +55,16 @@ export default function MyEvents() {
               </tr>
             </thead>
             <tbody>
-              {list.map((event) => (
-                <tr key={event.id}>
+              {list.map((event) => {
+                // past events are read-only: greyed out, no Edit button
+                const past = new Date(event.starts_at) < now;
+                return (
+                <tr key={event.id} className={past ? "is-past" : undefined}>
                   <td>
                     <Link to={`/events/${event.id}`}>
                       <strong>{event.title}</strong>
                     </Link>
+                    {past && <span className="past-chip mono">Past</span>}
                     <span className="table__sub">{event.venue_name}</span>
                   </td>
                   <td className="mono" title={longDate(event.starts_at)}>
@@ -71,16 +75,17 @@ export default function MyEvents() {
                   </td>
                   <td className="table__actions">
                     <Link to={`/events/${event.id}`} className="btn btn--small">
-                      Attendees
+                      {past ? "View" : "Attendees"}
                     </Link>
-                    {new Date(event.starts_at) >= now && (
+                    {!past && (
                       <Link to={`/events/${event.id}/edit`} className="btn btn--small">
                         Edit
                       </Link>
                     )}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </>
