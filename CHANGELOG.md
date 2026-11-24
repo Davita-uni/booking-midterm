@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0 — Notifications
+
+- New `notifications` table and a bell in the header with the unread count, a dropdown list, "Mark all as read", and links to the related page. Checks every 30 seconds and on every page change.
+- Attendees (anyone with a seat): notified when an event they booked is edited (lists what changed) or cancelled.
+- Organizers: notified when the admin replies to or changes the status of their request, and when one of their events becomes fully booked.
+- Admins: notified when an organizer sends a new request.
+- Organizers waiting for approval: "You have been accepted as Organizer. Welcome to DoorList!" when approved.
+- API: `GET /api/notifications`, `POST /api/notifications/:id/read`, `POST /api/notifications/read-all` (only your own).
+- Seed adds a few notifications so the bell isn't empty in the demo.
+
 ## 0.11.0 — Requests to admins
 
 - New `requests` table (organizer → admins) with status `new` / `in_progress` / `completed` and an admin reply.

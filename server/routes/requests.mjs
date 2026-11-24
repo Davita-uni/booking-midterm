@@ -3,6 +3,7 @@ import { db } from "../db/index.mjs";
 import { requireAuth, requireRole } from "../middlewares/auth.mjs";
 import { badRequest, notFound, parseId } from "../utils/http.mjs";
 import * as v from "../utils/validate.mjs";
+import { notify, notifyAdmins } from "../utils/notify.mjs";
 
 // Requests from organizers to the admins, e.g. "please add a venue".
 // Organizers send them and read the reply; admins reply and set the status.
@@ -38,6 +39,7 @@ router.post("/", requireRole("organizer"), (req, res) => {
   const { lastInsertRowid } = db
     .prepare("INSERT INTO requests (organizer_id, subject, body) VALUES (?, ?, ?)")
     .run(req.user.id, subject, body);
+  notifyAdmins(`New request from ${req.user.name}: “${subject}”`, "/admin/requests");
   res.status(201).json(findRequest(lastInsertRowid));
 });
 
@@ -66,7 +68,15 @@ router.patch("/:id", requireRole("admin"), (req, res) => {
     WHERE id = ?
   `).run(status, reply, replyChanged && reply ? 1 : 0, id);
 
-  res.json(findRequest(id));
+  const updated = findRequest(id);
+  const STATUS_LABEL = { new: "New", in_progress: "Work in progress", completed: "Completed" };
+  const parts = [];
+  if (replyChanged && reply) parts.push("the admin replied");
+  if (status !== existing.status) parts.push(`status is now ${STATUS_LABEL[status]}`);
+  if (parts.length) {
+    notify([existing.organizer_id], `Your request “${existing.subject}”: ${parts.join(" and ")}.`, "/my/requests");
+  }
+  res.json(updated);
 });
 
 export default router;

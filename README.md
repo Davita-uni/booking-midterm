@@ -62,6 +62,18 @@ their name (with an Admin, Organizer or Pending tag) and:
   admin writes a reply and changes the status; the organizer sees both.
 - **Log out**.
 
+## Notifications
+
+The bell next to My account shows unread notifications (checked every 30
+seconds). Clicking one opens the related page and marks it read.
+
+| Who | Gets a notification when |
+| --- | --- |
+| Attendee (anyone with a seat) | an event they booked is edited (date/time, venue, title, description or category) or cancelled |
+| Organizer | the admin replies to or changes the status of their request; one of their events becomes fully booked |
+| Admin | an organizer sends a new request |
+| Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!" |
+
 ## Stack
 
 | Part     | Technology                                |
@@ -170,6 +182,7 @@ server starts. `npm run seed` resets the data.
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, unique (`event_id`, `user_id`) |
+| `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
 | `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed), `admin_reply` |
 
 One-to-many relations: an organizer has many events, a venue has many
@@ -212,6 +225,9 @@ All responses are JSON. Validation errors return `400` with
 | GET    | `/api/requests`                    | organizer (own), admin (all) | Requests to the admins |
 | POST   | `/api/requests`                    | organizer | Send a request (`subject`, `body`) |
 | PATCH  | `/api/requests/:id`                | admin | Reply and/or change status |
+| GET    | `/api/notifications`               | logged in | Own notifications + unread count |
+| POST   | `/api/notifications/:id/read`      | logged in | Mark one as read |
+| POST   | `/api/notifications/read-all`      | logged in | Mark all as read |
 | GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
 | PATCH  | `/api/admin/organizers/:id`        | admin | Approve, suspend or reactivate (`{ status }`) |
 | DELETE | `/api/admin/organizers/:id`        | admin | Reject a pending sign-up |
@@ -264,3 +280,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.9.2 | Past event tag shortened to "Past event" |
 | 0.10.0 | Light theme (default) and dark theme, saved per browser |
 | 0.11.0 | Organizer requests to admins (reply + status) |
+| 0.12.0 | Notifications (bell in the header) |

@@ -69,6 +69,18 @@ CREATE TABLE IF NOT EXISTS requests (
   updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
+-- In-app notifications (bell in the header).
+-- users 1 ── * notifications
+CREATE TABLE IF NOT EXISTS notifications (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  message     TEXT    NOT NULL,
+  link        TEXT,                              -- page to open, e.g. /events/3
+  read_at     TEXT,                              -- NULL = unread
+  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read_at);
 CREATE INDEX IF NOT EXISTS idx_requests_organizer ON requests(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_starts_at ON events(starts_at);
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);

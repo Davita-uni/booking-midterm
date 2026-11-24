@@ -19,6 +19,7 @@ import NewRequest from "./pages/NewRequest.jsx";
 import AdminRequests from "./pages/AdminRequests.jsx";
 import AccountMenu from "./components/AccountMenu.jsx";
 import ThemeToggle from "./components/ThemeToggle.jsx";
+import NotificationBell from "./components/NotificationBell.jsx";
 
 function Header() {
   const { user } = useAuth();
@@ -48,7 +49,10 @@ function Header() {
         <div className="session">
           <ThemeToggle />
           {user ? (
-            <AccountMenu />
+            <>
+              <NotificationBell />
+              <AccountMenu />
+            </>
           ) : (
             <>
               <Link to="/login" className="btn btn--ghost btn--small">

@@ -138,6 +138,7 @@ const bookings = [
 
 transaction(() => {
   db.exec(`
+    DELETE FROM notifications;
     DELETE FROM requests;
     DELETE FROM registrations;
     DELETE FROM events;
@@ -225,8 +226,21 @@ transaction(() => {
   }
 });
 
+// A few notifications so the bell isn't empty in the demo
+transaction(() => {
+  const userId = (email) => db.prepare("SELECT id FROM users WHERE email = ?").get(email).id;
+  const eventId = (title) => db.prepare("SELECT id FROM events WHERE title = ?").get(title).id;
+  const insert = db.prepare("INSERT INTO notifications (user_id, message, link, read_at, created_at) VALUES (?, ?, ?, ?, ?)");
+  const wine = eventId("Natural Wine Tasting: Kakheti Qvevri");
+  const jazz = eventId("Late Jazz at the Courtyard");
+  insert.run(userId("attendee@doorlist.test"), "“Late Jazz at the Courtyard”, which you booked, was updated: new date or time.", `/events/${jazz}`, null, "2026-11-23 18:20:00");
+  insert.run(userId("organizer@doorlist.test"), "“Natural Wine Tasting: Kakheti Qvevri” is fully booked: all 4 seats are taken.", `/events/${wine}`, null, "2026-11-22 12:05:00");
+  insert.run(userId("organizer@doorlist.test"), "Your request “Wine Factory cellar seats”: the admin replied and status is now Work in progress.", "/my/requests", "2026-11-19 10:00:00", "2026-11-19 09:30:00");
+  insert.run(userId("admin@doorlist.test"), "New request from Giorgi Lomidze: “New category: Film screenings”", "/admin/requests", null, "2026-11-23 09:05:00");
+});
+
 const count = (table) => db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get().n;
 console.log(`Seeded ${DB_FILE}`);
-for (const t of ["users", "categories", "venues", "events", "registrations", "requests"]) {
+for (const t of ["users", "categories", "venues", "events", "registrations", "requests", "notifications"]) {
   console.log(`  ${t.padEnd(14)} ${count(t)}`);
 }
