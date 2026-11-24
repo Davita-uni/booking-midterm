@@ -3,6 +3,7 @@ import { db, transaction } from "../db/index.mjs";
 import { requireAuth, requireRole } from "../middlewares/auth.mjs";
 import { conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal } from "../utils/time.mjs";
+import { notify } from "../utils/notify.mjs";
 
 const router = express.Router();
 
@@ -38,6 +39,10 @@ router.post("/events/:id/registrations", requireAuth, requireRole(...BOOKERS), (
     const { lastInsertRowid } = db
       .prepare("INSERT INTO registrations (event_id, user_id) VALUES (?, ?)")
       .run(eventId, req.user.id);
+    // this booking took the last seat
+    if (event.booked + 1 === event.capacity) {
+      notify([event.organizer_id], `“${event.title}” is fully booked: all ${event.capacity} seats are taken.`, `/events/${event.id}`);
+    }
     return db.prepare("SELECT id, event_id, user_id, created_at FROM registrations WHERE id = ?").get(lastInsertRowid);
   });
 

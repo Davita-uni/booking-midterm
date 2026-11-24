@@ -4,6 +4,7 @@ import { requireAuth, requireRole, optionalAuth } from "../middlewares/auth.mjs"
 import { badRequest, conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal, isValidLocal } from "../utils/time.mjs";
 import * as v from "../utils/validate.mjs";
+import { notify, bookersOf } from "../utils/notify.mjs";
 
 const router = express.Router();
 
@@ -159,6 +160,17 @@ router.put("/:id", requireAuth, requireRole("organizer", "admin"), (req, res) =>
     WHERE id = ?
   `).run(event.title, event.description, event.starts_at, event.capacity, event.venue_id, event.category_id, id);
 
+  // tell everyone with a seat what changed
+  const changes = [];
+  if (event.starts_at !== existing.starts_at) changes.push("new date or time");
+  if (event.venue_id !== existing.venue_id) changes.push("new venue");
+  if (event.title !== existing.title) changes.push("new title");
+  if (event.description !== existing.description) changes.push("updated description");
+  if (event.category_id !== existing.category_id) changes.push("new category");
+  if (changes.length) {
+    notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was updated: ${changes.join(", ")}.`, `/events/${id}`);
+  }
+
   res.json(findEvent(id));
 });
 
@@ -168,6 +180,9 @@ router.delete("/:id", requireAuth, requireRole("organizer", "admin"), (req, res)
   if (!event) throw notFound("Event not found");
   assertCanManage(req.user, event);
   assertNotPast(event);
+
+  // tell people with a seat before their bookings disappear with it
+  notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was cancelled by the organizer.`, "/");
 
   // registrations are removed with it (ON DELETE CASCADE)
   db.prepare("DELETE FROM events WHERE id = ?").run(id);

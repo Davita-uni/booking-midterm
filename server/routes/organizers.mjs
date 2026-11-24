@@ -2,6 +2,7 @@ import express from "express";
 import { db } from "../db/index.mjs";
 import { requireAuth, requireRole } from "../middlewares/auth.mjs";
 import { badRequest, conflict, notFound, parseId } from "../utils/http.mjs";
+import { notify } from "../utils/notify.mjs";
 
 // Admin-only: review and manage organizer accounts.
 const router = express.Router();
@@ -56,6 +57,9 @@ router.patch("/:id", (req, res) => {
     WHERE id = ?
   `).run(status, status, id);
 
+  if (organizer.status === "pending" && status === "active") {
+    notify([id], "You have been accepted as Organizer. Welcome to DoorList!", "/my/events");
+  }
   res.json(findOrganizer(id));
 });
 
