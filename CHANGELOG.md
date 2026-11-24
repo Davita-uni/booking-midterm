@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.3 — Role label colour
+
+- The role label next to Log out is green for every role (Admin was red, which read like a warning). The "Pending" label for organizers awaiting approval stays amber.
+
 ## 0.6.2 — Approval tab
 
 - Organizers page tabs: Active, Suspended, All on the left; "Waiting for approval" on its own on the right.

@@ -211,3 +211,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.6.0 | 3-step sign-up, organizer approval by admin |
 | 0.6.1 | Pending organizers stay logged in with an account status page |
 | 0.6.2 | Organizers page: "Waiting for approval" tab on the right with a red count |
+| 0.6.3 | Role label in the header is green for every role |
