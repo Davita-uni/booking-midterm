@@ -43,7 +43,7 @@ export default function AccountStatus() {
     return (
       <div className="status-page">
         <p className="eyebrow">Organizer application</p>
-        <h1>Application denied</h1>
+        <h1>Application Denied</h1>
         <section className="panel status-card">
           <div className="notice notice--error">
             <p className="notice__title">Your organizer application was denied</p>
@@ -66,7 +66,7 @@ export default function AccountStatus() {
   return (
     <div className="status-page">
       <p className="eyebrow">Organizer account</p>
-      <h1>{pending ? "Waiting for approval" : "You're approved"}</h1>
+      <h1>{pending ? "Waiting for Approval" : "You're Approved"}</h1>
 
       <section className={`panel status-card${pending ? "" : " status-card--ok"}`} aria-live="polite">
         <dl className="status-card__rows">

@@ -1,50 +1,66 @@
-/* Doorlist design tokens — "Stage night" style guide.
-   Light is the default; dark is "Stage night" proper. The theme is chosen in
-   index.html before React starts (saved choice, otherwise the system setting). */
+/* Doorlist design tokens — "Vice City" palette.
+   Purple fading into light blue, like a Miami sunset over neon signs. Text
+   accents are purple; buttons, the logo dot, the menu underline, ticket stubs
+   and progress bars use the purple → light-blue gradient.
+   Light is the default; the theme is chosen in index.html before React starts
+   (saved choice, otherwise the system setting). */
 :root,
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f6f4ef;
+  --bg: #f6f5fb;
   --surface: #ffffff;
-  --surface-2: #eeebe4;
-  --line: #d9d4ca;
-  --text: #1c1d20;
-  --muted: #67635b;
-  --placeholder: #9a958b;
-  --accent: #b86a06;
-  --accent-hover: #9e5a03;
+  --surface-2: #eeedf6;
+  --line: #dcd9ea;
+  --text: #1b1830;
+  --muted: #625e78;
+  --placeholder: #9a96b0;
+  --accent: #7c3aed; /* violet: links, labels, dates, focus rings */
+  --accent-hover: #6d28d9;
+  --accent-2: #38bdf8; /* light blue: the end of decorative gradients */
+  --button-end: #0284c7; /* a deeper light blue, so white button text stays readable */
   --accent-ink: #ffffff;
   --success: #2a7d52;
   --error: #c43c33;
-  --shadow: 0 12px 32px rgba(40, 32, 20, 0.16);
-  --backdrop: rgba(28, 29, 32, 0.45);
+  --warn: #b45309; /* amber for "only a few tickets left" */
+  --shadow: 0 12px 32px rgba(40, 24, 80, 0.14);
+  --backdrop: rgba(27, 24, 48, 0.45);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #17181b;
-  --surface: #222429;
-  --surface-2: #2b2e34;
-  --line: #3a3d44;
-  --text: #f2efe9;
-  --muted: #a8a49c;
-  --placeholder: #6f6c66;
-  --accent: #f2a33a;
-  --accent-hover: #f7b558;
-  --accent-ink: #17181b;
+  --bg: #120f1f;
+  --surface: #1c1830;
+  --surface-2: #252040;
+  --line: #352f52;
+  --text: #f1eefa;
+  --muted: #a9a3c4;
+  --placeholder: #6e6890;
+  --accent: #b794f6;
+  --accent-hover: #c9adfa;
+  --accent-2: #67e8f9;
+  --button-end: #67e8f9;
+  --accent-ink: #120f1f;
   --success: #4caf7a;
   --error: #e5534b;
-  --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-  --backdrop: rgba(10, 10, 12, 0.7);
+  --warn: #f2a33a;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --backdrop: rgba(8, 6, 16, 0.72);
+}
+
+:root {
+  --gradient: linear-gradient(90deg, var(--accent), var(--accent-2));
+  --button-gradient: linear-gradient(90deg, var(--accent-hover), var(--button-end));
 }
 
 /* ---------- Iliauni colours ----------
    On Ilia State University pages (data-brand="iliauni" on <html>) the orange
-   accent becomes the university's red from its seal (#8f181b). Only the accent
-   changes: backgrounds and text stay as they are. */
+   accent (and the purple → light-blue gradients) become the university's red
+   from its seal (#8f181b). Backgrounds and text stay as they are. */
 :root[data-brand="iliauni"] {
   --accent: #8f181b;
   --accent-hover: #721316;
+  --accent-2: #8f181b;
+  --button-end: #8f181b;
   --accent-ink: #ffffff;
 }
 
@@ -52,7 +68,9 @@
   /* a lighter red, so labels and links stay readable on the dark background */
   --accent: #e3646a;
   --accent-hover: #ec8287;
-  --accent-ink: #17181b;
+  --accent-2: #e3646a;
+  --button-end: #e3646a;
+  --accent-ink: #120f1f;
 }
 
 /* Registered colour properties can be animated. The fade only runs while
@@ -61,18 +79,30 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #b86a06;
+  initial-value: #7c3aed;
 }
 @property --accent-hover {
   syntax: "<color>";
   inherits: true;
-  initial-value: #9e5a03;
+  initial-value: #6d28d9;
+}
+@property --accent-2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #38bdf8;
+}
+@property --button-end {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0284c7;
 }
 
 :root.brand-fade {
   transition:
     --accent 0.6s ease,
-    --accent-hover 0.6s ease;
+    --accent-hover 0.6s ease,
+    --accent-2 0.6s ease,
+    --button-end 0.6s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -210,7 +240,7 @@ a:hover {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--gradient);
 }
 
 .nav {
@@ -234,7 +264,8 @@ a:hover {
 
 .nav a.active {
   color: var(--text);
-  border-bottom-color: var(--accent);
+  /* the underline is the purple → light-blue gradient (only the bottom border has a width) */
+  border-image: var(--gradient) 1;
 }
 
 /* "Iliauni" menu item: the university seal before the word */
@@ -334,13 +365,14 @@ a:hover {
 }
 
 .btn--primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--button-gradient);
+  border-color: transparent;
   color: var(--accent-ink);
 }
 
 .btn--primary:hover {
-  background: var(--accent-hover);
+  background: var(--button-gradient);
+  filter: brightness(1.08) saturate(1.1);
 }
 
 .btn--danger {

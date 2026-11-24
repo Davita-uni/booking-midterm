@@ -34,12 +34,12 @@ export default function NewRequest() {
   return (
     <>
       <Link to="/my/requests" className="back">
-        ← My requests
+        ← My Requests
       </Link>
       <div className="page-head">
         <div>
           <p className="eyebrow">My requests</p>
-          <h1>New request</h1>
+          <h1>New Request</h1>
         </div>
       </div>
 

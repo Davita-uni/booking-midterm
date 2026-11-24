@@ -60,7 +60,7 @@ export default function EventForm({ id }) {
   // page keeps its own breadcrumb (`eventFrom`), so after saving or going back
   // to it the user still returns to the list they started from.
   const eventPage = editing ? `/events/${id}` : null;
-  const back = backTo(editing ? { to: eventPage, label: "Back to event" } : FROM.upcoming);
+  const back = backTo(editing ? { to: eventPage, label: "Back to Event" } : FROM.upcoming);
   const eventFrom = window.history.state?.eventFrom ?? (back.to === eventPage ? null : back);
   const backLinkFrom = back.to === eventPage ? eventFrom : undefined;
 
@@ -155,7 +155,7 @@ export default function EventForm({ id }) {
       <div className="page-head">
         <div>
           <p className="eyebrow">{editing ? "Edit event" : "New event"}</p>
-          <h1>{editing ? existing.data.title : "Plan an event"}</h1>
+          <h1>{editing ? existing.data.title : "Plan an Event"}</h1>
         </div>
       </div>
 

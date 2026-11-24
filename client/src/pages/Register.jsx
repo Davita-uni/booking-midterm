@@ -143,7 +143,7 @@ export default function Register() {
       <section className="panel">
         {!isOrganizer ? (
           <>
-            <h2>Create an account</h2>
+            <h2>Create an Account</h2>
             <form className="form" onSubmit={submit} noValidate>
               {message && (
                 <p className="alert" role="alert">
@@ -167,7 +167,7 @@ export default function Register() {
           </>
         ) : (
           <>
-            <h2>Organizer account</h2>
+            <h2>Organizer Account</h2>
             <Steps current={step} onGo={setStep} />
 
             {step === 0 && (

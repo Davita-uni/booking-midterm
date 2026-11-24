@@ -21,7 +21,7 @@ export default function MyEvents() {
       <div className="page-head">
         <div>
           <p className="eyebrow">Organizer</p>
-          <h1>My events</h1>
+          <h1>My Events</h1>
         </div>
         <Link to="/events/new" from={FROM.myEvents} className="btn btn--primary">
           New event

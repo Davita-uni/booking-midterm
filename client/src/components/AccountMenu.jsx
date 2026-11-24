@@ -57,16 +57,16 @@ export default function AccountMenu() {
             {tag}
           </div>
           <Link to="/account/profile" className="account__item">
-            My profile
+            My Profile
           </Link>
           {user.role === "organizer" && user.status === "active" && (
             <Link to="/my/events" className="account__item">
-              My events
+              My Events
             </Link>
           )}
           {user.role === "organizer" && user.status === "active" && (
             <Link to="/my/requests" className="account__item">
-              My requests
+              My Requests
             </Link>
           )}
           {user.role === "admin" && (
@@ -75,7 +75,7 @@ export default function AccountMenu() {
             </Link>
           )}
           <button type="button" className="account__item account__item--danger" onClick={logout}>
-            Log out
+            Log Out
           </button>
         </div>
       )}

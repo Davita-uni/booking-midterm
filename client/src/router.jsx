@@ -68,12 +68,12 @@ export function backTo(fallback) {
 
 // The places a link can come from, so every page names them the same way.
 export const FROM = {
-  upcoming: { to: "/", label: "All events" },
-  past: { to: "/?when=past", label: "Past events" },
+  upcoming: { to: "/", label: "All Events" },
+  past: { to: "/?when=past", label: "Past Events" },
   tickets: { to: "/my/tickets", label: "My Tickets" },
-  myEvents: { to: "/my/events", label: "My events" },
-  profile: { to: "/account/profile", label: "My profile" },
-  status: { to: "/account/status", label: "Account status" },
-  iliauni: { to: "/iliauni", label: "Iliauni meetings" },
-  iliauniPast: { to: "/iliauni?when=past", label: "Past Iliauni meetings" },
+  myEvents: { to: "/my/events", label: "My Events" },
+  profile: { to: "/account/profile", label: "My Profile" },
+  status: { to: "/account/status", label: "Account Status" },
+  iliauni: { to: "/iliauni", label: "Iliauni Meetings" },
+  iliauniPast: { to: "/iliauni?when=past", label: "Past Iliauni Meetings" },
 };

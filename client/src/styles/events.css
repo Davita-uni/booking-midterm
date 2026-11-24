@@ -113,7 +113,7 @@
 }
 
 .seats--warn {
-  color: var(--accent);
+  color: var(--warn);
   font-weight: 600;
 }
 
@@ -211,7 +211,7 @@
 .meter span {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: var(--gradient);
 }
 
 .form--narrow {
@@ -314,7 +314,7 @@
   align-content: center;
   justify-items: center;
   gap: 2px;
-  background: var(--accent);
+  background: linear-gradient(165deg, var(--accent-hover), var(--button-end));
   color: var(--accent-ink);
   font-size: 12px;
   border-right: 2px dashed var(--bg);
