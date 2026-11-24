@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0 — Light and dark theme
+
+- New light theme (warm paper background, darker amber for contrast). "Stage night" stays as the dark theme.
+- First visit follows the system setting: dark system → dark, light system → light (light if unknown).
+- Moon/sun button in the header switches the theme; the choice is saved in `localStorage` and wins over the system. Switching back to the system's theme removes the saved choice.
+- The theme is applied by a small script in `index.html` before React starts, so there is no flash of the wrong theme.
+- All hard-coded colours replaced by theme variables (`color-mix` for tinted backgrounds).
+
 ## 0.9.2 — Past event tag
 
 - The tag on a past event's page now reads "Past event" (the "· read-only" part was removed). Past events stay read-only.

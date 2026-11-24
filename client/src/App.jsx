@@ -15,6 +15,7 @@ import AccountStatus from "./pages/AccountStatus.jsx";
 import Profile from "./pages/Profile.jsx";
 import ProfileEdit from "./pages/ProfileEdit.jsx";
 import AccountMenu from "./components/AccountMenu.jsx";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 
 function Header() {
   const { user } = useAuth();
@@ -42,6 +43,7 @@ function Header() {
           )}
         </nav>
         <div className="session">
+          <ThemeToggle />
           {user ? (
             <AccountMenu />
           ) : (

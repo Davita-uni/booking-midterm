@@ -219,6 +219,10 @@ All responses are JSON. Validation errors return `400` with
   this event" and a green person-with-star icon means "You are organizer of
   this event" (tooltips on hover).
 - The attendee list can be sorted by name, email or booking date; the # column always counts from 1.
+- Light and dark theme. The first visit follows the system setting (light if
+  there is none); the moon/sun button in the header switches it, and the choice
+  is saved in the browser (`localStorage`). Switching back to the system's
+  theme forgets the choice.
 - Layout works from 360px phones to desktop (tables turn into cards on small screens).
 
 ## Versions
@@ -248,3 +252,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.9.0 | Upcoming / Past events switch; past events read-only |
 | 0.9.1 | More past events in the seed; booked / organizer icons with tooltips |
 | 0.9.2 | Past event tag shortened to "Past event" |
+| 0.10.0 | Light theme (default) and dark theme, saved per browser |

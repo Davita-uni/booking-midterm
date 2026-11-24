@@ -3,7 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#17181B" />
+    <meta name="theme-color" content="#f6f4ef" />
+    <script>
+      // Pick the theme before anything is drawn, so the page never flashes:
+      // a saved choice wins, otherwise follow the system (light by default).
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("doorlist.theme");
+        } catch (e) {}
+        var system = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        var theme = saved === "dark" || saved === "light" ? saved : system;
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#17181b" : "#f6f4ef";
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Doorlist — Event booking</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
