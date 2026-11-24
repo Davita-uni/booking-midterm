@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useApi } from "../hooks.js";
 import { useAuth } from "../auth.jsx";
-import { Link } from "../router.jsx";
+import { Link, FROM } from "../router.jsx";
 import EventRow from "../components/EventRow.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -63,7 +63,7 @@ export default function Events() {
           </h1>
         </div>
         {user?.role === "organizer" && user.status === "active" && when === "upcoming" && (
-          <Link to="/events/new" className="btn btn--primary">
+          <Link to="/events/new" from={when === "past" ? FROM.past : FROM.upcoming} className="btn btn--primary">
             New event
           </Link>
         )}
@@ -125,7 +125,7 @@ export default function Events() {
       ) : (
         <ul className="event-list" aria-busy={events.loading}>
           {events.data.map((event) => (
-            <EventRow key={event.id} event={event} />
+            <EventRow key={event.id} event={event} from={when === "past" ? FROM.past : FROM.upcoming} />
           ))}
         </ul>
       )}

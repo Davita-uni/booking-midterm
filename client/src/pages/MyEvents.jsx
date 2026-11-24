@@ -1,5 +1,5 @@
 import { useApi } from "../hooks.js";
-import { Link } from "../router.jsx";
+import { Link, FROM } from "../router.jsx";
 import { parts, longDate } from "../format.js";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -22,7 +22,7 @@ export default function MyEvents() {
           <p className="eyebrow">Organizer</p>
           <h1>My events</h1>
         </div>
-        <Link to="/events/new" className="btn btn--primary">
+        <Link to="/events/new" from={FROM.myEvents} className="btn btn--primary">
           New event
         </Link>
       </div>
@@ -31,7 +31,7 @@ export default function MyEvents() {
         <Empty
           title="You haven't created any events"
           action={
-            <Link to="/events/new" className="btn btn--primary">
+            <Link to="/events/new" from={FROM.myEvents} className="btn btn--primary">
               Create your first event
             </Link>
           }
@@ -61,7 +61,7 @@ export default function MyEvents() {
                 return (
                 <tr key={event.id} className={past ? "is-past" : undefined}>
                   <td>
-                    <Link to={`/events/${event.id}`}>
+                    <Link to={`/events/${event.id}`} from={FROM.myEvents}>
                       <strong>{event.title}</strong>
                     </Link>
                     {past && <span className="past-chip mono">Past</span>}
@@ -74,11 +74,11 @@ export default function MyEvents() {
                     {event.booked} / {event.capacity}
                   </td>
                   <td className="table__actions">
-                    <Link to={`/events/${event.id}`} className="btn btn--small">
+                    <Link to={`/events/${event.id}`} from={FROM.myEvents} className="btn btn--small">
                       {past ? "View" : "Attendees"}
                     </Link>
                     {!past && (
-                      <Link to={`/events/${event.id}/edit`} className="btn btn--small">
+                      <Link to={`/events/${event.id}/edit`} from={FROM.myEvents} className="btn btn--small">
                         Edit
                       </Link>
                     )}

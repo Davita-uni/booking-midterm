@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../auth.jsx";
-import { Link } from "../router.jsx";
+import { Link, FROM } from "../router.jsx";
 import { HELP_PHONE } from "../config.js";
 
 const CHECK_EVERY_MS = 30000;
@@ -126,7 +126,7 @@ export default function AccountStatus() {
           <>
             <p className="alert alert--success">An admin approved your account. You can now publish events.</p>
             <div className="form__actions">
-              <Link to="/events/new" className="btn btn--primary">
+              <Link to="/events/new" from={FROM.status} className="btn btn--primary">
                 Create your first event
               </Link>
               <Link to="/my/events" className="btn">

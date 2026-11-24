@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
-import { Link, navigate } from "../router.jsx";
+import { Link, navigate, backTo, FROM } from "../router.jsx";
 import { longDate, seatsLabel, seatsTone } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
@@ -22,16 +22,18 @@ export default function EventDetail({ id }) {
   if (error) return <ErrorState error={error} onRetry={reload} />;
 
   const percent = Math.round((event.booked / event.capacity) * 100);
+  // the breadcrumb goes back to the list the event was opened from
+  const back = backTo(event.is_past ? FROM.past : FROM.upcoming);
 
   const remove = async () => {
     await api(`/events/${event.id}`, { method: "DELETE" });
-    navigate("/");
+    navigate(back.to);
   };
 
   return (
     <>
-      <Link to="/" className="back">
-        ← All events
+      <Link to={back.to} className="back">
+        ← {back.label}
       </Link>
 
       <div className="detail">
@@ -53,7 +55,12 @@ export default function EventDetail({ id }) {
 
           {event.can_edit && (
             <div className="detail__owner">
-              <Link to={`/events/${event.id}/edit`} className="btn">
+              <Link
+                to={`/events/${event.id}/edit`}
+                from={{ to: `/events/${event.id}`, label: "Back to event" }}
+                state={{ eventFrom: back }}
+                className="btn"
+              >
                 Edit event
               </Link>
               <button className="btn btn--danger" onClick={() => setConfirmDelete(true)}>
@@ -136,10 +143,11 @@ function CancelledEvent({ info }) {
   const title = info.get("title") || "This event";
   const when = info.get("when");
   const venue = info.get("venue");
+  const back = backTo(FROM.upcoming);
   return (
     <>
-      <Link to="/" className="back">
-        ← All events
+      <Link to={back.to} className="back">
+        ← {back.label}
       </Link>
       <div className="cancelled">
         <p className="cancelled__banner" role="status">

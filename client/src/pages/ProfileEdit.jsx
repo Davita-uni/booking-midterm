@@ -7,7 +7,20 @@ import { Loading, ErrorState } from "../components/States.jsx";
 import { Link } from "../router.jsx";
 import { CURRENCIES } from "../config.js";
 
-// My profile > Edit profile: name (and organization for organizers), password.
+// My profile > Edit Profile: first and last name (and organization for organizers), password.
+
+// The name is stored as one text; the first word is the first name, the rest the last name.
+function splitName(name = "") {
+  const [first = "", ...rest] = name.trim().split(/\s+/);
+  return { first_name: first, last_name: rest.join(" ") };
+}
+
+const formFrom = (account) => ({
+  ...splitName(account.name),
+  email: account.email,
+  organization: account.organization ?? "",
+  currency: account.currency,
+});
 export default function ProfileEdit() {
   const account = useApi("/account");
 
@@ -22,7 +35,7 @@ export default function ProfileEdit() {
       <div className="page-head">
         <div>
           <p className="eyebrow">My profile</p>
-          <h1>Edit profile</h1>
+          <h1>Edit Profile</h1>
         </div>
       </div>
       <div className="profile">
@@ -36,22 +49,19 @@ export default function ProfileEdit() {
 function DetailsForm({ account, onSaved }) {
   const { updateUser } = useAuth();
   const isOrganizer = account.role === "organizer";
-  const [form, setForm] = useState({ name: "", email: "", organization: "" });
+  const [form, setForm] = useState({ first_name: "", last_name: "", email: "", organization: "" });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    setForm({
-      name: account.name,
-      email: account.email,
-      organization: account.organization ?? "",
-      currency: account.currency,
-    });
+    setForm(formFrom(account));
   }, [account]);
 
+  const original = splitName(account.name);
   const changed =
-    form.name !== account.name ||
+    form.first_name !== original.first_name ||
+    form.last_name !== original.last_name ||
     form.currency !== account.currency ||
     (isOrganizer && form.organization !== (account.organization ?? ""));
 
@@ -66,7 +76,7 @@ function DetailsForm({ account, onSaved }) {
     setBusy(true);
     setMessage(null);
     try {
-      const body = { name: form.name, currency: form.currency };
+      const body = { first_name: form.first_name, last_name: form.last_name, currency: form.currency };
       if (isOrganizer) body.organization = form.organization;
       const saved = await api("/account/profile", { method: "PUT", body });
       onSaved(saved);
@@ -89,7 +99,24 @@ function DetailsForm({ account, onSaved }) {
             {message.text}
           </p>
         )}
-        <Field label="Full name" name="name" autoComplete="name" value={form.name} onChange={update} error={errors.name} />
+        <div className="form-row">
+          <Field
+            label="First name"
+            name="first_name"
+            autoComplete="given-name"
+            value={form.first_name}
+            onChange={update}
+            error={errors.first_name}
+          />
+          <Field
+            label="Last name"
+            name="last_name"
+            autoComplete="family-name"
+            value={form.last_name}
+            onChange={update}
+            error={errors.last_name}
+          />
+        </div>
         {isOrganizer && (
           <Field
             label="Organization or project"
@@ -135,12 +162,7 @@ function DetailsForm({ account, onSaved }) {
               type="button"
               className="btn btn--ghost"
               onClick={() => {
-                setForm({
-                  name: account.name,
-                  email: account.email,
-                  organization: account.organization ?? "",
-                  currency: account.currency,
-                });
+                setForm(formFrom(account));
                 setErrors({});
               }}
             >

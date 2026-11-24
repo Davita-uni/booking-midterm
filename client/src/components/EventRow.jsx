@@ -4,11 +4,11 @@ import EventBadges from "./EventBadges.jsx";
 import Price from "./Price.jsx";
 
 // One line in the event list: date block, title and venue, seats.
-export default function EventRow({ event }) {
+export default function EventRow({ event, from }) {
   const d = parts(event.starts_at);
   return (
     <li>
-      <Link to={`/events/${event.id}`} className={`event-row${event.is_past ? " event-row--past" : ""}`}>
+      <Link to={`/events/${event.id}`} from={from} className={`event-row${event.is_past ? " event-row--past" : ""}`}>
         <span className="date-block mono" aria-label={`${d.weekday} ${d.day} ${d.month}`}>
           <span className="date-block__month">{d.month}</span>
           <span className="date-block__day">{d.day}</span>

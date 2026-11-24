@@ -70,7 +70,7 @@ their name (with an Admin, Organizer or Pending tag) and:
 
 ## Notifications
 
-The bell next to Account shows unread notifications (checked every 10
+The bell next to the "Hi, name!" button shows unread notifications (checked every 10
 seconds). Clicking one opens the related page and marks it read.
 
 | Who | Gets a notification when |
@@ -331,3 +331,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.15.2 | Past events greyed out and read-only on My events |
 | 0.16.0 | Prices only in the user's currency; ticket counter; "Buy Ticket" |
 | 0.16.1 | First and last name on sign-up; "Hi, name!" header |
+| 0.16.2 | Breadcrumbs go back where you came from; first/last name in Edit Profile; schema fix |
