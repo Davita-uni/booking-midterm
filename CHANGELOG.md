@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — Events
+
+- Events CRUD API. Organizers create events; only the event's own organizer (or an admin) can edit or delete it, otherwise `403`.
+- Validation: future date, venue and category must exist, seats can't exceed the venue or go below seats already booked.
+- Event list with search and category filter, event detail page, create/edit form and an organizer "My events" dashboard.
+- Delete asks for confirmation; deleting an event removes its bookings (ON DELETE CASCADE).
+
 ## 0.2.0 — Venues and categories (admin)
 
 - CRUD API for venues and categories; only admins can create, edit or delete.

@@ -5,6 +5,7 @@ import "./db/index.mjs";
 import authRoutes from "./routes/auth.mjs";
 import venueRoutes from "./routes/venues.mjs";
 import categoryRoutes from "./routes/categories.mjs";
+import eventRoutes from "./routes/events.mjs";
 
 if (!process.env.JWT_SECRET) {
   console.error("JWT_SECRET is missing. Copy server/.env.example to server/.env.");
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/venues", venueRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/events", eventRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ message: "Route not found" });
