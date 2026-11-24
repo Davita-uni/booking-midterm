@@ -44,11 +44,12 @@ function Header() {
             <>
               <span className="session__name">
                 {user.name}{" "}
+                {/* attendees are the default account, so they get no role label */}
                 {user.status === "pending" ? (
                   <span className="chip chip--pending">Pending</span>
-                ) : (
+                ) : user.role !== "attendee" ? (
                   <span className={`chip chip--${user.role}`}>{ROLE_LABEL[user.role]}</span>
-                )}
+                ) : null}
               </span>
               <button className="btn btn--danger btn--small" onClick={logout}>
                 Log out

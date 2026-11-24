@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.5 — Header role label
+
+- The role label next to the user's name is shown only for Admin and Organizer accounts (and "Pending" for organizers awaiting approval). Attendees, the default account type, have no label.
+
 ## 0.6.4 — "All" tab
 
 - The "All" tab on the Organizers page lists active and suspended organizers only. Sign-ups waiting for approval appear only under "Waiting for approval".
