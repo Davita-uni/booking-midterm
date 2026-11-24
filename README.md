@@ -344,6 +344,22 @@ All responses are JSON. Validation errors return `400` with
   theme forgets the choice.
 - Layout works from 360px phones to desktop (tables turn into cards on small screens).
 
+## Planned (not in this MVP)
+
+These are known gaps, left out on purpose for the interim version:
+
+- **Online payments.** Events have prices and a **Buy Ticket** button, but no
+  money is charged: the tickets are reserved straight away. A card payment
+  provider will be added, so the ticket is confirmed only after the payment
+  goes through, and refunds (see the Refund Policy page) are paid back
+  automatically. Prices shown in USD or EUR will then also be charged in that
+  currency.
+- **Email service.** The app sends no emails yet; all notifications are shown
+  in the app (the bell). Planned emails: a confirmation link when you sign up
+  (this also proves that an `@iliauni.edu.ge` address really belongs to you),
+  your tickets after buying, "forgot password" links, and a message when an
+  event you have a ticket for changes or is cancelled.
+
 ## Versions
 
 See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request:
@@ -402,3 +418,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.20.1 | Footer in the same colour as the header |
 | 0.20.2 | No sideways scrolling on phones |
 | 0.20.3 | Figma link in the README |
+| 0.20.4 | README: planned payments and email service |
