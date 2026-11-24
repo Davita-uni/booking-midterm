@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.3 — Message style
+
+- Error, success and info messages no longer look like input fields: no full border, a thick coloured bar on the left, a round icon (!, ✓, i), bold text and a stronger tint.
+
 ## 0.12.2 — 15-minute event times
 
 - The event form's date and time picker offers minutes in 15-minute steps (:00, :15, :30, :45).
