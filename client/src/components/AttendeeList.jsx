@@ -8,11 +8,14 @@ import { Loading, ErrorState, Empty } from "./States.jsx";
 const COLUMNS = [
   ["name", "Name"],
   ["email", "Email"],
+  ["quantity", "Tickets"],
   ["created_at", "Ticket from"],
 ];
 
 const compare = (a, b, key) =>
-  key === "created_at"
+  key === "quantity"
+    ? a.quantity - b.quantity || a.id - b.id
+    : key === "created_at"
     ? a.created_at.localeCompare(b.created_at) || a.id - b.id
     : a[key].localeCompare(b[key], "en", { sensitivity: "base" });
 
@@ -70,6 +73,9 @@ export default function AttendeeList({ eventId }) {
                   <strong>{a.name}</strong>
                 </td>
                 <td className="break">{a.email}</td>
+                <td className="num mono" data-label="Tickets">
+                  {a.quantity}
+                </td>
                 <td className="mono muted">{bookedOn(a.created_at)}</td>
               </tr>
             ))}

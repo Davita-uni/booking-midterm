@@ -626,3 +626,50 @@ h1 .badge svg {
   accent-color: var(--accent);
   margin: 0;
 }
+
+/* ---------- ticket counter + buy button ---------- */
+
+.buy {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.buy__btn {
+  flex: 1;
+  min-width: 0;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.qty__btn {
+  width: 36px;
+  height: 100%;
+  min-height: 40px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: 600 18px var(--font-ui);
+  cursor: pointer;
+}
+
+.qty__btn:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.qty__btn:disabled {
+  color: var(--line);
+  cursor: not-allowed;
+}
+
+.qty__value {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}

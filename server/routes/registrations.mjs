@@ -1,6 +1,8 @@
 import express from "express";
 import { db, transaction } from "../db/index.mjs";
 import { requireAuth, requireRole, requireSession } from "../middlewares/auth.mjs";
+import * as v from "../utils/validate.mjs";
+import { badRequest } from "../utils/http.mjs";
 import { conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal } from "../utils/time.mjs";
 import { notify } from "../utils/notify.mjs";
@@ -11,7 +13,7 @@ const findEvent = (id) =>
   db
     .prepare(`
       SELECT e.id, e.title, e.starts_at, e.capacity, e.organizer_id,
-             (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) AS booked
+             (SELECT COALESCE(SUM(r.quantity), 0) FROM registrations r WHERE r.event_id = e.id) AS booked
       FROM events e WHERE e.id = ?
     `)
     .get(id);
@@ -25,6 +27,10 @@ const BOOKERS = ["attendee", "organizer"];
 
 router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
+  // how many tickets in one purchase (1–10)
+  const errors = {};
+  const quantity = req.body?.quantity === undefined ? 1 : v.integer(errors, req.body, "quantity", "Number of tickets", { min: 1, max: 10 });
+  if (v.hasErrors(errors)) throw badRequest(errors);
 
   const registration = transaction(() => {
     const event = findEvent(eventId);
@@ -37,15 +43,17 @@ router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS)
       .get(eventId, req.user.id);
     if (already) throw conflict("You already have a ticket for this event");
     if (event.booked >= event.capacity) throw conflict("Sorry, this event is sold out");
+    const left = event.capacity - event.booked;
+    if (quantity > left) throw conflict(`Only ${left} ticket(s) left`);
 
     const { lastInsertRowid } = db
-      .prepare("INSERT INTO registrations (event_id, user_id) VALUES (?, ?)")
-      .run(eventId, req.user.id);
-    // this booking took the last seat
-    if (event.booked + 1 === event.capacity) {
+      .prepare("INSERT INTO registrations (event_id, user_id, quantity) VALUES (?, ?, ?)")
+      .run(eventId, req.user.id, quantity);
+    // this purchase took the last tickets
+    if (event.booked + quantity === event.capacity) {
       notify([event.organizer_id], `“${event.title}” is sold out: all ${event.capacity} tickets are gone.`, `/events/${event.id}`);
     }
-    return db.prepare("SELECT id, event_id, user_id, created_at FROM registrations WHERE id = ?").get(lastInsertRowid);
+    return db.prepare("SELECT id, event_id, user_id, quantity, created_at FROM registrations WHERE id = ?").get(lastInsertRowid);
   });
 
   res.status(201).json(registration);
@@ -73,7 +81,7 @@ router.get("/events/:id/registrations", requireAuth, requireRole("organizer", "a
 
   const attendees = db
     .prepare(`
-      SELECT r.id, r.created_at, u.id AS user_id, u.name, u.email
+      SELECT r.id, r.created_at, r.quantity, u.id AS user_id, u.name, u.email
       FROM registrations r
       JOIN users u ON u.id = r.user_id
       WHERE r.event_id = ?
@@ -87,7 +95,7 @@ router.get("/events/:id/registrations", requireAuth, requireRole("organizer", "a
 router.get("/registrations/mine", requireSession, requireRole(...BOOKERS), (req, res) => {
   const rows = db
     .prepare(`
-      SELECT r.id, r.created_at AS booked_at,
+      SELECT r.id, r.created_at AS booked_at, r.quantity,
              e.id AS event_id, e.title, e.starts_at, ve.name AS venue_name, c.name AS category_name
       FROM registrations r
       JOIN events e ON e.id = r.event_id

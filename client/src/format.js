@@ -68,8 +68,16 @@ export function gel(price) {
   return `${Number.isInteger(price) ? price : price.toFixed(2)} ₾`;
 }
 
-// price in the user's currency, always rounded UP to a whole number:
-// 15.02 → "16 USD"
-export function converted(price, currency, rates) {
-  return `${Math.ceil(price * rates[currency] - 1e-9)} ${currency}`;
+// One ticket's price in another currency, always rounded UP to a whole
+// number: 15.02 → 16
+export function convertedUnit(price, currency, rates) {
+  return Math.ceil(price * rates[currency] - 1e-9);
+}
+
+// Price in the user's currency: "35 ₾" for GEL, "13 USD" otherwise, "Free" for 0.
+// `quantity` multiplies the (already rounded) price of one ticket.
+export function priceIn(price, currency, rates, quantity = 1) {
+  if (!price) return "Free";
+  if (currency === "GEL") return gel(price * quantity);
+  return `${convertedUnit(price, currency, rates) * quantity} ${currency}`;
 }

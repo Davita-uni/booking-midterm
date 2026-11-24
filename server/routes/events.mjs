@@ -16,7 +16,7 @@ const SELECT = `
          e.venue_id, ve.name AS venue_name, ve.address AS venue_address, ve.city AS venue_city,
          e.category_id, c.name AS category_name,
          e.organizer_id, u.name AS organizer_name, u.organization AS organizer_organization,
-         (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) AS booked
+         (SELECT COALESCE(SUM(r.quantity), 0) FROM registrations r WHERE r.event_id = e.id) AS booked
   FROM events e
   JOIN venues ve ON ve.id = e.venue_id
   JOIN categories c ON c.id = e.category_id
@@ -141,9 +141,9 @@ router.get("/:id", optionalAuth, (req, res) => {
   event.can_manage = Boolean(
     user && (user.role === "admin" || (user.role === "organizer" && user.id === event.organizer_id))
   );
-  event.is_registered = Boolean(
-    user && db.prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?").get(event.id, user.id)
-  );
+  const mine = user && db.prepare("SELECT quantity FROM registrations WHERE event_id = ? AND user_id = ?").get(event.id, user.id);
+  event.is_registered = Boolean(mine);
+  event.my_tickets = mine ? mine.quantity : 0;
   event.is_organizer = Boolean(user && user.id === event.organizer_id);
   event.is_past = event.starts_at <= nowLocal();
   // past events are read-only: the organizer still sees who came, but can't edit

@@ -21,7 +21,7 @@ function accountOf(id) {
       ? db
           .prepare(`
             SELECT e.id, e.title, e.starts_at, e.capacity, ve.name AS venue_name,
-                   (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) AS booked
+                   (SELECT COALESCE(SUM(r.quantity), 0) FROM registrations r WHERE r.event_id = e.id) AS booked
             FROM events e JOIN venues ve ON ve.id = e.venue_id
             WHERE e.organizer_id = ?
             ORDER BY e.starts_at
@@ -31,7 +31,7 @@ function accountOf(id) {
   // Events this user booked a seat at. Organizing an event never adds it here.
   const attended = db
     .prepare(`
-      SELECT e.id, e.title, e.starts_at, e.price, ve.name AS venue_name, r.created_at AS booked_at
+      SELECT e.id, e.title, e.starts_at, e.price, ve.name AS venue_name, r.created_at AS booked_at, r.quantity
       FROM registrations r
       JOIN events e ON e.id = r.event_id
       JOIN venues ve ON ve.id = e.venue_id

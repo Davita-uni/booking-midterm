@@ -227,7 +227,7 @@ transaction(() => {
   const crowdIds = crowd.map(
     (c) => Number(insertUser.run(c.name, c.email, crowdHash, "attendee", "active", null).lastInsertRowid)
   );
-  const bookedCount = db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ?");
+  const bookedCount = db.prepare("SELECT COALESCE(SUM(quantity), 0) AS n FROM registrations WHERE event_id = ?");
   eventIds.forEach((eventId, index) => {
     let need = BOOKED[index] - bookedCount.get(eventId).n;
     // start at a different place in the crowd for each event, so lists differ

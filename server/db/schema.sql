@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   event_id    INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
   user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  quantity    INTEGER NOT NULL DEFAULT 1 CHECK (quantity BETWEEN 1 AND 10),  -- tickets in this purchase
   created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
   UNIQUE (event_id, user_id)                  -- one seat per attendee per event
 );
