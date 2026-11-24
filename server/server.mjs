@@ -9,6 +9,7 @@ import eventRoutes from "./routes/events.mjs";
 import registrationRoutes from "./routes/registrations.mjs";
 import organizerRoutes from "./routes/organizers.mjs";
 import accountRoutes from "./routes/account.mjs";
+import requestRoutes from "./routes/requests.mjs";
 
 if (!process.env.JWT_SECRET) {
   console.error("JWT_SECRET is missing. Copy server/.env.example to server/.env.");
@@ -28,6 +29,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api", registrationRoutes);
 app.use("/api/admin/organizers", organizerRoutes);
 app.use("/api/account", accountRoutes);
+app.use("/api/requests", requestRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ message: "Route not found" });

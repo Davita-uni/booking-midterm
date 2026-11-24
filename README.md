@@ -54,6 +54,12 @@ their name (with an Admin, Organizer or Pending tag) and:
   password. The email is read-only: it is the login and can't be changed (the
   API refuses it and a database trigger blocks any `UPDATE` of `users.email`).
   Changing the password logs the user out everywhere.
+- **My requests** (approved organizers): requests sent to the admins (for
+  example "please add this venue"), each with its status (**New**, **Work in
+  progress**, **Completed**) and the admin's reply. **Add new request** opens an
+  email-like form with Subject and Request.
+- **Requests** (admins): requests from all organizers, filtered by status. The
+  admin writes a reply and changes the status; the organizer sees both.
 - **Log out**.
 
 ## Stack
@@ -164,6 +170,7 @@ server starts. `npm run seed` resets the data.
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, unique (`event_id`, `user_id`) |
+| `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed), `admin_reply` |
 
 One-to-many relations: an organizer has many events, a venue has many
 events, a category has many events, and an event has many registrations.
@@ -202,6 +209,9 @@ All responses are JSON. Validation errors return `400` with
 | GET    | `/api/account`                     | logged in | Own account with events organized and attended |
 | PUT    | `/api/account/profile`             | logged in | Update name, organization (email is read-only) |
 | PUT    | `/api/account/password`            | logged in | Change password (needs the current one) |
+| GET    | `/api/requests`                    | organizer (own), admin (all) | Requests to the admins |
+| POST   | `/api/requests`                    | organizer | Send a request (`subject`, `body`) |
+| PATCH  | `/api/requests/:id`                | admin | Reply and/or change status |
 | GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
 | PATCH  | `/api/admin/organizers/:id`        | admin | Approve, suspend or reactivate (`{ status }`) |
 | DELETE | `/api/admin/organizers/:id`        | admin | Reject a pending sign-up |
@@ -253,3 +263,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.9.1 | More past events in the seed; booked / organizer icons with tooltips |
 | 0.9.2 | Past event tag shortened to "Past event" |
 | 0.10.0 | Light theme (default) and dark theme, saved per browser |
+| 0.11.0 | Organizer requests to admins (reply + status) |

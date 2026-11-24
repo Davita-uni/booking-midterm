@@ -33,3 +33,6 @@ export function bookedOn(value) {
   const d = new Date(value.replace(" ", "T") + "Z");
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
+
+// Request statuses as the users see them
+export const REQUEST_STATUS = { new: "New", in_progress: "Work in progress", completed: "Completed" };

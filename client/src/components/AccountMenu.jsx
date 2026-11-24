@@ -4,7 +4,7 @@ import { Link, usePath } from "../router.jsx";
 
 // "My account" button in the header with a small dropdown:
 // name (+ Admin / Organizer / Pending tag), My events (approved organizers),
-// My profile, Log out.
+// My profile, My requests (approved organizers) or Requests (admins), Log out.
 export default function AccountMenu() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
@@ -64,6 +64,16 @@ export default function AccountMenu() {
           <Link to="/account/profile" className="account__item">
             My profile
           </Link>
+          {user.role === "organizer" && user.status === "active" && (
+            <Link to="/my/requests" className="account__item">
+              My requests
+            </Link>
+          )}
+          {user.role === "admin" && (
+            <Link to="/admin/requests" className="account__item">
+              Requests
+            </Link>
+          )}
           <button type="button" className="account__item account__item--danger" onClick={logout}>
             Log out
           </button>

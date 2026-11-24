@@ -138,6 +138,7 @@ const bookings = [
 
 transaction(() => {
   db.exec(`
+    DELETE FROM requests;
     DELETE FROM registrations;
     DELETE FROM events;
     DELETE FROM venues;
@@ -185,8 +186,47 @@ transaction(() => {
   }
 });
 
+// Requests from organizers to the admins
+const requests = [
+  {
+    from: "organizer@doorlist.test",
+    subject: "Please add Mtatsminda Park Open-Air Stage",
+    body: "Hi! I'd like to run a summer concert series at the open-air stage in Mtatsminda Park (about 400 seats). Could you add it as a venue?",
+    status: "completed",
+    reply: "Done. Mtatsminda Park Open-Air Stage will be listed once the park confirms the seat count; I'll add it this week.",
+    created: "2026-11-02 10:15:00",
+  },
+  {
+    from: "organizer@doorlist.test",
+    subject: "Wine Factory cellar seats",
+    body: "The cellar now has a second room. Could the capacity of Wine Factory N1 Cellar be raised from 40 to 60?",
+    status: "in_progress",
+    reply: "Checking with the venue manager, I'll update the capacity after their confirmation.",
+    created: "2026-11-18 16:40:00",
+  },
+  {
+    from: "giorgi.lomidze@doorlist.test",
+    subject: "New category: Film screenings",
+    body: "We want to start a monthly film club with screenings and short discussions. A 'Film' category would make it easier for people to find.",
+    status: "new",
+    reply: null,
+    created: "2026-11-23 09:05:00",
+  },
+];
+
+transaction(() => {
+  const userId = (email) => db.prepare("SELECT id FROM users WHERE email = ?").get(email).id;
+  const insert = db.prepare(`
+    INSERT INTO requests (organizer_id, subject, body, status, admin_reply, replied_at, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  for (const r of requests) {
+    insert.run(userId(r.from), r.subject, r.body, r.status, r.reply, r.reply ? r.created : null, r.created, r.created);
+  }
+});
+
 const count = (table) => db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get().n;
 console.log(`Seeded ${DB_FILE}`);
-for (const t of ["users", "categories", "venues", "events", "registrations"]) {
+for (const t of ["users", "categories", "venues", "events", "registrations", "requests"]) {
   console.log(`  ${t.padEnd(14)} ${count(t)}`);
 }

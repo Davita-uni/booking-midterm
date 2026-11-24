@@ -54,6 +54,22 @@ CREATE TABLE IF NOT EXISTS registrations (
   UNIQUE (event_id, user_id)                  -- one seat per attendee per event
 );
 
+-- Requests from organizers to the admins (e.g. "please add this venue").
+-- users 1 ── * requests
+CREATE TABLE IF NOT EXISTS requests (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  organizer_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  subject       TEXT    NOT NULL,
+  body          TEXT    NOT NULL,
+  status        TEXT    NOT NULL DEFAULT 'new'
+                        CHECK (status IN ('new', 'in_progress', 'completed')),
+  admin_reply   TEXT,
+  replied_at    TEXT,
+  created_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+  updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_requests_organizer ON requests(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_starts_at ON events(starts_at);
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_registrations_user ON registrations(user_id);
