@@ -9,7 +9,7 @@ import { Loading, ErrorState, Empty } from "../components/States.jsx";
 const FILTERS = [
   ["active", "Active"],
   ["suspended", "Suspended"],
-  ["all", "All"],
+  ["all", "All"], // active + suspended, without pending sign-ups
 ];
 
 const STATUS_LABEL = { pending: "Pending", active: "Active", suspended: "Suspended" };
@@ -65,7 +65,10 @@ export default function AdminOrganizers() {
 
   const all = organizers.data ?? [];
   const count = (status) => all.filter((o) => o.status === status).length;
-  const list = filter === "all" ? all : all.filter((o) => o.status === filter);
+  // "All" means every approved organizer (active + suspended); sign-ups waiting
+  // for approval only appear in their own tab
+  const reviewed = all.filter((o) => o.status !== "pending");
+  const list = filter === "all" ? reviewed : all.filter((o) => o.status === filter);
 
   return (
     <>
@@ -86,7 +89,7 @@ export default function AdminOrganizers() {
             onClick={() => setFilter(key)}
           >
             {label}
-            <span className="tab__count mono">{key === "all" ? all.length : count(key)}</span>
+            <span className="tab__count mono">{key === "all" ? reviewed.length : count(key)}</span>
           </button>
         ))}
         <button
