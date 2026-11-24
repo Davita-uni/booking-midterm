@@ -43,7 +43,7 @@
 
 .field input[type="datetime-local"],
 .field input[type="number"] {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
 }
 
 .field input::placeholder,
@@ -83,7 +83,7 @@
 
 .datetime input,
 .datetime select {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
 }
 
 /* Messages: a coloured bar on the left, an icon and no full border, so they
@@ -133,7 +133,7 @@
 
 .alert--info::before {
   content: "i";
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
 }
 
 /* role picker on the sign-up form */
@@ -211,7 +211,7 @@
   border-radius: var(--radius);
   padding: var(--space-4);
   max-width: 340px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 13px;
   color: var(--muted);
   display: grid;

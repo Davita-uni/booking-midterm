@@ -332,3 +332,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.16.0 | Prices only in the user's currency; ticket counter; "Buy Ticket" |
 | 0.16.1 | First and last name on sign-up; "Hi, name!" header |
 | 0.16.2 | Breadcrumbs go back where you came from; first/last name in Edit Profile; schema fix |
+| 0.16.3 | Monospace font only for labels, event dates and categories |
