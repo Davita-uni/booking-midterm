@@ -73,25 +73,54 @@
   font-size: 13px;
 }
 
+/* Messages: a coloured bar on the left, an icon and no full border, so they
+   can't be mistaken for an input field. */
 .alert {
-  border-radius: var(--radius);
+  --tone: var(--error);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-left: 4px solid var(--tone);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  color: var(--text);
   font-size: 14px;
-  border: 1px solid var(--error);
-  color: var(--error);
-  background: color-mix(in srgb, var(--error) 8%, transparent);
+  font-weight: 600;
+  cursor: default;
+  user-select: none;
 }
 
-.alert--info {
-  border-color: var(--line);
-  color: var(--muted);
-  background: var(--surface);
+.alert::before {
+  content: "!";
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+  font: 700 13px/1 var(--font-ui);
 }
 
 .alert--success {
-  border-color: var(--success);
-  color: var(--success);
-  background: color-mix(in srgb, var(--success) 8%, transparent);
+  --tone: var(--success);
+}
+
+.alert--success::before {
+  content: "✓";
+}
+
+.alert--info {
+  --tone: var(--muted);
+}
+
+.alert--info::before {
+  content: "i";
+  font-family: var(--font-mono);
 }
 
 /* role picker on the sign-up form */
