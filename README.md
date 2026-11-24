@@ -44,8 +44,9 @@ can be **Reactivated**.
 Logged-in users open **My account** in the top right corner. The menu shows
 their name (with an Admin, Organizer or Pending tag) and three entries:
 
-- **My profile**: edit name, email (and organization for organizers) and
-  change the password. Changing the password logs the user out everywhere;
+- **My profile**: edit name (and organization for organizers) and change the
+  password. The email is shown read-only: it is the login and can't be changed
+  (the API refuses it and a database trigger blocks any `UPDATE` of `users.email`). Changing the password logs the user out everywhere;
   they log in again with the new one.
 - **Account details**: account type, status, member since, and the number of
   bookings or events.
@@ -195,7 +196,7 @@ All responses are JSON. Validation errors return `400` with
 | GET    | `/api/events/:id/registrations`    | owner organizer, admin | Attendee list |
 | GET    | `/api/registrations/mine`          | attendee | Own bookings |
 | GET    | `/api/account`                     | logged in | Own account with stats |
-| PUT    | `/api/account/profile`             | logged in | Update name, email, organization |
+| PUT    | `/api/account/profile`             | logged in | Update name, organization (email is read-only) |
 | PUT    | `/api/account/password`            | logged in | Change password (needs the current one) |
 | GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
 | PATCH  | `/api/admin/organizers/:id`        | admin | Approve, suspend or reactivate (`{ status }`) |
@@ -231,3 +232,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.6.4 | "All" tab no longer includes sign-ups waiting for approval |
 | 0.6.5 | No role label in the header for attendees |
 | 0.7.0 | "My account" menu, profile editing, sortable attendee list |
+| 0.7.1 | Email is read-only; role label aligned with the name |

@@ -323,3 +323,15 @@
 .notice--error .notice__title {
   color: var(--error);
 }
+
+/* read-only field (e.g. email on My profile) */
+.field input.is-readonly {
+  background: var(--surface-2);
+  border-style: dashed;
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.field input.is-readonly:focus {
+  border-color: var(--line);
+}
