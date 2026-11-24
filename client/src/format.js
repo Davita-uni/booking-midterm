@@ -35,4 +35,17 @@ export function bookedOn(value) {
 }
 
 // Request statuses as the users see them
-export const REQUEST_STATUS = { new: "New", in_progress: "Work in progress", completed: "Completed" };
+export const REQUEST_STATUS = {
+  new: "New",
+  in_progress: "Work in progress",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
+
+// "24 Nov 2026, 09:05" in the viewer's time zone (stored in UTC)
+export function dateTime(value) {
+  const d = new Date(value.replace(" ", "T") + "Z");
+  const date = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+  return `${date}, ${time}`;
+}

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
-import { bookedOn, REQUEST_STATUS } from "../format.js";
+import { dateTime, REQUEST_STATUS } from "../format.js";
+import ReplyThread from "../components/ReplyThread.jsx";
 import RequestStatus from "../components/RequestStatus.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
-const FILTERS = ["new", "in_progress", "completed", "all"];
+const FILTERS = ["new", "in_progress", "completed", "cancelled", "all"];
 
 // Admin: requests from all organizers. Reply and change the status.
 export default function AdminRequests() {
@@ -79,27 +80,28 @@ export default function AdminRequests() {
 }
 
 function AdminRequest({ request: r, onSaved }) {
-  const [reply, setReply] = useState(r.admin_reply ?? "");
+  // every save can add a new reply, so the box starts empty each time
+  const [reply, setReply] = useState("");
   const [status, setStatus] = useState(r.status);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setReply(r.admin_reply ?? "");
+    setReply("");
     setStatus(r.status);
   }, [r]);
 
-  const changed = reply.trim() !== (r.admin_reply ?? "") || status !== r.status;
+  const changed = reply.trim() !== "" || status !== r.status;
 
   const save = async (e) => {
     e.preventDefault();
     setBusy(true);
     setError("");
     try {
-      const saved = await api(`/requests/${r.id}`, { method: "PATCH", body: { status, admin_reply: reply } });
+      const saved = await api(`/requests/${r.id}`, { method: "PATCH", body: { status, reply } });
       onSaved(saved);
     } catch (err) {
-      setError(err.errors?.admin_reply || err.errors?.status || err.message);
+      setError(err.errors?.reply || err.errors?.status || err.message);
     } finally {
       setBusy(false);
     }
@@ -114,13 +116,15 @@ function AdminRequest({ request: r, onSaved }) {
       <p className="request__meta">
         <strong>{r.organizer_name}</strong>
         {r.organization && <> · {r.organization}</>} · <span className="break">{r.organizer_email}</span>
-        <span className="mono muted"> · {bookedOn(r.created_at)}</span>
       </p>
+      <p className="request__sent mono">Sent {dateTime(r.created_at)}</p>
       <p className="request__body">{r.body}</p>
+
+      <ReplyThread replies={r.replies} />
 
       <form className="request__answer" onSubmit={save}>
         <div className="field">
-          <label htmlFor={`reply-${r.id}`}>Reply</label>
+          <label htmlFor={`reply-${r.id}`}>{r.replies.length ? "Add another reply" : "Reply"}</label>
           <textarea
             id={`reply-${r.id}`}
             rows={3}
@@ -132,11 +136,7 @@ function AdminRequest({ request: r, onSaved }) {
         <div className="request__controls">
           <div className="field">
             <label htmlFor={`status-${r.id}`}>Status</label>
-            <select
-              id={`status-${r.id}`}
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
+            <select id={`status-${r.id}`} value={status} onChange={(e) => setStatus(e.target.value)}>
               {Object.entries(REQUEST_STATUS).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}

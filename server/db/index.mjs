@@ -26,6 +26,37 @@ if (!userColumns.includes("organization")) {
   db.exec("ALTER TABLE users ADD COLUMN organization TEXT");
 }
 
+// Databases from v0.11/v0.12 have one admin_reply per request and no
+// "cancelled" status. Rebuild the table and move each reply into request_replies.
+const requestsSql = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'requests'").get()?.sql ?? "";
+if (requestsSql && !requestsSql.includes("cancelled")) {
+  db.exec("PRAGMA foreign_keys = OFF;");
+  db.exec(`
+    BEGIN;
+    CREATE TABLE requests_v2 (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      organizer_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      subject       TEXT    NOT NULL,
+      body          TEXT    NOT NULL,
+      status        TEXT    NOT NULL DEFAULT 'new'
+                            CHECK (status IN ('new', 'in_progress', 'completed', 'cancelled')),
+      created_at    TEXT    NOT NULL DEFAULT (datetime('now')),
+      updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
+    );
+    INSERT INTO requests_v2 (id, organizer_id, subject, body, status, created_at, updated_at)
+      SELECT id, organizer_id, subject, body, status, created_at, updated_at FROM requests;
+    INSERT INTO request_replies (request_id, admin_id, body, status, created_at)
+      SELECT id, (SELECT id FROM users WHERE role = 'admin' ORDER BY id LIMIT 1), admin_reply, status,
+             COALESCE(replied_at, updated_at)
+      FROM requests WHERE admin_reply IS NOT NULL;
+    DROP TABLE requests;
+    ALTER TABLE requests_v2 RENAME TO requests;
+    CREATE INDEX IF NOT EXISTS idx_requests_organizer ON requests(organizer_id);
+    COMMIT;
+  `);
+  db.exec("PRAGMA foreign_keys = ON;");
+}
+
 // Runs fn inside one transaction: everything is saved, or nothing is.
 export function transaction(fn) {
   db.exec("BEGIN IMMEDIATE");

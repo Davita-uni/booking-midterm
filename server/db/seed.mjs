@@ -139,6 +139,7 @@ const bookings = [
 transaction(() => {
   db.exec(`
     DELETE FROM notifications;
+    DELETE FROM request_replies;
     DELETE FROM requests;
     DELETE FROM registrations;
     DELETE FROM events;
@@ -187,42 +188,58 @@ transaction(() => {
   }
 });
 
-// Requests from organizers to the admins
+// Requests from organizers to the admins, with the admin's replies over time
 const requests = [
   {
     from: "organizer@doorlist.test",
     subject: "Please add Mtatsminda Park Open-Air Stage",
     body: "Hi! I'd like to run a summer concert series at the open-air stage in Mtatsminda Park (about 400 seats). Could you add it as a venue?",
     status: "completed",
-    reply: "Done. Mtatsminda Park Open-Air Stage will be listed once the park confirms the seat count; I'll add it this week.",
     created: "2026-11-02 10:15:00",
+    replies: [
+      ["I'm asking the park for the exact seat count first.", "in_progress", "2026-11-03 09:40:00"],
+      ["Done. Mtatsminda Park Open-Air Stage will be listed as soon as the park confirms the seats.", "completed", "2026-11-06 14:20:00"],
+    ],
   },
   {
     from: "organizer@doorlist.test",
     subject: "Wine Factory cellar seats",
     body: "The cellar now has a second room. Could the capacity of Wine Factory N1 Cellar be raised from 40 to 60?",
     status: "in_progress",
-    reply: "Checking with the venue manager, I'll update the capacity after their confirmation.",
     created: "2026-11-18 16:40:00",
+    replies: [["Checking with the venue manager, I'll update the capacity after their confirmation.", "in_progress", "2026-11-19 09:30:00"]],
   },
   {
     from: "giorgi.lomidze@doorlist.test",
     subject: "New category: Film screenings",
     body: "We want to start a monthly film club with screenings and short discussions. A 'Film' category would make it easier for people to find.",
     status: "new",
-    reply: null,
     created: "2026-11-23 09:05:00",
+    replies: [],
+  },
+  {
+    from: "giorgi.lomidze@doorlist.test",
+    subject: "Move the Postgres clinic to Fabrika",
+    body: "Could the Postgres Performance Clinic be moved to Fabrika Courtyard? We expect more people.",
+    status: "cancelled",
+    created: "2026-11-10 13:00:00",
+    replies: [["Cancelled as you asked in your follow-up email: the clinic stays at Impact Hub.", "cancelled", "2026-11-11 10:05:00"]],
   },
 ];
 
 transaction(() => {
   const userId = (email) => db.prepare("SELECT id FROM users WHERE email = ?").get(email).id;
-  const insert = db.prepare(`
-    INSERT INTO requests (organizer_id, subject, body, status, admin_reply, replied_at, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+  const adminId = userId("admin@doorlist.test");
+  const insert = db.prepare(
+    "INSERT INTO requests (organizer_id, subject, body, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
+  );
+  const insertReply = db.prepare(
+    "INSERT INTO request_replies (request_id, admin_id, body, status, created_at) VALUES (?, ?, ?, ?, ?)"
+  );
   for (const r of requests) {
-    insert.run(userId(r.from), r.subject, r.body, r.status, r.reply, r.reply ? r.created : null, r.created, r.created);
+    const updated = r.replies.at(-1)?.[2] ?? r.created;
+    const id = Number(insert.run(userId(r.from), r.subject, r.body, r.status, r.created, updated).lastInsertRowid);
+    for (const [body, status, at] of r.replies) insertReply.run(id, adminId, body, status, at);
   }
 });
 
@@ -243,6 +260,6 @@ transaction(() => {
 
 const count = (table) => db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get().n;
 console.log(`Seeded ${DB_FILE}`);
-for (const t of ["users", "categories", "venues", "events", "registrations", "requests", "notifications"]) {
+for (const t of ["users", "categories", "venues", "events", "registrations", "requests", "request_replies", "notifications"]) {
   console.log(`  ${t.padEnd(14)} ${count(t)}`);
 }

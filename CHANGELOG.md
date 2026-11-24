@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.0 — Request replies and account menu
+
+- Requests keep a history of admin replies (new `request_replies` table). Every save can add a new reply, e.g. one when moving to Work in progress and another when moving to Completed. Each reply shows the admin, date and time, and the status it set.
+- New status **Cancelled** (tab on the admin page; struck-through label).
+- Requests show the date and time they were sent (24-hour).
+- Databases from 0.11–0.12 are upgraded automatically on start: the requests table is rebuilt with the new status and the old single reply moves into `request_replies`.
+- My account menu: order is My profile, My events, My requests; the menu is as wide as its content, with the same padding left and right.
+
 ## 0.12.5 — Notification tweaks
 
 - The bell checks for new notifications every 10 seconds (was 30).

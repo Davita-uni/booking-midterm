@@ -44,7 +44,6 @@ can be **Reactivated**.
 Logged-in users open **My account** in the top right corner. The menu shows
 their name (with an Admin, Organizer or Pending tag) and:
 
-- **My events** (approved organizers only): the organizer dashboard.
 - **My profile**: email, account type, status, organization, member since, and
   two lists. Organizers see **Events organized** and **Events attended**.
   Attendees see **Events attended**. Booking a seat adds the event to Events
@@ -54,12 +53,16 @@ their name (with an Admin, Organizer or Pending tag) and:
   password. The email is read-only: it is the login and can't be changed (the
   API refuses it and a database trigger blocks any `UPDATE` of `users.email`).
   Changing the password logs the user out everywhere.
+- **My events** (approved organizers only): the organizer dashboard.
 - **My requests** (approved organizers): requests sent to the admins (for
-  example "please add this venue"), each with its status (**New**, **Work in
-  progress**, **Completed**) and the admin's reply. **Add new request** opens an
+  example "please add this venue"), each with the time it was sent, its status
+  (**New**, **Work in progress**, **Completed**, **Cancelled**) and every
+  admin reply with its time. **Add new request** opens an
   email-like form with Subject and Request.
-- **Requests** (admins): requests from all organizers, filtered by status. The
-  admin writes a reply and changes the status; the organizer sees both.
+- **Requests** (admins): requests from all organizers with the time they were
+  sent, filtered by status. Each save can add a new reply and change the
+  status, so the request keeps a history of replies; the organizer sees all of
+  them.
 - **Log out**.
 
 ## Notifications
@@ -185,7 +188,8 @@ server starts. `npm run seed` resets the data.
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, unique (`event_id`, `user_id`) |
 | `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
-| `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed), `admin_reply` |
+| `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed / cancelled) |
+| `request_replies` | `id` PK, `request_id` FK → requests, `admin_id` FK → users, `body`, `status` |
 
 One-to-many relations: an organizer has many events, a venue has many
 events, a category has many events, and an event has many registrations.
@@ -226,7 +230,7 @@ All responses are JSON. Validation errors return `400` with
 | PUT    | `/api/account/password`            | logged in | Change password (needs the current one) |
 | GET    | `/api/requests`                    | organizer (own), admin (all) | Requests to the admins |
 | POST   | `/api/requests`                    | organizer | Send a request (`subject`, `body`) |
-| PATCH  | `/api/requests/:id`                | admin | Reply and/or change status |
+| PATCH  | `/api/requests/:id`                | admin | Add a reply and/or change status (`{ reply, status }`) |
 | GET    | `/api/notifications`               | logged in | Own notifications + unread count |
 | POST   | `/api/notifications/:id/read`      | logged in | Mark one as read |
 | POST   | `/api/notifications/read-all`      | logged in | Mark all as read |
@@ -288,3 +292,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.12.3 | Messages restyled so they don't look like input fields |
 | 0.12.4 | 24-hour time list on the event form |
 | 0.12.5 | Notification tweaks, cancelled-event page, organization on events |
+| 0.13.0 | Request reply history, Cancelled status, timestamps; account menu order |

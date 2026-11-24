@@ -636,6 +636,39 @@
   color: var(--success);
 }
 
+.req-status--cancelled {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.request__sent {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.replies {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.reply {
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--success);
+  background: color-mix(in srgb, var(--success) 7%, transparent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.reply__head {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--success);
+}
+
 /* email-like form */
 .mail {
   max-width: 760px;

@@ -1,25 +1,42 @@
 import express from "express";
-import { db } from "../db/index.mjs";
+import { db, transaction } from "../db/index.mjs";
 import { requireAuth, requireRole } from "../middlewares/auth.mjs";
 import { badRequest, notFound, parseId } from "../utils/http.mjs";
 import * as v from "../utils/validate.mjs";
 import { notify, notifyAdmins } from "../utils/notify.mjs";
 
 // Requests from organizers to the admins, e.g. "please add a venue".
-// Organizers send them and read the reply; admins reply and set the status.
+// Organizers send them and read the replies; admins add replies and set the status.
 const router = express.Router();
 router.use(requireAuth);
 
-export const STATUSES = ["new", "in_progress", "completed"];
+export const STATUSES = ["new", "in_progress", "completed", "cancelled"];
+const STATUS_LABEL = { new: "New", in_progress: "Work in progress", completed: "Completed", cancelled: "Cancelled" };
 
 const SELECT = `
-  SELECT r.id, r.subject, r.body, r.status, r.admin_reply, r.replied_at, r.created_at, r.updated_at,
+  SELECT r.id, r.subject, r.body, r.status, r.created_at, r.updated_at,
          r.organizer_id, u.name AS organizer_name, u.email AS organizer_email, u.organization
   FROM requests r
   JOIN users u ON u.id = r.organizer_id
 `;
 
-const findRequest = (id) => db.prepare(`${SELECT} WHERE r.id = ?`).get(id);
+// Adds each request's replies (oldest first).
+function withReplies(requests) {
+  if (requests.length === 0) return requests;
+  const ids = requests.map((r) => r.id);
+  const replies = db
+    .prepare(`
+      SELECT rr.id, rr.request_id, rr.body, rr.status, rr.created_at, a.name AS admin_name
+      FROM request_replies rr
+      LEFT JOIN users a ON a.id = rr.admin_id
+      WHERE rr.request_id IN (${ids.map(() => "?").join(", ")})
+      ORDER BY rr.created_at, rr.id
+    `)
+    .all(...ids);
+  return requests.map((r) => ({ ...r, replies: replies.filter((x) => x.request_id === r.id) }));
+}
+
+const findRequest = (id) => withReplies([db.prepare(`${SELECT} WHERE r.id = ?`).get(id)].filter(Boolean))[0];
 
 // Organizers see their own requests, admins see all of them. Newest first.
 router.get("/", requireRole("organizer", "admin"), (req, res) => {
@@ -27,7 +44,7 @@ router.get("/", requireRole("organizer", "admin"), (req, res) => {
     req.user.role === "admin"
       ? db.prepare(`${SELECT} ORDER BY r.created_at DESC, r.id DESC`).all()
       : db.prepare(`${SELECT} WHERE r.organizer_id = ? ORDER BY r.created_at DESC, r.id DESC`).all(req.user.id);
-  res.json(rows);
+  res.json(withReplies(rows));
 });
 
 router.post("/", requireRole("organizer"), (req, res) => {
@@ -43,7 +60,7 @@ router.post("/", requireRole("organizer"), (req, res) => {
   res.status(201).json(findRequest(lastInsertRowid));
 });
 
-// Admin replies and/or changes the status.
+// Admin adds a reply and/or changes the status. Every save can add a new reply.
 router.patch("/:id", requireRole("admin"), (req, res) => {
   const id = parseId(req.params.id);
   const existing = findRequest(id);
@@ -53,30 +70,27 @@ router.patch("/:id", requireRole("admin"), (req, res) => {
   const errors = {};
   const status = body.status ?? existing.status;
   if (!STATUSES.includes(status)) errors.status = "Choose a valid status";
-  let reply = existing.admin_reply;
-  if (body.admin_reply !== undefined) {
-    reply = v.text(errors, body, "admin_reply", "Reply", { max: 4000, required: false }) || null;
+  const reply = v.text(errors, body, "reply", "Reply", { max: 4000, required: false });
+  if (!errors.status && !reply && status === existing.status) {
+    errors.reply = "Write a reply or change the status";
   }
   if (v.hasErrors(errors)) throw badRequest(errors);
 
-  const replyChanged = (reply ?? null) !== (existing.admin_reply ?? null);
-  db.prepare(`
-    UPDATE requests
-    SET status = ?, admin_reply = ?,
-        replied_at = CASE WHEN ? THEN datetime('now') ELSE replied_at END,
-        updated_at = datetime('now')
-    WHERE id = ?
-  `).run(status, reply, replyChanged && reply ? 1 : 0, id);
+  transaction(() => {
+    db.prepare("UPDATE requests SET status = ?, updated_at = datetime('now') WHERE id = ?").run(status, id);
+    if (reply) {
+      db.prepare("INSERT INTO request_replies (request_id, admin_id, body, status) VALUES (?, ?, ?, ?)").run(
+        id, req.user.id, reply, status
+      );
+    }
+  });
 
-  const updated = findRequest(id);
-  const STATUS_LABEL = { new: "New", in_progress: "Work in progress", completed: "Completed" };
   const parts = [];
-  if (replyChanged && reply) parts.push("the admin replied");
+  if (reply) parts.push("the admin replied");
   if (status !== existing.status) parts.push(`status is now ${STATUS_LABEL[status]}`);
-  if (parts.length) {
-    notify([existing.organizer_id], `Your request “${existing.subject}”: ${parts.join(" and ")}.`, "/my/requests");
-  }
-  res.json(updated);
+  notify([existing.organizer_id], `Your request “${existing.subject}”: ${parts.join(" and ")}.`, "/my/requests");
+
+  res.json(findRequest(id));
 });
 
 export default router;
