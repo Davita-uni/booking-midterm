@@ -174,3 +174,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.3.0 | Events CRUD with organizer ownership |
 | 0.4.0 | Bookings, capacity limit, attendee list |
 | 0.5.0 | Forbidden-action demo, README, polish |
+| 0.5.1 | Dropdown arrow spacing |
