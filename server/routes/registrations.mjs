@@ -1,6 +1,6 @@
 import express from "express";
 import { db, transaction } from "../db/index.mjs";
-import { requireAuth, requireRole } from "../middlewares/auth.mjs";
+import { requireAuth, requireRole, requireSession } from "../middlewares/auth.mjs";
 import { conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal } from "../utils/time.mjs";
 import { notify } from "../utils/notify.mjs";
@@ -19,9 +19,11 @@ const findEvent = (id) =>
 // Attendees and organizers book seats (organizers only at other organizers'
 // events). The check and the insert run in one transaction, so two people
 // can't take the last seat at the same time.
+// Organizers still waiting for approval may book too: booking only needs
+// attendee rights, and attendee accounts never need approval.
 const BOOKERS = ["attendee", "organizer"];
 
-router.post("/events/:id/registrations", requireAuth, requireRole(...BOOKERS), (req, res) => {
+router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
 
   const registration = transaction(() => {
@@ -50,7 +52,7 @@ router.post("/events/:id/registrations", requireAuth, requireRole(...BOOKERS), (
 });
 
 // Cancel your own booking.
-router.delete("/events/:id/registrations/me", requireAuth, requireRole(...BOOKERS), (req, res) => {
+router.delete("/events/:id/registrations/me", requireSession, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
   const event = findEvent(eventId);
   if (event && event.starts_at <= nowLocal()) throw conflict("This event has already taken place");
@@ -82,7 +84,7 @@ router.get("/events/:id/registrations", requireAuth, requireRole("organizer", "a
 });
 
 // The logged-in user's own bookings.
-router.get("/registrations/mine", requireAuth, requireRole(...BOOKERS), (req, res) => {
+router.get("/registrations/mine", requireSession, requireRole(...BOOKERS), (req, res) => {
   const rows = db
     .prepare(`
       SELECT r.id, r.created_at AS booked_at,

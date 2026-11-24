@@ -73,6 +73,9 @@ export default function AccountStatus() {
                 it. Please wait — this page checks your status automatically, so you don't need to log in again.
               </p>
               <p>
+                Meanwhile you can browse and book events like an attendee. Your bookings show up under My profile.
+              </p>
+              <p>
                 If it takes too long, call our help center: <strong className="mono">{HELP_PHONE}</strong>
               </p>
             </div>
@@ -86,7 +89,7 @@ export default function AccountStatus() {
                 {checking ? "Checking…" : "Check status now"}
               </button>
               <Link to="/" className="btn">
-                Browse events meanwhile
+                Browse and book events
               </Link>
             </div>
             <p className="status-card__checked mono">
