@@ -107,7 +107,7 @@ function DetailsForm({ account, onSaved }) {
           readOnly
           aria-readonly="true"
           className="is-readonly"
-          hint="You log in with this email, so it can't be changed."
+          hint="You log in with this email, so it can't be changed"
           value={form.email}
           error={errors.email}
         />
@@ -115,7 +115,7 @@ function DetailsForm({ account, onSaved }) {
           as="select"
           label="Currency"
           name="currency"
-          hint="Ticket prices are set in GEL. With USD or EUR you also see them converted (rounded up)."
+          hint="Ticket prices are set in GEL. By changing this setting you will get converted value shown on events page. Payment will also be completed in selected currency"
           value={form.currency ?? "GEL"}
           onChange={update}
           error={errors.currency}
@@ -212,7 +212,7 @@ function PasswordForm() {
           name="new_password"
           type="password"
           autoComplete="new-password"
-          hint="At least 8 characters, with a letter and a number."
+          hint="At least 8 characters, with a letter and a number"
           value={form.new_password}
           onChange={update}
           error={errors.new_password}
@@ -226,7 +226,7 @@ function PasswordForm() {
           onChange={update}
           error={errors.confirm}
         />
-        <p className="field__hint">After changing it you'll be logged out and log in again with the new password.</p>
+        <p className="field__hint">After changing it you'll be logged out and log in again with the new password</p>
         <div className="form__actions">
           <button className="btn btn--primary" disabled={busy}>
             {busy ? "Changing…" : "Change password"}

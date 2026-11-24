@@ -112,7 +112,7 @@ export default function Register() {
         type="password"
         autoComplete="new-password"
         placeholder="At least 8 characters"
-        hint="At least 8 characters, with a letter and a number."
+        hint="At least 8 characters, with a letter and a number"
         value={form.password}
         onChange={update}
         error={errors.password}
@@ -171,7 +171,7 @@ export default function Register() {
                   name="organization"
                   autoComplete="organization"
                   placeholder="Courtyard Sessions"
-                  hint="Shown on your events and helps the admin recognise you."
+                  hint="Shown on your events and helps the admin recognise you"
                   value={form.organization}
                   onChange={update}
                   error={errors.organization}
