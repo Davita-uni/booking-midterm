@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.1 — Simpler sign-up
+
+- Sign up is now one simple form that creates an attendee account (no account-type step). Most users are attendees.
+- Organizers use a quieter link under the form, "Apply for an organizer account" (`/register?as=organizer`), with three steps: Organization → Your details → Done.
+- The step headers are buttons, so users can jump back to an earlier step; a missing organization sends them back to step 1 with the error.
+
 ## 0.13.0 — Request replies and account menu
 
 - Requests keep a history of admin replies (new `request_replies` table). Every save can add a new reply, e.g. one when moving to Work in progress and another when moving to Completed. Each reply shows the admin, date and time, and the status it set.

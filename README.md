@@ -20,16 +20,17 @@ only hides buttons; it is not what protects the data.
 
 ## Signing up
 
-Sign-up has three steps: **1. Account type → 2. Your details → 3. Done**.
+Most people book events, so **Sign up** is one simple form (name, email,
+password) that creates an **attendee** account, ready to use right away.
 
-- **Attendee** ("Book events"): name, email, password. The account works right away.
-- **Organizer** ("Run events"): name, organization or project, email, password.
-  The account is created as **pending**. The organizer is logged in and lands
-  on an **Account status** page that says an admin has to approve the account,
-  asks them to wait, and gives the help center number (+995 555 XX XX XX) to
-  call in case of delay. The page checks the status every 30 seconds (or with
-  "Check status now"), so there's no need to log in again. Logging in later
-  while still pending opens the same page.
+Organizers use the smaller **"Apply for an organizer account"** link under the
+form (or `/register?as=organizer`). It has three steps: **1. Organization →
+2. Your details → 3. Done**. The step headers are clickable to go back. The
+account is created as **pending**: the organizer is logged in and lands on an
+**Account status** page that says an admin has to approve the account, asks
+them to wait, and gives the help center number (+995 555 XX XX XX). The page
+checks the status every 30 seconds (or with "Check status now"). While
+waiting they can book events like an attendee.
 
 The admin opens **Organizers** in the menu. The tabs are Active, Suspended and
 All (active + suspended) on the left, and **Waiting for approval** on its own on the right, with the
@@ -293,3 +294,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.12.4 | 24-hour time list on the event form |
 | 0.12.5 | Notification tweaks, cancelled-event page, organization on events |
 | 0.13.0 | Request reply history, Cancelled status, timestamps; account menu order |
+| 0.13.1 | Simple attendee sign-up; organizer sign-up behind a link, clickable steps |
