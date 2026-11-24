@@ -19,7 +19,7 @@ const ACTIONS = {
   reject: {
     title: "Reject this sign-up?",
     label: "Reject sign-up",
-    text: (o) => `${o.name}'s pending organizer account will be deleted. They can sign up again later.`,
+    text: (o) => `${o.name} won't become an organizer. The account stays as a regular attendee account, and they get a notification that the application was denied.`,
   },
   suspend: {
     title: "Suspend this organizer?",
@@ -54,8 +54,8 @@ export default function AdminOrganizers() {
   const runConfirmed = async () => {
     const { action, organizer } = confirm;
     if (action === "reject") {
-      await api(`/admin/organizers/${organizer.id}`, { method: "DELETE" });
-      setMessage({ type: "success", text: `${organizer.name}'s sign-up rejected.` });
+      await api(`/admin/organizers/${organizer.id}/reject`, { method: "POST" });
+      setMessage({ type: "success", text: `${organizer.name}'s sign-up rejected. They now have an attendee account.` });
     } else {
       await api(`/admin/organizers/${organizer.id}`, { method: "PATCH", body: { status: "suspended" } });
       setMessage({ type: "success", text: `${organizer.name} suspended.` });

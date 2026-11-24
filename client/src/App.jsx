@@ -96,7 +96,7 @@ const routes = [
   ["/events/:id/edit", EventForm, ["organizer", "admin"]],
   ["/my/events", MyEvents, ["organizer"]],
   ["/my/tickets", MyTickets, ["attendee"]],
-  ["/account/status", AccountStatus, ["organizer"]],
+  ["/account/status", AccountStatus, "user"],
   ["/account", () => <Redirect to="/account/profile" />, "user"],
   ["/account/profile", Profile, "user"],
   ["/account/profile/edit", ProfileEdit, "user"],

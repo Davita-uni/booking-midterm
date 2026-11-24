@@ -76,7 +76,7 @@ seconds). Clicking one opens the related page and marks it read.
 | Attendee (anyone with a seat) | an event they booked is edited (date/time, venue, title, description or category): “…, which you booked, was updated. Click to view new details.” Or the event is cancelled: the link opens a greyed-out page saying it was cancelled |
 | Organizer | the admin replies to or changes the status of their request; one of their events becomes fully booked |
 | Admin | an organizer sends a new request; a new organizer signs up and waits for approval |
-| Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!" |
+| Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!"; or rejects them: "Your organizer application was denied. Please contact the administrator." (the account becomes an attendee account) |
 
 ## Stack
 
@@ -237,7 +237,7 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/notifications/read-all`      | logged in | Mark all as read |
 | GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
 | PATCH  | `/api/admin/organizers/:id`        | admin | Approve, suspend or reactivate (`{ status }`) |
-| DELETE | `/api/admin/organizers/:id`        | admin | Reject a pending sign-up |
+| POST   | `/api/admin/organizers/:id/reject` | admin | Reject a pending sign-up (becomes an attendee) |
 
 ## Validation and UX
 
@@ -295,3 +295,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.12.5 | Notification tweaks, cancelled-event page, organization on events |
 | 0.13.0 | Request reply history, Cancelled status, timestamps; account menu order |
 | 0.13.1 | Simple attendee sign-up; organizer sign-up behind a link, clickable steps |
+| 0.13.2 | Rejected organizer sign-ups become attendee accounts and are notified |
