@@ -3,6 +3,7 @@ import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
+import DateTimeField from "../components/DateTimeField.jsx";
 import { Loading, ErrorState } from "../components/States.jsx";
 
 const EMPTY = { title: "", description: "", starts_at: "", capacity: "", venue_id: "", category_id: "" };
@@ -115,12 +116,9 @@ export default function EventForm({ id }) {
               </option>
             ))}
           </Field>
-          <Field
+          <DateTimeField
             label="Date and time"
             name="starts_at"
-            type="datetime-local"
-            step={900}
-            hint="Times go in 15-minute steps."
             value={form.starts_at}
             onChange={update}
             error={errors.starts_at}

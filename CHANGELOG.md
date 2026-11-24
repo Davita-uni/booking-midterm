@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.4 — 24-hour time
+
+- The event form's date and time is now a date picker plus a 24-hour time list (00:00 … 23:45 in 15-minute steps). The browser's combined date-and-time input showed AM/PM on English systems.
+- "Choose a time" error when a date is picked without a time (checked on the server).
+- Fields in a two-column form row line up at the top.
+
 ## 0.12.3 — Message style
 
 - Error, success and info messages no longer look like input fields: no full border, a thick coloured bar on the left, a round icon (!, ✓, i), bold text and a stronger tint.
