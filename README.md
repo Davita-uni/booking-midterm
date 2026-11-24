@@ -34,7 +34,9 @@ waiting they can book events like an attendee.
 
 The admin opens **Organizers** in the menu. The tabs are Active, Suspended and
 All (active + suspended) on the left, and **Waiting for approval** on its own on the right, with the
-number of waiting sign-ups in red. New sign-ups are listed there, where the admin can **Approve** or **Reject** them.
+number of waiting sign-ups in red. New sign-ups are listed there, where the admin can **Approve** or **Reject** them. Rejecting doesn't delete the account: it
+becomes a regular attendee account, and the person gets a notification that
+the application was denied and they should contact the administrator.
 Once approved, the status page switches to "You're approved" and the organizer
 can create events. Active organizers can be **Suspended**, which logs them out
 at once and blocks login (the login page explains why). Suspended organizers
