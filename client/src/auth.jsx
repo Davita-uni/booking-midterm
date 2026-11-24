@@ -56,8 +56,20 @@ export function AuthProvider({ children }) {
     navigate("/login");
   };
 
+  // After a profile edit: keep the header and menus in sync.
+  const updateUser = (account) =>
+    setUser((u) => ({ ...u, name: account.name, email: account.email, organization: account.organization }));
+
+  // The server ends every session when the password changes, so log in again.
+  const passwordChanged = () => {
+    endSession();
+    navigate("/login?password=1", { replace: true });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, checking, login, register, logout, refresh }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, checking, login, register, logout, refresh, updateUser, passwordChanged }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 
@@ -65,5 +77,7 @@ export const useAuth = () => useContext(AuthContext);
 
 // Where to go after logging in or signing up
 export const homeFor = (user) => (user.status === "pending" ? "/account/status" : "/");
+
+export const STATUS_LABEL = { pending: "Pending approval", active: "Active", suspended: "Suspended" };
 
 export const ROLE_LABEL = { admin: "Admin", organizer: "Organizer", attendee: "Attendee" };

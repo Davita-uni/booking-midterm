@@ -27,7 +27,9 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [suspended, setSuspended] = useState(false);
-  const expired = new URLSearchParams(window.location.search).has("expired");
+  const query = new URLSearchParams(window.location.search);
+  const expired = query.has("expired");
+  const passwordChanged = query.has("password");
 
   const update = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,6 +62,9 @@ export default function Login() {
       <section className="panel">
         <h2>Log in</h2>
         <form className="form" onSubmit={submit} noValidate>
+          {passwordChanged && !message && (
+            <p className="alert alert--success">Password changed. Please log in with your new password.</p>
+          )}
           {expired && !message && <p className="alert alert--info">Your session ended. Please log in again.</p>}
           {message && (
             <p className="alert" role="alert">

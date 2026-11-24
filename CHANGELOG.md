@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 — My account
+
+- Header: one "My account" dropdown instead of separate name, label and Log out. It shows the name with an Admin / Organizer / Pending tag, then My profile, Account details and Log out (closes on outside click or Escape).
+- My profile page: edit name, email and organization (organizers); change password with the current password and a repeat field. A password change ends all sessions and asks to log in again.
+- Account details page: account type, status, member since, bookings or events count.
+- API: `GET /api/account`, `PUT /api/account/profile`, `PUT /api/account/password`, all validated on the server.
+- Attendee list on the event page is sortable by name, email and booking date (click a header to switch direction). The # column keeps counting 1, 2, 3… from the top. On phones the sort buttons sit above the cards.
+
 ## 0.6.5 — Header role label
 
 - The role label next to the user's name is shown only for Admin and Organizer accounts (and "Pending" for organizers awaiting approval). Attendees, the default account type, have no label.

@@ -12,9 +12,12 @@ import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
 import AdminOrganizers from "./pages/AdminOrganizers.jsx";
 import AccountStatus from "./pages/AccountStatus.jsx";
+import AccountDetails from "./pages/AccountDetails.jsx";
+import Profile from "./pages/Profile.jsx";
+import AccountMenu from "./components/AccountMenu.jsx";
 
 function Header() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   return (
     <header className="site-header">
       <div className="site-header__inner">
@@ -41,20 +44,7 @@ function Header() {
         </nav>
         <div className="session">
           {user ? (
-            <>
-              <span className="session__name">
-                {user.name}{" "}
-                {/* attendees are the default account, so they get no role label */}
-                {user.status === "pending" ? (
-                  <span className="chip chip--pending">Pending</span>
-                ) : user.role !== "attendee" ? (
-                  <span className={`chip chip--${user.role}`}>{ROLE_LABEL[user.role]}</span>
-                ) : null}
-              </span>
-              <button className="btn btn--danger btn--small" onClick={logout}>
-                Log out
-              </button>
-            </>
+            <AccountMenu />
           ) : (
             <>
               <Link to="/login" className="btn btn--ghost btn--small">
@@ -99,6 +89,8 @@ const routes = [
   ["/my/events", MyEvents, ["organizer"]],
   ["/my/tickets", MyTickets, ["attendee"]],
   ["/account/status", AccountStatus, ["organizer"]],
+  ["/account", AccountDetails, "user"],
+  ["/account/profile", Profile, "user"],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/organizers", AdminOrganizers, ["admin"]],
@@ -118,8 +110,8 @@ function Routes() {
 
     if (access === "guest" && user) return <Redirect to={homeFor(user)} />;
     if (access && access !== "guest" && !user) return <Redirect to="/login" />;
-    // organizers waiting for approval can browse public pages and see their status, nothing else
-    if (access && access !== "guest" && user.status === "pending" && pattern !== "/account/status") {
+    // organizers waiting for approval can browse public pages and their own account pages, nothing else
+    if (access && access !== "guest" && user.status === "pending" && !pattern.startsWith("/account")) {
       return <Redirect to="/account/status" />;
     }
     if (Array.isArray(access) && !access.includes(user.role)) {
