@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — Bookings
+
+- Attendees book and cancel seats. Booking runs in a transaction and is refused when the event is full, already started, or already booked (`409`).
+- Organizers see the attendee list for their own events; other organizers get `403`.
+- Event page shows the booking state (book, sold out, you have a seat, cancel with confirmation).
+- "My tickets" page for attendees; "Attendees" shortcut on the organizer dashboard.
+
 ## 0.3.0 — Events
 
 - Events CRUD API. Organizers create events; only the event's own organizer (or an admin) can edit or delete it, otherwise `403`.

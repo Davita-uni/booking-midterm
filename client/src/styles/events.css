@@ -228,3 +228,117 @@
     font-size: 17px;
   }
 }
+
+/* ---------- booking ---------- */
+
+.booking {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.booked-badge {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.attendees {
+  margin-top: var(--space-7);
+}
+
+.attendees h2 {
+  margin-bottom: var(--space-4);
+}
+
+.break {
+  word-break: break-word;
+}
+
+/* ---------- tickets ---------- */
+
+.tickets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-4);
+}
+
+.ticket {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  overflow: hidden;
+  height: 100%;
+}
+
+.ticket:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.ticket__stub {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 2px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 12px;
+  border-right: 2px dashed var(--bg);
+}
+
+.ticket__stub strong {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.ticket__body {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-4);
+}
+
+.ticket__title {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.ticket__body .muted {
+  font-size: 14px;
+}
+
+.ticket__no {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: var(--space-2);
+}
+
+.tickets__past-title {
+  margin: var(--space-6) 0 var(--space-4);
+}
+
+.tickets--past .ticket {
+  opacity: 0.6;
+}
+
+.tickets--past .ticket__stub {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+@media (max-width: 560px) {
+  .tickets {
+    grid-template-columns: 1fr;
+  }
+}

@@ -96,6 +96,10 @@ router.get("/:id", optionalAuth, (req, res) => {
   event.can_manage = Boolean(
     user && (user.role === "admin" || (user.role === "organizer" && user.id === event.organizer_id))
   );
+  event.is_registered = Boolean(
+    user && db.prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?").get(event.id, user.id)
+  );
+  event.is_past = event.starts_at <= nowLocal();
   res.json(event);
 });
 
