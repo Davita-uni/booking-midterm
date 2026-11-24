@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.1 — Pending organizers can book
+
+- Organizers waiting for approval now have attendee rights: they can book and cancel seats, and their bookings show up under My profile → Events attended and with the check icon in event lists. Attendee accounts never need approval, so neither does booking.
+- Organizer actions (creating events, attendee lists, requests) still wait for approval (`403 account_pending`).
+- Server: booking routes use `requireSession`; `optionalAuth` also recognises pending accounts.
+- The account status page says they can book events in the meantime.
+
 ## 0.12.0 — Notifications
 
 - New `notifications` table and a bell in the header with the unread count, a dropdown list, "Mark all as read", and links to the related page. Checks every 30 seconds and on every page change.

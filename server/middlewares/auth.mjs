@@ -54,12 +54,13 @@ export function requireAuth(req, res, next) {
   next();
 }
 
-// Like requireAuth, but lets visitors without a token through (req.user stays undefined).
-// Used on public pages that show extra details to logged-in users.
+// Like requireSession, but lets visitors without a token through (req.user stays
+// undefined). Used on public pages that show extra details to logged-in users,
+// such as "you booked this event".
 export function optionalAuth(req, res, next) {
   if (!req.get("authorization")) return next();
   try {
-    requireAuth(req, res, () => {});
+    loadSession(req);
   } catch {
     // an old or broken token just means "not logged in" here
   }

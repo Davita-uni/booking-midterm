@@ -165,9 +165,11 @@ another organizer's event.
   on the server too, not only in the browser.
 - Sign-up allows the attendee and organizer roles. Admin accounts come only from the seed.
 - Organizer accounts have a `status`: `pending` → `active` (approved) ⇄ `suspended`.
-  Pending organizers get a session, but the server only lets them call
-  `/api/auth/me` and `/api/auth/logout` (`requireSession`); everything else
-  answers `403 account_pending` (`requireAuth`). Suspended accounts can't log in.
+  Pending organizers get a session with attendee rights while they wait: they
+  can see their account, and book, cancel and list their own seats
+  (`requireSession`). Organizer actions (creating events, attendee lists,
+  requests) answer `403 account_pending` (`requireAuth`). Suspended accounts
+  can't log in.
 
 ## Database
 
@@ -281,3 +283,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.10.0 | Light theme (default) and dark theme, saved per browser |
 | 0.11.0 | Organizer requests to admins (reply + status) |
 | 0.12.0 | Notifications (bell in the header) |
+| 0.12.1 | Organizers waiting for approval can book events like attendees |
