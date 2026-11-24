@@ -97,6 +97,16 @@ export default function EventForm({ id }) {
   }
 
   const venue = venues.data.find((v) => String(v.id) === form.venue_id);
+  // Iliauni meetings take place in A–D Block only; the server sends those blocks
+  // to Ilia Uni accounts only, so other organizers never see them
+  const internal = form.audience === "iliauni";
+  const cityVenues = venues.data.filter((v) => !v.iliauni);
+  const blockVenues = venues.data.filter((v) => v.iliauni);
+  const venueOption = (v) => (
+    <option key={v.id} value={v.id}>
+      {v.name} (up to {v.capacity})
+    </option>
+  );
 
   const update = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -105,7 +115,10 @@ export default function EventForm({ id }) {
 
   // for the Yes/No and 16+… choices, which can also be unselected
   const choose = (name) => (value) => {
-    setForm({ ...form, [name]: value });
+    const next = { ...form, [name]: value };
+    // switching to "Iliauni only" clears a venue that isn't one of the blocks
+    if (name === "audience" && value === "iliauni" && venue && !venue.iliauni) next.venue_id = "";
+    setForm(next);
     setErrors({ ...errors, [name]: undefined, dress_code: name === "dress" ? undefined : errors.dress_code });
   };
 
@@ -204,13 +217,26 @@ export default function EventForm({ id }) {
           />
         </div>
         <div className="form-row">
-          <Field as="select" label="Venue" name="venue_id" value={form.venue_id} onChange={update} error={errors.venue_id}>
+          <Field
+            as="select"
+            label="Venue"
+            name="venue_id"
+            value={form.venue_id}
+            onChange={update}
+            error={errors.venue_id}
+            hint={internal ? "Iliauni meetings take place in A, B, C or D Block" : undefined}
+          >
             <option value="">Choose…</option>
-            {venues.data.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name} (up to {v.capacity})
-              </option>
-            ))}
+            {internal ? (
+              blockVenues.map(venueOption)
+            ) : blockVenues.length ? (
+              <>
+                <optgroup label="Tbilisi venues">{cityVenues.map(venueOption)}</optgroup>
+                <optgroup label="Ilia State University">{blockVenues.map(venueOption)}</optgroup>
+              </>
+            ) : (
+              cityVenues.map(venueOption)
+            )}
           </Field>
           <Field
             label="Tickets"

@@ -4,8 +4,9 @@ import { useApi } from "../hooks.js";
 import Field from "../components/Field.jsx";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
+import IliauniTag from "../components/IliauniTag.jsx";
 
-const EMPTY = { name: "", address: "", city: "Tbilisi", capacity: "" };
+const EMPTY = { name: "", address: "", city: "Tbilisi", capacity: "", iliauni: false };
 
 export default function AdminVenues() {
   const venues = useApi("/venues");
@@ -18,7 +19,13 @@ export default function AdminVenues() {
 
   const startEdit = (venue) => {
     setEditing(venue);
-    setForm({ name: venue.name, address: venue.address, city: venue.city, capacity: String(venue.capacity) });
+    setForm({
+      name: venue.name,
+      address: venue.address,
+      city: venue.city,
+      capacity: String(venue.capacity),
+      iliauni: Boolean(venue.iliauni),
+    });
     setErrors({});
     setMessage(null);
   };
@@ -95,6 +102,7 @@ export default function AdminVenues() {
                   <tr key={venue.id} className={editing?.id === venue.id ? "is-editing" : undefined}>
                     <td>
                       <strong>{venue.name}</strong>
+                      {venue.iliauni ? <IliauniTag label="Ilia Uni" /> : null}
                       <span className="table__sub">
                         {venue.address}, {venue.city}
                       </span>
@@ -130,6 +138,22 @@ export default function AdminVenues() {
               <Field label="City" name="city" value={form.city} onChange={update} error={errors.city} />
               <Field label="Seats" name="capacity" type="number" min="50" placeholder="At least 50" value={form.capacity} onChange={update} error={errors.capacity} />
             </div>
+            <label className={`check${errors.iliauni ? " check--invalid" : ""}`}>
+              <input
+                type="checkbox"
+                checked={form.iliauni}
+                onChange={(e) => {
+                  setForm({ ...form, iliauni: e.target.checked });
+                  setErrors({ ...errors, iliauni: undefined });
+                }}
+              />
+              Ilia State University venue
+            </label>
+            {errors.iliauni ? (
+              <p className="field__error">{errors.iliauni}</p>
+            ) : (
+              <p className="field__hint">Only organizers with an @iliauni.edu.ge email can use it</p>
+            )}
             <div className="form__actions">
               <button className="btn btn--primary" disabled={busy}>
                 {busy ? "Saving…" : editing ? "Save changes" : "Add venue"}

@@ -5,7 +5,7 @@ import { badRequest, conflict, forbidden, notFound, parseId } from "../utils/htt
 import { nowLocal, isValidLocal } from "../utils/time.mjs";
 import * as v from "../utils/validate.mjs";
 import { notify, bookersOf } from "../utils/notify.mjs";
-import { AUDIENCES, ILIAUNI_ONLY_MESSAGE, ILIAUNI_CREATE_MESSAGE } from "../utils/iliauni.mjs";
+import { AUDIENCES, ILIAUNI_ONLY_MESSAGE, ILIAUNI_CREATE_MESSAGE, ILIAUNI_VENUE_MESSAGE } from "../utils/iliauni.mjs";
 
 const router = express.Router();
 
@@ -81,8 +81,11 @@ function readEvent(body = {}, { existing, user } = {}) {
   else if (event.starts_at <= nowLocal() && event.starts_at !== existing?.starts_at)
     errors.starts_at = "The event must start in the future";
 
-  const venue = db.prepare("SELECT id, capacity FROM venues WHERE id = ?").get(event.venue_id || 0);
+  const venue = db.prepare("SELECT id, capacity, iliauni FROM venues WHERE id = ?").get(event.venue_id || 0);
+  // A–D Block belong to Ilia Uni: other organizers can't use them, even by calling the API directly
+  if (venue?.iliauni && !user?.is_iliauni && user?.role !== "admin") throw forbidden(ILIAUNI_VENUE_MESSAGE, "iliauni_only");
   if (!venue) errors.venue_id = "Choose a venue";
+  else if (audience === "iliauni" && !venue.iliauni) errors.venue_id = "Iliauni meetings take place in A, B, C or D Block";
   else if (!errors.capacity && event.capacity > venue.capacity)
     errors.capacity = `This venue has room for ${venue.capacity} people at most`;
 

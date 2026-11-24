@@ -33,7 +33,9 @@ CREATE TABLE IF NOT EXISTS venues (
   name      TEXT    NOT NULL UNIQUE COLLATE NOCASE,
   address   TEXT    NOT NULL,
   city      TEXT    NOT NULL DEFAULT 'Tbilisi',
-  capacity  INTEGER NOT NULL CHECK (capacity > 0)
+  capacity  INTEGER NOT NULL CHECK (capacity > 0),
+  -- 1 = an Ilia State University venue (A–D Block): only Ilia Uni organizers can use it
+  iliauni   INTEGER NOT NULL DEFAULT 0 CHECK (iliauni IN (0, 1))
 );
 
 CREATE TABLE IF NOT EXISTS events (

@@ -40,14 +40,12 @@
 
 /* ---------- Iliauni colours ----------
    On Ilia State University pages (data-brand="iliauni" on <html>) the orange
-   accent becomes the university's red from its seal (#8f181b), and the page
-   background gets a faint warm tint. */
+   accent becomes the university's red from its seal (#8f181b). Only the accent
+   changes: backgrounds and text stay as they are. */
 :root[data-brand="iliauni"] {
   --accent: #8f181b;
   --accent-hover: #721316;
   --accent-ink: #ffffff;
-  --bg: #f7f2f1;
-  --surface-2: #f0e8e7;
 }
 
 :root[data-theme="dark"][data-brand="iliauni"] {
@@ -55,8 +53,6 @@
   --accent: #e3646a;
   --accent-hover: #ec8287;
   --accent-ink: #17181b;
-  --bg: #1a1718;
-  --surface-2: #302a2c;
 }
 
 /* Registered colour properties can be animated. The fade only runs while
@@ -72,23 +68,11 @@
   inherits: true;
   initial-value: #9e5a03;
 }
-@property --bg {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #f6f4ef;
-}
-@property --surface-2 {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #eeebe4;
-}
 
 :root.brand-fade {
   transition:
     --accent 0.6s ease,
-    --accent-hover 0.6s ease,
-    --bg 0.6s ease,
-    --surface-2 0.6s ease;
+    --accent-hover 0.6s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
