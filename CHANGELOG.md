@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.15.1 — Hint texts
+
+- Currency hint: "Ticket prices are set in GEL. By changing this setting you will get converted value shown on events page. Payment will also be completed in selected currency"
+- The small hint texts under form fields no longer end with a full stop.
+
 ## 0.15.0 — Tickets, prices and entry rules
 
 - Bookings are now **tickets** everywhere: "Buy ticket · 45 ₾" / "Get free ticket", "You have a ticket", "Cancel ticket", "Tickets: 241 / 280 sold", notifications and messages reworded.

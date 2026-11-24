@@ -191,7 +191,7 @@ export default function EventForm({ id }) {
             min="0"
             step="0.5"
             placeholder="0 for a free event"
-            hint="In Georgian lari. 0 means free."
+            hint="In Georgian lari, 0 means free"
             value={form.price}
             onChange={update}
             error={errors.price}
@@ -200,7 +200,7 @@ export default function EventForm({ id }) {
 
         <div className="rules">
           <p className="rules__title">Entry rules</p>
-          <p className="field__hint">Optional. Click a selected option again to clear it.</p>
+          <p className="field__hint">Optional, click a selected option again to clear it</p>
           <ChoiceGroup
             label="Face control"
             name="face_control"

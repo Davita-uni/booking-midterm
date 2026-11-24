@@ -45,7 +45,7 @@ export default function DateTimeField({ label, name, value, onChange, error }) {
           ))}
         </select>
       </div>
-      {error ? <p className="field__error">{error}</p> : <p className="field__hint">24-hour time, in 15-minute steps.</p>}
+      {error ? <p className="field__error">{error}</p> : <p className="field__hint">24-hour time, in 15-minute steps</p>}
     </div>
   );
 }
