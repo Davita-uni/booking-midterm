@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.17.1 — Iliauni colours
+
+- On Iliauni pages the accent colour fades (0.6 s) from Doorlist orange to the university's red, taken from its seal: `#8f181b` in light mode, a lighter `#e3646a` in dark mode for readable text. The background gets a faint warm tint. Leaving the section fades back.
+- Applies to the Iliauni meetings list, the page of an internal meeting, and the event form while "Iliauni only" is chosen.
+- Done with CSS custom properties registered via `@property`, so they can animate. The fade only runs when entering or leaving Iliauni pages: switching light/dark stays instant, and `prefers-reduced-motion` turns the fade off.
+- Opening a meeting from the Iliauni list keeps the red (no orange flash while the meeting loads).
+
 ## 0.17.0 — Iliauni internal meetings
 
 - Accounts whose email ends with `@iliauni.edu.ge` (any capitalisation) are Ilia State University members. The server works this out (`is_iliauni` on the session and in login/`/me` responses).

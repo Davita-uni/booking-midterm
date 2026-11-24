@@ -3,6 +3,7 @@ import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate, backTo, FROM } from "../router.jsx";
 import IliauniTag from "../components/IliauniTag.jsx";
+import { useBrand } from "../brand.js";
 import { longDate, seatsLabel, seatsTone } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
@@ -16,6 +17,8 @@ export default function EventDetail({ id }) {
   const { data: event, error, loading, reload } = useApi(`/events/${id}`);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
+  // internal Ilia Uni meetings are shown in the university's colours
+  useBrand(event?.audience === "iliauni");
   if (loading && !event) return <Loading label="Loading event…" />;
   // opened from a "was cancelled" notification: the event no longer exists
   const cancelled = new URLSearchParams(window.location.search);

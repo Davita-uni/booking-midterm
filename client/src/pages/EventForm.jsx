@@ -3,6 +3,7 @@ import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate, backTo, FROM } from "../router.jsx";
 import { useAuth } from "../auth.jsx";
+import { useBrand } from "../brand.js";
 import Field from "../components/Field.jsx";
 import DateTimeField from "../components/DateTimeField.jsx";
 import ChoiceGroup from "../components/ChoiceGroup.jsx";
@@ -81,6 +82,9 @@ export default function EventForm({ id }) {
       audience: e.audience,
     });
   }, [existing.data]);
+
+  // the form takes the Iliauni colours while "Iliauni only" is chosen
+  useBrand(form.audience === "iliauni");
 
   if (existing.loading || venues.loading || categories.loading) return <Loading label="Loading form…" />;
   const loadError = existing.error || venues.error || categories.error;

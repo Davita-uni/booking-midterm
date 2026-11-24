@@ -90,6 +90,10 @@ seconds). Clicking one opens the related page and marks it read.
   (`is_iliauni` on the session); the browser can't fake it.
 - Members get an **Iliauni** item (with the university seal) next to Events
   in the top menu. It lists the internal meetings, upcoming and past.
+- Iliauni pages (the meetings list, an internal meeting's page, and the event
+  form while "Iliauni only" is chosen) **fade into the university's red**
+  (`#8f181b`, from its seal) instead of the orange accent, and fade back when
+  you leave. Light and dark mode both have their own red.
 - **Organizers** with an iliauni email see a **Who can see this event** choice
   on the event form: **Everyone** (normal public event) or **Iliauni only**.
   Attendees can't create meetings, like any other event.
@@ -369,3 +373,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.16.2 | Breadcrumbs go back where you came from; first/last name in Edit Profile; schema fix |
 | 0.16.3 | Monospace font only for labels, event dates and categories |
 | 0.17.0 | Iliauni section: internal meetings for `@iliauni.edu.ge` accounts |
+| 0.17.1 | Iliauni pages fade into the university's red |
