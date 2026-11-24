@@ -3,18 +3,22 @@ import { useAuth, homeFor } from "../auth.jsx";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
 import PendingNotice from "../components/PendingNotice.jsx";
+import NextEventTicket from "../components/NextEventTicket.jsx";
+
+export const TAGLINE =
+  "Get tickets for concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.";
 
 export function AuthIntro() {
   return (
     <div className="auth__intro">
       <p className="eyebrow">Doorlist</p>
-      <h1>Your Name on the Door</h1>
-      <p>Get tickets for concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.</p>
-      <div className="ticket-stub" aria-hidden="true">
-        <span>ADMIT ONE</span>
-        <b>Late Jazz at the Courtyard</b>
-        <span>FRI 04 DEC 2026 · 20:00</span>
-        <span>Fabrika Courtyard</span>
+      <h1 className="tagline">
+        Your Name <span className="tagline__glow">on the Door</span>
+      </h1>
+      <p>{TAGLINE}</p>
+      {/* the next real event, not a made-up ticket */}
+      <div className="auth__ticket">
+        <NextEventTicket />
       </div>
     </div>
   );
@@ -93,7 +97,7 @@ export default function Login() {
             error={errors.password}
           />
           <button className="btn btn--primary" disabled={busy}>
-            {busy ? "Logging in…" : "Log in"}
+            {busy ? "Logging in…" : "Log In"}
           </button>
         </form>
         <p className="panel__foot">

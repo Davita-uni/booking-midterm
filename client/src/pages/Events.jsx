@@ -4,6 +4,8 @@ import { useAuth } from "../auth.jsx";
 import { Link, FROM } from "../router.jsx";
 import { useBrand } from "../brand.js";
 import EventRow from "../components/EventRow.jsx";
+import NextEventTicket from "../components/NextEventTicket.jsx";
+import { TAGLINE } from "./Login.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
 // Read ?when=past from the address so the choice survives a reload or Back.
@@ -33,6 +35,7 @@ const TEXT = {
 export default function Events({ audience = "public" }) {
   const { user } = useAuth();
   const text = TEXT[audience];
+  const HeadingTag = audience === "public" ? "h2" : "h1";
   useBrand(audience === "iliauni");
   const categories = useApi("/categories");
   const [when, setWhen] = useState(initialWhen);
@@ -61,11 +64,35 @@ export default function Events({ audience = "public" }) {
 
   return (
     <>
+      {audience === "public" && (
+        <section className="hero">
+          <div className="hero__intro">
+            <p className="eyebrow">Doorlist · Tbilisi</p>
+            <h1 className="tagline">
+              Your Name <span className="tagline__glow">on the Door</span>
+            </h1>
+            <p className="hero__lead">{TAGLINE}</p>
+            {!user && (
+              <div className="hero__actions">
+                <Link to="/register" className="btn btn--primary">
+                  Create an Account
+                </Link>
+                <Link to="/login" className="btn btn--ghost">
+                  Log In
+                </Link>
+              </div>
+            )}
+          </div>
+          <NextEventTicket />
+        </section>
+      )}
+
       <div className="page-head">
         <div>
           <p className="eyebrow">{text.eyebrow}</p>
           {/* the chosen list is the big title; the other one is the small link after the slash */}
-          <h1 className="when-switch">
+          {/* on the public page the hero has the h1, so the list title is an h2 */}
+          <HeadingTag className="when-switch">
             <button
               type="button"
               className={`when-switch__opt${when === "upcoming" ? " is-active" : ""}`}
@@ -85,7 +112,7 @@ export default function Events({ audience = "public" }) {
             >
               {text.past}
             </button>
-          </h1>
+          </HeadingTag>
         </div>
         {user?.role === "organizer" && user.status === "active" && when === "upcoming" && (
           <Link to={text.newEvent} from={text.from.upcoming} className="btn btn--primary">

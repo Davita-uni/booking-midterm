@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.18.1 — Your Name on the Door
+
+- The events page opens with a header: "Your Name **on the Door**" (the second line in the purple → light-blue gradient), the Doorlist tagline, and for visitors "Create an Account" / "Log In" buttons.
+- Next to it, a ticket for the **next real event** that still has tickets (date stub, title, venue, category, price, "Get Tickets →"). Clicking it opens the event.
+- The login and sign-up pages show the same live ticket instead of the old made-up "ADMIT ONE" stub, which always showed Late Jazz at the Courtyard.
+- The list title (Upcoming Events / Past Events) is now an h2 under the header, so each page still has one h1.
+- "Log In" / "Sign Up" in the top bar and the login button in Title Case.
+
 ## 0.18.0 — Vice City
 
 - New colour palette, "Vice City": purple fading into light blue instead of orange. Buttons, the logo dot, the active menu underline, ticket stubs, the sign-up step number and the tickets bar use a purple → light-blue gradient; links, labels and dates are purple. Dark mode has a deep night-purple background.
