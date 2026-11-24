@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.4 — Planned features
+
+- README: new "Planned (not in this MVP)" section. Online payments (tickets are reserved without charging; a card payment provider will confirm tickets and pay refunds) and an email service (sign-up confirmation, also verifying @iliauni.edu.ge addresses; ticket emails; password reset; event change emails).
+
 ## 0.20.3 — Figma
 
 - README links the Figma file: wireframes (Log In, Events, Event page, Create event, My Tickets, Admin → Organizers), 4 screens in light and dark mode (Events, Event page, Create event, Admin → Organizers), extras (Log In, My Tickets, Iliauni meetings, Events on a phone) and the "Vice City" style guide in light and dark.
