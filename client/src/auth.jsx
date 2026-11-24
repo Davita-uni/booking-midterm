@@ -35,13 +35,15 @@ export function AuthProvider({ children }) {
   const login = async (email, password) =>
     startSession(await api("/auth/login", { method: "POST", body: { email, password } }));
 
-  // Organizer sign-ups come back as { pending: true } without a token:
-  // they can't use the platform until an admin approves them.
-  const register = async (form) => {
-    const data = await api("/auth/register", { method: "POST", body: form });
-    if (data.pending) return data;
-    startSession(data);
-    return data;
+  // New organizers are logged in with status "pending": they only see the
+  // account status page until an admin approves them.
+  const register = async (form) => startSession(await api("/auth/register", { method: "POST", body: form }));
+
+  // Reloads the current user, e.g. to see whether an admin approved the account.
+  const refresh = async () => {
+    const data = await api("/auth/me");
+    setUser(data.user);
+    return data.user;
   };
 
   const logout = async () => {
@@ -55,10 +57,13 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, checking, login, register, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, checking, login, register, logout, refresh }}>{children}</AuthContext.Provider>
   );
 }
 
 export const useAuth = () => useContext(AuthContext);
+
+// Where to go after logging in or signing up
+export const homeFor = (user) => (user.status === "pending" ? "/account/status" : "/");
 
 export const ROLE_LABEL = { admin: "Admin", organizer: "Organizer", attendee: "Attendee" };

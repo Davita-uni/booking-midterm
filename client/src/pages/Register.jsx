@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useAuth } from "../auth.jsx";
+import { useAuth, homeFor } from "../auth.jsx";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
-import PendingNotice from "../components/PendingNotice.jsx";
 import { AuthIntro } from "./Login.jsx";
 
 // Sign-up in three steps:
 //   1. account type (attendee or organizer)
 //   2. details (organizers also give an organization name)
-//   3. done — attendees go straight in, organizers wait for admin approval
+//   3. done — attendees go to the events, organizers to their account status
+//      page, where they wait for an admin to approve them
 const STEPS = ["Account type", "Your details", "Done"];
 
 function Steps({ current }) {
@@ -35,7 +35,6 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [pendingName, setPendingName] = useState("");
 
   const isOrganizer = form.role === "organizer";
 
@@ -51,13 +50,8 @@ export default function Register() {
     try {
       const body = { ...form };
       if (!isOrganizer) delete body.organization;
-      const data = await register(body);
-      if (data.pending) {
-        setPendingName(data.user.name);
-        setStep(2);
-      } else {
-        navigate("/");
-      }
+      const user = await register(body);
+      navigate(homeFor(user));
     } catch (err) {
       setErrors(err.errors);
       // a wrong role is a step-1 problem
@@ -167,20 +161,9 @@ export default function Register() {
           </form>
         )}
 
-        {step === 2 && (
-          <div className="form">
-            <PendingNotice name={pendingName} />
-            <Link to="/" className="btn">
-              Browse events meanwhile
-            </Link>
-          </div>
-        )}
-
-        {step < 2 && (
-          <p className="panel__foot">
-            Already have an account? <Link to="/login">Log in</Link>
-          </p>
-        )}
+        <p className="panel__foot">
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
       </section>
     </div>
   );

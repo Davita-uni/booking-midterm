@@ -24,15 +24,19 @@ Sign-up has three steps: **1. Account type → 2. Your details → 3. Done**.
 
 - **Attendee** ("Book events"): name, email, password. The account works right away.
 - **Organizer** ("Run events"): name, organization or project, email, password.
-  The account is created as **pending** and can't log in yet. The last step
-  explains that an admin has to approve it, and gives the help center number
-  (+995 555 XX XX XX) to call in case of delay.
+  The account is created as **pending**. The organizer is logged in and lands
+  on an **Account status** page that says an admin has to approve the account,
+  asks them to wait, and gives the help center number (+995 555 XX XX XX) to
+  call in case of delay. The page checks the status every 30 seconds (or with
+  "Check status now"), so there's no need to log in again. Logging in later
+  while still pending opens the same page.
 
 The admin opens **Organizers** in the menu. New sign-ups are listed under
 "Waiting for approval", where the admin can **Approve** or **Reject** them.
-Active organizers can be **Suspended**, which logs them out at once and blocks
-login. Suspended organizers can be **Reactivated**. Pending and suspended
-organizers get a clear message on the login page instead of a generic error.
+Once approved, the status page switches to "You're approved" and the organizer
+can create events. Active organizers can be **Suspended**, which logs them out
+at once and blocks login (the login page explains why). Suspended organizers
+can be **Reactivated**.
 
 ## Stack
 
@@ -108,8 +112,8 @@ Created by `npm run seed`:
 
 Two organizer sign-ups are waiting for approval, so the approval screen isn't
 empty: `levan.kiknadze@doorlist.test` and `keti.mamaladze@doorlist.test`
-(both `Organizer123!`). Logging in as one of them shows the "waiting for
-approval" message until the admin approves it.
+(both `Organizer123!`). Logging in as one of them opens the account status
+page until the admin approves it.
 
 A second active organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
 some of the events. It is useful for showing that one organizer can't change
@@ -125,7 +129,9 @@ another organizer's event.
   on the server too, not only in the browser.
 - Sign-up allows the attendee and organizer roles. Admin accounts come only from the seed.
 - Organizer accounts have a `status`: `pending` → `active` (approved) ⇄ `suspended`.
-  Only `active` accounts get a token, and every request checks the status again.
+  Pending organizers get a session, but the server only lets them call
+  `/api/auth/me` and `/api/auth/logout` (`requireSession`); everything else
+  answers `403 account_pending` (`requireAuth`). Suspended accounts can't log in.
 
 ## Database
 
@@ -202,3 +208,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.5.0 | Forbidden-action demo, README, polish |
 | 0.5.1 | Dropdown arrow spacing |
 | 0.6.0 | 3-step sign-up, organizer approval by admin |
+| 0.6.1 | Pending organizers stay logged in with an account status page |
