@@ -42,8 +42,9 @@ can be **Reactivated**.
 ## My account
 
 Logged-in users open **My account** in the top right corner. The menu shows
-their name (with an Admin, Organizer or Pending tag) and three entries:
+their name (with an Admin, Organizer or Pending tag) and these entries:
 
+- **My events** (approved organizers only): the organizer dashboard.
 - **My profile**: edit name (and organization for organizers) and change the
   password. The email is shown read-only: it is the login and can't be changed
   (the API refuses it and a database trigger blocks any `UPDATE` of `users.email`). Changing the password logs the user out everywhere;
@@ -233,3 +234,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.6.5 | No role label in the header for attendees |
 | 0.7.0 | "My account" menu, profile editing, sortable attendee list |
 | 0.7.1 | Email is read-only; role label aligned with the name |
+| 0.7.2 | "My events" moved into the My account menu |

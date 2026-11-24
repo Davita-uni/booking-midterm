@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2 — My events in the account menu
+
+- For approved organizers, "My events" moved from the top navigation into the My account dropdown (above My profile).
+
 ## 0.7.1 — Read-only email
 
 - My profile shows the email read-only (it is the login).

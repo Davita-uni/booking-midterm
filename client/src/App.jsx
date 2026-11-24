@@ -33,7 +33,6 @@ function Header() {
           {user?.role === "organizer" && user.status === "pending" && (
             <NavLink to="/account/status">Account status</NavLink>
           )}
-          {user?.role === "organizer" && user.status === "active" && <NavLink to="/my/events">My events</NavLink>}
           {user?.role === "admin" && (
             <>
               <NavLink to="/admin/organizers">Organizers</NavLink>
