@@ -39,7 +39,7 @@ function readEvent(body = {}, { existing } = {}) {
     title: v.text(errors, body, "title", "Title", { min: 3, max: 120 }),
     description: v.text(errors, body, "description", "Description", { max: 2000, required: false }),
     starts_at: body.starts_at,
-    capacity: v.integer(errors, body, "capacity", "Seats", { min: 1, max: 50000 }),
+    capacity: v.integer(errors, body, "capacity", "Seats", { min: 50, max: 50000 }),
     venue_id: Number(body.venue_id),
     category_id: Number(body.category_id),
   };

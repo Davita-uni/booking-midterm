@@ -34,9 +34,9 @@ function Header() {
           <NavLink to="/" exact>
             Events
           </NavLink>
-          {user?.role === "attendee" && <NavLink to="/my/tickets">My tickets</NavLink>}
+          {user?.role === "attendee" && <NavLink to="/my/tickets">My Tickets</NavLink>}
           {user?.role === "organizer" && user.status === "pending" && (
-            <NavLink to="/account/status">Account status</NavLink>
+            <NavLink to="/account/status">Account Status</NavLink>
           )}
           {user?.role === "admin" && (
             <>

@@ -24,8 +24,20 @@ export function longDate(value) {
 
 export function seatsLabel(event) {
   if (event.seats_left === 0) return "Sold out";
-  if (event.seats_left <= Math.max(3, Math.ceil(event.capacity * 0.1))) return `${event.seats_left} left`;
-  return `${event.seats_left} of ${event.capacity} free`;
+  return `${event.seats_left} left`;
+}
+
+// Colour of the seats label:
+//   out  = sold out (solid red badge)
+//   low  = fewer than 10 left (red text)
+//   warn = amber: fewer than 50 left for big events (200+ seats), fewer than 20 otherwise
+//   ok   = green
+export function seatsTone(event) {
+  const left = event.seats_left;
+  if (left === 0) return "out";
+  if (left < 10) return "low";
+  if (left < (event.capacity >= 200 ? 50 : 20)) return "warn";
+  return "ok";
 }
 
 // created_at values are stored by SQLite in UTC: "YYYY-MM-DD HH:MM:SS"

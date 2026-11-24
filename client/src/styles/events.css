@@ -104,12 +104,34 @@
 
 .seats {
   font-size: 13px;
-  color: var(--success);
   white-space: nowrap;
+  justify-self: start;
 }
 
-.seats--out {
+.seats--ok {
+  color: var(--success);
+}
+
+.seats--warn {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.seats--low {
   color: var(--error);
+  font-weight: 600;
+}
+
+/* sold out: a solid badge, so it can't be confused with "3 left" in red */
+.seats--out {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--error);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
 }
 
 /* ---------- event detail ---------- */

@@ -137,9 +137,9 @@ export default function EventForm({ id }) {
             label="Seats"
             name="capacity"
             type="number"
-            min="1"
+            min="50"
             max={venue?.capacity}
-            placeholder={venue ? `Up to ${venue.capacity}` : "e.g. 40"}
+            placeholder={venue ? `50 to ${venue.capacity}` : "At least 50"}
             hint={editing && existing.data.booked ? `${existing.data.booked} already booked` : undefined}
             value={form.capacity}
             onChange={update}
