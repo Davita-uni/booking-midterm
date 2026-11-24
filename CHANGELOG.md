@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.2 — Approval tab
+
+- Organizers page tabs: Active, Suspended, All on the left; "Waiting for approval" on its own on the right.
+- The waiting count is red while anyone is waiting, since it needs action. On phones the tab comes first.
+
 ## 0.6.1 — Account status page for pending organizers
 
 - Pending organizers are logged in after signing up or logging in, instead of being turned away.

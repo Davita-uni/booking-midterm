@@ -1,6 +1,6 @@
 {
   "name": "doorlist-server",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "description": "REST API for the Doorlist event booking platform",
   "type": "module",

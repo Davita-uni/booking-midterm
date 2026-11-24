@@ -307,3 +307,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* "Waiting for approval" is pushed to the right, apart from the other tabs */
+.tab--pending {
+  margin-left: auto;
+}
+
+.tab__count--urgent {
+  background: var(--error);
+  color: #fff;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .tab--pending {
+    margin-left: 0;
+    order: -1;
+  }
+}
