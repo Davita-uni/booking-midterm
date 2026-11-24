@@ -23,7 +23,10 @@ const publicUser = (u) => ({
 router.post("/register", async (req, res) => {
   const body = req.body ?? {};
   const errors = {};
-  const name = v.text(errors, body, "name", "Name", { min: 2, max: 60 });
+  // the form sends first and last name; they are stored together as `name`
+  const first = v.text(errors, body, "first_name", "First name", { min: 2, max: 30 });
+  const last = v.text(errors, body, "last_name", "Last name", { min: 2, max: 30 });
+  const name = `${first} ${last}`;
   const email = v.email(errors, body);
   const password = v.password(errors, body);
   const role = body.role ?? "attendee";

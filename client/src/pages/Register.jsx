@@ -46,7 +46,7 @@ export default function Register() {
   const { register } = useAuth();
   const [role, setRole] = useState(initialRole);
   const [step, setStep] = useState(0); // organizer steps only
-  const [form, setForm] = useState({ name: "", email: "", password: "", organization: "" });
+  const [form, setForm] = useState({ first_name: "", last_name: "", email: "", password: "", organization: "" });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -71,7 +71,13 @@ export default function Register() {
     setBusy(true);
     setMessage("");
     try {
-      const body = { role, name: form.name, email: form.email, password: form.password };
+      const body = {
+        role,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        email: form.email,
+        password: form.password,
+      };
       if (isOrganizer) body.organization = form.organization;
       const user = await register(body);
       navigate(homeFor(user)); // organizers land on their account status page ("Done")
@@ -87,15 +93,26 @@ export default function Register() {
 
   const detailsFields = (
     <>
-      <Field
-        label="Full name"
-        name="name"
-        autoComplete="name"
-        placeholder="Nino Beridze"
-        value={form.name}
-        onChange={update}
-        error={errors.name}
-      />
+      <div className="form-row">
+        <Field
+          label="First name"
+          name="first_name"
+          autoComplete="given-name"
+          placeholder="Nino"
+          value={form.first_name}
+          onChange={update}
+          error={errors.first_name}
+        />
+        <Field
+          label="Last name"
+          name="last_name"
+          autoComplete="family-name"
+          placeholder="Beridze"
+          value={form.last_name}
+          onChange={update}
+          error={errors.last_name}
+        />
+      </div>
       <Field
         label="Email"
         name="email"
