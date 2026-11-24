@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.1 — Matching footer
+
+- The footer now has the same background as the header (the page background) instead of the lighter card colour, in light and dark mode. The thin purple → light-blue line still marks where it starts.
+
 ## 0.20.0 — Pages of 10
 
 - Event lists show **10 events per page** (fixed on the server, not a setting): upcoming and past events, and the Iliauni meetings. Below the list: "11–17 of 17 events" and ← Previous · 1 2 3 · Next → links (with … when there are many pages). The current page uses the purple → light-blue gradient.
