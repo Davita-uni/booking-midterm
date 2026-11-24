@@ -1,16 +1,44 @@
-/* Doorlist design tokens — "Stage night" style guide */
-:root {
+/* Doorlist design tokens — "Stage night" style guide.
+   Light is the default; dark is "Stage night" proper. The theme is chosen in
+   index.html before React starts (saved choice, otherwise the system setting). */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --surface-2: #eeebe4;
+  --line: #d9d4ca;
+  --text: #1c1d20;
+  --muted: #67635b;
+  --placeholder: #9a958b;
+  --accent: #b86a06;
+  --accent-hover: #9e5a03;
+  --accent-ink: #ffffff;
+  --success: #2a7d52;
+  --error: #c43c33;
+  --shadow: 0 12px 32px rgba(40, 32, 20, 0.16);
+  --backdrop: rgba(28, 29, 32, 0.45);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #17181b;
   --surface: #222429;
   --surface-2: #2b2e34;
   --line: #3a3d44;
   --text: #f2efe9;
   --muted: #a8a49c;
+  --placeholder: #6f6c66;
   --accent: #f2a33a;
+  --accent-hover: #f7b558;
   --accent-ink: #17181b;
   --success: #4caf7a;
   --error: #e5534b;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --backdrop: rgba(10, 10, 12, 0.7);
+}
 
+:root {
   --font-ui: "Archivo", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
@@ -29,10 +57,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-html {
-  color-scheme: dark;
 }
 
 body {
@@ -224,7 +248,7 @@ a:hover {
 }
 
 .btn--primary:hover {
-  background: #f7b558;
+  background: var(--accent-hover);
 }
 
 .btn--danger {
@@ -234,7 +258,7 @@ a:hover {
 }
 
 .btn--danger:hover {
-  background: rgba(229, 83, 75, 0.12);
+  background: color-mix(in srgb, var(--error) 12%, transparent);
 }
 
 .btn--ghost {
@@ -388,7 +412,7 @@ a:hover {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow);
   padding: var(--space-2) 0;
   display: grid;
 }
@@ -448,4 +472,9 @@ a:hover {
   .account__caret {
     transition: none;
   }
+}
+
+.theme-toggle {
+  padding: 0 var(--space-2);
+  min-width: 36px;
 }
