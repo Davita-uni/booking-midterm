@@ -119,6 +119,8 @@ export default function EventForm({ id }) {
             label="Date and time"
             name="starts_at"
             type="datetime-local"
+            step={900}
+            hint="Times go in 15-minute steps."
             value={form.starts_at}
             onChange={update}
             error={errors.starts_at}

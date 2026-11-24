@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.2 — 15-minute event times
+
+- The event form's date and time picker offers minutes in 15-minute steps (:00, :15, :30, :45).
+- The server rejects other minutes with a field error, so the rule holds even without the form.
+
 ## 0.12.1 — Pending organizers can book
 
 - Organizers waiting for approval now have attendee rights: they can book and cancel seats, and their bookings show up under My profile → Events attended and with the check icon in event lists. Attendee accounts never need approval, so neither does booking.
