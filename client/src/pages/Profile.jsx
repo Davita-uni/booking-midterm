@@ -1,5 +1,5 @@
 import { useApi } from "../hooks.js";
-import { Link } from "../router.jsx";
+import { Link, FROM } from "../router.jsx";
 import { ROLE_LABEL, STATUS_LABEL } from "../auth.jsx";
 import { bookedOn, parts } from "../format.js";
 import { Loading, ErrorState } from "../components/States.jsx";
@@ -93,7 +93,7 @@ function EventList({ title, events, empty, meta }) {
             const d = parts(e.starts_at);
             return (
               <li key={e.id}>
-                <Link to={`/events/${e.id}`} className={`mini-event${e.past ? " is-past" : ""}`}>
+                <Link to={`/events/${e.id}`} from={FROM.profile} className={`mini-event${e.past ? " is-past" : ""}`}>
                   <span className="mini-event__date mono">
                     {d.day} {d.month}
                     <small>{d.year}</small>

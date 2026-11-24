@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
-import { Link, navigate } from "../router.jsx";
+import { Link, navigate, backTo, FROM } from "../router.jsx";
 import Field from "../components/Field.jsx";
 import DateTimeField from "../components/DateTimeField.jsx";
 import ChoiceGroup from "../components/ChoiceGroup.jsx";
@@ -42,6 +42,14 @@ export default function EventForm({ id }) {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+
+  // Breadcrumb and Cancel go back to where the form was opened from. The event
+  // page keeps its own breadcrumb (`eventFrom`), so after saving or going back
+  // to it the user still returns to the list they started from.
+  const eventPage = editing ? `/events/${id}` : null;
+  const back = backTo(editing ? { to: eventPage, label: "Back to event" } : FROM.upcoming);
+  const eventFrom = window.history.state?.eventFrom ?? (back.to === eventPage ? null : back);
+  const backLinkFrom = back.to === eventPage ? eventFrom : undefined;
 
   useEffect(() => {
     const e = existing.data;
@@ -101,7 +109,7 @@ export default function EventForm({ id }) {
       const saved = editing
         ? await api(`/events/${id}`, { method: "PUT", body })
         : await api("/events", { method: "POST", body });
-      navigate(`/events/${saved.id}`);
+      navigate(`/events/${saved.id}`, { state: eventFrom ? { from: eventFrom } : null });
     } catch (err) {
       setErrors(err.errors);
       setMessage(Object.keys(err.errors).length ? "Please fix the highlighted fields." : err.message);
@@ -111,8 +119,8 @@ export default function EventForm({ id }) {
 
   return (
     <>
-      <Link to={editing ? `/events/${id}` : "/"} className="back">
-        ← {editing ? "Back to event" : "All events"}
+      <Link to={back.to} from={backLinkFrom} className="back">
+        ← {back.label}
       </Link>
       <div className="page-head">
         <div>
@@ -244,7 +252,7 @@ export default function EventForm({ id }) {
           <button className="btn btn--primary" disabled={busy}>
             {busy ? "Saving…" : editing ? "Save changes" : "Publish event"}
           </button>
-          <Link to={editing ? `/events/${id}` : "/"} className="btn btn--ghost">
+          <Link to={back.to} from={backLinkFrom} className="btn btn--ghost">
             Cancel
           </Link>
         </div>

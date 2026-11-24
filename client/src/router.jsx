@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 // A very small client-side router based on the History API.
 // Patterns look like "/events/:id/edit".
 
-export function navigate(to, { replace = false } = {}) {
-  if (replace) window.history.replaceState(null, "", to);
-  else window.history.pushState(null, "", to);
+// `state` is kept with the history entry, so it survives Back/Forward and a reload.
+// Pages use it to remember where the user came from (see backTo below).
+export function navigate(to, { replace = false, state = null } = {}) {
+  if (replace) window.history.replaceState(state, "", to);
+  else window.history.pushState(state, "", to);
   window.dispatchEvent(new PopStateEvent("popstate"));
   window.scrollTo(0, 0);
 }
@@ -32,11 +34,13 @@ export function matchPath(pattern, path) {
   return params;
 }
 
-export function Link({ to, className, children, ...rest }) {
+// `from` = { to, label } of the page this link is on; the target page shows it
+// as its "← label" breadcrumb instead of a fixed one.
+export function Link({ to, from, state, className, children, ...rest }) {
   const onClick = (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
-    navigate(to);
+    navigate(to, { state: from ? { ...state, from } : state ?? null });
   };
   return (
     <a href={to} className={className} onClick={onClick} {...rest}>
@@ -54,3 +58,20 @@ export function NavLink({ to, children, exact = false }) {
     </Link>
   );
 }
+
+// Where the "← back" breadcrumb should point: the page the user came from,
+// or `fallback` when the page was opened directly (address bar, notification).
+export function backTo(fallback) {
+  const from = window.history.state?.from;
+  return from?.to && from?.label ? from : fallback;
+}
+
+// The places a link can come from, so every page names them the same way.
+export const FROM = {
+  upcoming: { to: "/", label: "All events" },
+  past: { to: "/?when=past", label: "Past events" },
+  tickets: { to: "/my/tickets", label: "My Tickets" },
+  myEvents: { to: "/my/events", label: "My events" },
+  profile: { to: "/account/profile", label: "My profile" },
+  status: { to: "/account/status", label: "Account status" },
+};

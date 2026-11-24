@@ -48,12 +48,14 @@ router.get("/", (req, res) => {
   res.json(accountOf(req.user.id));
 });
 
-// Name and (for organizers) organization. The email is the login and is
+// First and last name (stored together as `name`) and, for organizers, the organization. The email is the login and is
 // read-only; the database also refuses to change it (users_email_readonly trigger).
 router.put("/profile", (req, res) => {
   const body = req.body ?? {};
   const errors = {};
-  const name = v.text(errors, body, "name", "Name", { min: 2, max: 60 });
+  const first = v.text(errors, body, "first_name", "First name", { min: 2, max: 30 });
+  const last = v.text(errors, body, "last_name", "Last name", { min: 2, max: 30 });
+  const name = `${first} ${last}`;
   if (body.email !== undefined && String(body.email).trim().toLowerCase() !== req.user.email.toLowerCase()) {
     errors.email = "Email can't be changed";
   }

@@ -1,5 +1,5 @@
 import { useApi } from "../hooks.js";
-import { Link } from "../router.jsx";
+import { Link, FROM } from "../router.jsx";
 import { parts } from "../format.js";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -60,7 +60,7 @@ function Ticket({ ticket }) {
   const d = parts(ticket.starts_at);
   return (
     <li>
-      <Link to={`/events/${ticket.event_id}`} className="ticket">
+      <Link to={`/events/${ticket.event_id}`} from={FROM.tickets} className="ticket">
         <span className="ticket__stub mono">
           <span>{d.month}</span>
           <strong>{d.day}</strong>

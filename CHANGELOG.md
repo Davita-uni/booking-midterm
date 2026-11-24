@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.2 — Breadcrumbs, Edit Profile names, schema fix
+
+- The "← back" link on an event page now goes back to where the event was opened from: All events, Past events, My Tickets, My events or My profile. It still works after a reload. An event opened directly or from a notification goes back to All events (or Past events for a past event).
+- The new/edit event form goes back (breadcrumb and Cancel) to where it was opened from: My events, the events list, the event page or Account status. After saving, the event page keeps the original breadcrumb (e.g. still "← My events").
+- Deleting an event returns to the page the event was opened from.
+- Edit Profile has separate First name and Last name fields, like sign-up. The page title is "Edit Profile".
+- Fix: `schema.sql` was missing the `notifications` table since 0.13.0, so `npm run seed` failed on a fresh install. Restored the table and its index.
+
 ## 0.16.1 — First and last name
 
 - Sign-up asks for First name and Last name in two fields (2–30 characters each) instead of one Full name field. The server checks both and stores them together as the user's name.
