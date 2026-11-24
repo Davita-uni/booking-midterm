@@ -38,7 +38,7 @@ export default function EventDetail({ id }) {
           </h1>
           <p className="detail__when mono">
             {longDate(event.starts_at)}
-            {event.is_past && <span className="past-tag">Past event · read-only</span>}
+            {event.is_past && <span className="past-tag">Past event</span>}
           </p>
           {event.description ? (
             <p className="detail__text">{event.description}</p>

@@ -247,3 +247,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.8.0 | One My profile page (events organized / attended); organizers can book other events |
 | 0.9.0 | Upcoming / Past events switch; past events read-only |
 | 0.9.1 | More past events in the seed; booked / organizer icons with tooltips |
+| 0.9.2 | Past event tag shortened to "Past event" |
