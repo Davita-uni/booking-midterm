@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useApi } from "../hooks.js";
 import { useAuth } from "../auth.jsx";
 import { Link, FROM } from "../router.jsx";
+import { useBrand } from "../brand.js";
 import EventRow from "../components/EventRow.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -32,6 +33,7 @@ const TEXT = {
 export default function Events({ audience = "public" }) {
   const { user } = useAuth();
   const text = TEXT[audience];
+  useBrand(audience === "iliauni");
   const categories = useApi("/categories");
   const [when, setWhen] = useState(initialWhen);
   const [q, setQ] = useState("");
