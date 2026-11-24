@@ -528,3 +528,133 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- requests (organizer ↔ admin) ---------- */
+
+.requests {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.request {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.request__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.request .request__subject {
+  margin: 0;
+  font-size: 19px;
+}
+
+.request__meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.request__meta strong {
+  color: var(--text);
+}
+
+.request__body {
+  white-space: pre-line;
+  max-width: 70ch;
+}
+
+.request__reply {
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--success);
+  background: color-mix(in srgb, var(--success) 7%, transparent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.request__reply-head {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--success);
+}
+
+.request__waiting {
+  font-size: 14px;
+}
+
+.request__answer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.request__controls {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.request__controls .field {
+  min-width: 220px;
+}
+
+.request__saved {
+  color: var(--success);
+  font-size: 14px;
+}
+
+.req-status {
+  flex: none;
+  font: 500 12px var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.req-status--new {
+  color: var(--accent);
+}
+
+.req-status--in_progress {
+  color: var(--text);
+  border-style: dashed;
+}
+
+.req-status--completed {
+  color: var(--success);
+}
+
+/* email-like form */
+.mail {
+  max-width: 760px;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.mail__line {
+  display: flex;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.mail__label {
+  width: 56px;
+  flex: none;
+  font: 500 12px/1.9 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

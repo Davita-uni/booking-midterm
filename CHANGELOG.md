@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0 — Requests to admins
+
+- New `requests` table (organizer → admins) with status `new` / `in_progress` / `completed` and an admin reply.
+- Organizers: "My requests" in the My account menu lists their requests with status (New, Work in progress, Completed) and the admin's reply. "Add new request" opens an email-like form (To, From, Subject, Request).
+- Admins: "Requests" in the My account menu, tabs by status (New count in red), reply and change status per request.
+- API: `GET/POST /api/requests`, `PATCH /api/requests/:id` (admin only), validated on the server. Attendees get `403`.
+- Seed: three sample requests (completed with reply, in progress with reply, new).
+
 ## 0.10.0 — Light and dark theme
 
 - New light theme (warm paper background, darker amber for contrast). "Stage night" stays as the dark theme.

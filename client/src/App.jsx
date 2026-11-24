@@ -14,6 +14,9 @@ import AdminOrganizers from "./pages/AdminOrganizers.jsx";
 import AccountStatus from "./pages/AccountStatus.jsx";
 import Profile from "./pages/Profile.jsx";
 import ProfileEdit from "./pages/ProfileEdit.jsx";
+import MyRequests from "./pages/MyRequests.jsx";
+import NewRequest from "./pages/NewRequest.jsx";
+import AdminRequests from "./pages/AdminRequests.jsx";
 import AccountMenu from "./components/AccountMenu.jsx";
 import ThemeToggle from "./components/ThemeToggle.jsx";
 
@@ -96,6 +99,9 @@ const routes = [
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/organizers", AdminOrganizers, ["admin"]],
+  ["/admin/requests", AdminRequests, ["admin"]],
+  ["/my/requests", MyRequests, ["organizer"]],
+  ["/my/requests/new", NewRequest, ["organizer"]],
   ["/admin/venues", AdminVenues, ["admin"]],
   ["/admin/categories", AdminCategories, ["admin"]],
 ];
