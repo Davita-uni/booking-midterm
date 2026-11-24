@@ -57,3 +57,11 @@ CREATE TABLE IF NOT EXISTS registrations (
 CREATE INDEX IF NOT EXISTS idx_events_starts_at ON events(starts_at);
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_registrations_user ON registrations(user_id);
+
+-- A user's email is their login and can't be changed once the account exists.
+CREATE TRIGGER IF NOT EXISTS users_email_readonly
+BEFORE UPDATE OF email ON users
+WHEN NEW.email IS NOT OLD.email
+BEGIN
+  SELECT RAISE(ABORT, 'email cannot be changed');
+END;

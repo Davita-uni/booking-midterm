@@ -42,7 +42,6 @@ function DetailsForm({ account, onSaved }) {
 
   const changed =
     form.name !== account.name ||
-    form.email !== account.email ||
     (isOrganizer && form.organization !== (account.organization ?? ""));
 
   const update = (e) => {
@@ -56,7 +55,7 @@ function DetailsForm({ account, onSaved }) {
     setBusy(true);
     setMessage(null);
     try {
-      const body = { name: form.name, email: form.email };
+      const body = { name: form.name };
       if (isOrganizer) body.organization = form.organization;
       const saved = await api("/account/profile", { method: "PUT", body });
       onSaved(saved);
@@ -94,10 +93,11 @@ function DetailsForm({ account, onSaved }) {
           label="Email"
           name="email"
           type="email"
-          autoComplete="email"
-          hint="You log in with this email."
+          readOnly
+          aria-readonly="true"
+          className="is-readonly"
+          hint="You log in with this email, so it can't be changed."
           value={form.email}
-          onChange={update}
           error={errors.email}
         />
         <div className="form__actions">

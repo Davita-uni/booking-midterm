@@ -335,8 +335,10 @@ a:hover {
 }
 
 .chip {
-  display: inline-block;
-  padding: 1px 8px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  padding: 4px 8px 3px;
   border-radius: 999px;
   border: 1px solid var(--line);
   font: 500 11px var(--font-mono);
@@ -403,6 +405,7 @@ a:hover {
 
 .account__name {
   font-weight: 700;
+  line-height: 1.2;
   color: var(--text);
 }
 

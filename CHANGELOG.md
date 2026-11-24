@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1 — Read-only email
+
+- My profile shows the email read-only (it is the login).
+- `PUT /api/account/profile` no longer changes the email and answers `400` if a different one is sent.
+- Database trigger `users_email_readonly` aborts any `UPDATE` that changes `users.email`.
+- The role label in the account menu is vertically centred with the name.
+
 ## 0.7.0 — My account
 
 - Header: one "My account" dropdown instead of separate name, label and Log out. It shows the name with an Admin / Organizer / Pending tag, then My profile, Account details and Log out (closes on outside click or Escape).

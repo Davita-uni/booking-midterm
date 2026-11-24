@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import { db } from "../db/index.mjs";
 import { requireSession } from "../middlewares/auth.mjs";
-import { badRequest, conflict, unauthorized } from "../utils/http.mjs";
+import { badRequest } from "../utils/http.mjs";
 import * as v from "../utils/validate.mjs";
 
 // The logged-in user's own account. Organizers waiting for approval may use
@@ -25,24 +25,22 @@ router.get("/", (req, res) => {
   res.json(accountOf(req.user.id));
 });
 
-// Name, email and (for organizers) organization.
+// Name and (for organizers) organization. The email is the login and is
+// read-only; the database also refuses to change it (users_email_readonly trigger).
 router.put("/profile", (req, res) => {
   const body = req.body ?? {};
   const errors = {};
   const name = v.text(errors, body, "name", "Name", { min: 2, max: 60 });
-  const email = v.email(errors, body);
+  if (body.email !== undefined && String(body.email).trim().toLowerCase() !== req.user.email.toLowerCase()) {
+    errors.email = "Email can't be changed";
+  }
   const organization =
     req.user.role === "organizer"
       ? v.text(errors, body, "organization", "Organization or project name", { min: 2, max: 80 })
       : null;
   if (v.hasErrors(errors)) throw badRequest(errors);
 
-  const taken = db.prepare("SELECT 1 FROM users WHERE email = ? AND id != ?").get(email, req.user.id);
-  if (taken) throw conflict("This email is already registered", { email: "This email is already registered" });
-
-  db.prepare("UPDATE users SET name = ?, email = ?, organization = ? WHERE id = ?").run(
-    name, email, organization, req.user.id
-  );
+  db.prepare("UPDATE users SET name = ?, organization = ? WHERE id = ?").run(name, organization, req.user.id);
   res.json(accountOf(req.user.id));
 });
 
