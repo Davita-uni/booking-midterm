@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { db } from "../db/index.mjs";
 import { unauthorized, forbidden } from "../utils/http.mjs";
 import { PENDING_MESSAGE } from "../config/app.mjs";
+import { isIliauni } from "../utils/iliauni.mjs";
 
 const SECRET = () => process.env.JWT_SECRET;
 
@@ -38,6 +39,7 @@ function loadSession(req) {
   req.user = {
     id: user.id, name: user.name, email: user.email, role: user.role,
     status: user.status, organization: user.organization, currency: user.currency,
+    is_iliauni: isIliauni(user.email),
   };
 }
 

@@ -14,6 +14,9 @@ venue and category lists.
 | Organizer | After admin approval: create events, edit and delete **only their own** events, see who booked their events, book seats at **other organizers'** events |
 | Admin     | Approve, reject, suspend and reactivate organizers; manage venues and categories; edit or delete any event; see any attendee list |
 
+Ilia State University accounts (any role with an `@iliauni.edu.ge` email)
+also get the **Iliauni** section, see below.
+
 Roles are checked on the server for every request (`requireAuth` +
 `requireRole` middleware and an ownership check for events). The React app
 only hides buttons; it is not what protects the data.
@@ -79,6 +82,23 @@ seconds). Clicking one opens the related page and marks it read.
 | Organizer | the admin replies to or changes the status of their request; one of their events becomes fully booked |
 | Admin | an organizer sends a new request; a new organizer signs up and waits for approval |
 | Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!"; or rejects them: "Your organizer application was denied. Please contact the administrator." (the account becomes an attendee account) |
+
+## Iliauni: internal university meetings
+
+- Anyone whose email ends with **`@iliauni.edu.ge`** (any capitalisation) is
+  an Ilia State University member. The server works this out from the email
+  (`is_iliauni` on the session); the browser can't fake it.
+- Members get an **Iliauni** item (with the university seal) next to Events
+  in the top menu. It lists the internal meetings, upcoming and past.
+- **Organizers** with an iliauni email see a **Who can see this event** choice
+  on the event form: **Everyone** (normal public event) or **Iliauni only**.
+  Attendees can't create meetings, like any other event.
+- Internal meetings never appear on the public events page. Listing, opening
+  or booking one without an iliauni account, and creating one as a
+  non-iliauni organizer, are refused by the server with `403`.
+- Known limitation: the app doesn't send confirmation emails, so it can't
+  prove that a person really owns the `@iliauni.edu.ge` address they signed
+  up with. A real deployment would verify the email first.
 
 ## Tickets, prices and entry rules
 
@@ -155,7 +175,10 @@ npm run demo:forbidden
 It logs in as organizer Giorgi and attendee Ana and calls the API directly,
 skipping the React app. The server answers `403` when Giorgi tries to edit,
 delete or read the attendee list of Nino's event, `403` when Ana tries to
-create an event or a venue, and `401` without a token.
+create an event or a venue, and `401` without a token. It also shows the
+Iliauni rules: Ana (not `@iliauni.edu.ge`) gets `403` when she lists, opens
+or books an internal meeting, and Giorgi gets `403` when he tries to create
+an "Iliauni only" event (10 checks in total).
 
 In the browser: log in as `giorgi.lomidze@doorlist.test` and open
 "Late Jazz at the Courtyard". There are no Edit/Delete buttons, and opening
@@ -184,6 +207,17 @@ A second active organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), own
 some of the events. It is useful for showing that one organizer can't change
 another organizer's event.
 
+Ilia State University accounts (they see the **Iliauni** section):
+
+| Role      | Email                      | Password        |
+| --------- | -------------------------- | --------------- |
+| Organizer | `organizer@iliauni.edu.ge` | `Organizer123!` |
+| Attendee  | `student@iliauni.edu.ge`   | `Attendee123!`  |
+
+They come with 3 internal meetings (2 upcoming, 1 past), 1 public open day,
+and 120 more student accounts (`…@iliauni.edu.ge`, `Attendee123!`) who booked
+the meetings.
+
 ## Authentication
 
 - Passwords are hashed with bcrypt (`bcryptjs`, 10 rounds) and never sent back.
@@ -211,7 +245,7 @@ server starts. `npm run seed` resets the data.
 | `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee), `status` (pending / active / suspended), `organization`, `currency` |
 | `categories`    | `id` PK, `name` unique                                            |
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
-| `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users, `price`, `face_control`, `age_limit`, `dress_code` |
+| `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users, `price`, `face_control`, `age_limit`, `dress_code`, `audience` (`public` / `iliauni`) |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, `quantity` (1–10), unique (`event_id`, `user_id`) |
 | `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
 | `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed / cancelled) |
@@ -242,6 +276,7 @@ All responses are JSON. Validation errors return `400` with
 | PUT    | `/api/categories/:id`| admin     | Rename a category       |
 | DELETE | `/api/categories/:id`| admin     | Delete an unused category |
 | GET    | `/api/events`        | public    | Upcoming events, or past ones with `?when=past` (`?q=`, `?category=`) |
+| GET    | `/api/events?audience=iliauni` | `@iliauni.edu.ge` accounts | Internal Ilia Uni meetings (also `?when=past`) |
 | GET    | `/api/events/mine`   | organizer | Own events with booking counts |
 | GET    | `/api/events/:id`    | public    | One event                |
 | POST   | `/api/events`        | organizer | Create an event          |
@@ -333,3 +368,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.16.1 | First and last name on sign-up; "Hi, name!" header |
 | 0.16.2 | Breadcrumbs go back where you came from; first/last name in Edit Profile; schema fix |
 | 0.16.3 | Monospace font only for labels, event dates and categories |
+| 0.17.0 | Iliauni section: internal meetings for `@iliauni.edu.ge` accounts |

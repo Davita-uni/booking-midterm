@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate, backTo, FROM } from "../router.jsx";
+import { useAuth } from "../auth.jsx";
 import Field from "../components/Field.jsx";
 import DateTimeField from "../components/DateTimeField.jsx";
 import ChoiceGroup from "../components/ChoiceGroup.jsx";
@@ -19,7 +20,13 @@ const EMPTY = {
   age_limit: null, // 16 / 18 / 21 / 25 / null
   dress: null, // "Formal" / "other" / null
   dress_other: "",
+  audience: "public", // "public" or "iliauni" (Ilia Uni organizers only)
 };
+
+const AUDIENCE_OPTIONS = [
+  { value: "public", label: "Everyone" },
+  { value: "iliauni", label: "Iliauni only" },
+];
 
 const FACE_OPTIONS = [
   { value: true, label: "Yes" },
@@ -34,11 +41,16 @@ const DRESS_OPTIONS = [
 // Used for both /events/new and /events/:id/edit
 export default function EventForm({ id }) {
   const editing = Boolean(id);
+  const { user } = useAuth();
   const existing = useApi(editing ? `/events/${id}` : null);
   const venues = useApi("/venues");
   const categories = useApi("/categories");
 
-  const [form, setForm] = useState(EMPTY);
+  // "New event" on the Iliauni page opens the form with "Iliauni only" chosen
+  const [form, setForm] = useState(() => ({
+    ...EMPTY,
+    audience: new URLSearchParams(window.location.search).get("audience") === "iliauni" ? "iliauni" : "public",
+  }));
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -66,6 +78,7 @@ export default function EventForm({ id }) {
       age_limit: e.age_limit,
       dress: e.dress_code === null ? null : e.dress_code === "Formal" ? "Formal" : "other",
       dress_other: e.dress_code && e.dress_code !== "Formal" ? e.dress_code : "",
+      audience: e.audience,
     });
   }, [existing.data]);
 
@@ -134,6 +147,23 @@ export default function EventForm({ id }) {
           <p className="alert" role="alert">
             {message}
           </p>
+        )}
+        {/* only Ilia Uni organizers can make an event visible to @iliauni.edu.ge accounts only */}
+        {user?.is_iliauni && (
+          <ChoiceGroup
+            label="Who can see this event"
+            name="audience"
+            options={AUDIENCE_OPTIONS}
+            value={form.audience}
+            onChange={choose("audience")}
+            error={errors.audience}
+            hint={
+              form.audience === "iliauni"
+                ? "Only people with an @iliauni.edu.ge email can see it and get a ticket"
+                : "Listed on the public events page"
+            }
+            required
+          />
         )}
         <Field
           label="Title"

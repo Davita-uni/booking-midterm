@@ -74,4 +74,6 @@ export const FROM = {
   myEvents: { to: "/my/events", label: "My events" },
   profile: { to: "/account/profile", label: "My profile" },
   status: { to: "/account/status", label: "Account status" },
+  iliauni: { to: "/iliauni", label: "Iliauni meetings" },
+  iliauniPast: { to: "/iliauni?when=past", label: "Past Iliauni meetings" },
 };

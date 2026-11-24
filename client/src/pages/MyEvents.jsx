@@ -1,5 +1,6 @@
 import { useApi } from "../hooks.js";
 import { Link, FROM } from "../router.jsx";
+import IliauniTag from "../components/IliauniTag.jsx";
 import { parts, longDate } from "../format.js";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -64,6 +65,7 @@ export default function MyEvents() {
                     <Link to={`/events/${event.id}`} from={FROM.myEvents}>
                       <strong>{event.title}</strong>
                     </Link>
+                    {event.audience === "iliauni" && <IliauniTag label="Iliauni" />}
                     {past && <span className="past-chip mono">Past</span>}
                     <span className="table__sub">{event.venue_name}</span>
                   </td>

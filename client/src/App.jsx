@@ -34,6 +34,15 @@ function Header() {
           <NavLink to="/" exact>
             Events
           </NavLink>
+          {/* only for @iliauni.edu.ge accounts (the server decides who that is) */}
+          {user?.is_iliauni && (
+            <NavLink to="/iliauni">
+              <span className="nav__iliauni">
+                <img src="/iliauni-logo.png" alt="" width="22" height="22" />
+                Iliauni
+              </span>
+            </NavLink>
+          )}
           {user?.role === "attendee" && <NavLink to="/my/tickets">My Tickets</NavLink>}
           {user?.role === "organizer" && user.status === "pending" && (
             <NavLink to="/account/status">Account Status</NavLink>
@@ -91,6 +100,7 @@ function NotFound() {
 // a list of roles = only those roles. The server checks roles again.
 const routes = [
   ["/", Events],
+  ["/iliauni", () => <Events audience="iliauni" />, "iliauni"],
   ["/events/new", EventForm, ["organizer"]],
   ["/events/:id", EventDetail],
   ["/events/:id/edit", EventForm, ["organizer", "admin"]],
@@ -122,6 +132,18 @@ function Routes() {
 
     if (access === "guest" && user) return <Redirect to={homeFor(user)} />;
     if (access && access !== "guest" && !user) return <Redirect to="/login" />;
+    if (access === "iliauni") {
+      if (user.is_iliauni) return <Page key={path} {...params} />;
+      return (
+        <div className="state state--error">
+          <h3>Only for Ilia State University</h3>
+          <p>Iliauni meetings are for accounts with an @iliauni.edu.ge email.</p>
+          <Link to="/" className="btn">
+            Back to events
+          </Link>
+        </div>
+      );
+    }
     // organizers waiting for approval can browse public pages and their own account pages, nothing else
     if (access && access !== "guest" && user.status === "pending" && !pattern.startsWith("/account")) {
       return <Redirect to="/account/status" />;

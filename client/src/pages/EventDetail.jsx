@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate, backTo, FROM } from "../router.jsx";
+import IliauniTag from "../components/IliauniTag.jsx";
 import { longDate, seatsLabel, seatsTone } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
@@ -23,7 +24,10 @@ export default function EventDetail({ id }) {
 
   const percent = Math.round((event.booked / event.capacity) * 100);
   // the breadcrumb goes back to the list the event was opened from
-  const back = backTo(event.is_past ? FROM.past : FROM.upcoming);
+  const internal = event.audience === "iliauni";
+  const back = backTo(
+    internal ? (event.is_past ? FROM.iliauniPast : FROM.iliauni) : event.is_past ? FROM.past : FROM.upcoming
+  );
 
   const remove = async () => {
     await api(`/events/${event.id}`, { method: "DELETE" });
@@ -38,7 +42,10 @@ export default function EventDetail({ id }) {
 
       <div className="detail">
         <article className="detail__main">
-          <p className="eyebrow">{event.category_name}</p>
+          <p className="eyebrow">
+            {event.category_name}
+            {internal && <IliauniTag />}
+          </p>
           <h1>
             {event.title}
             <EventBadges event={event} />

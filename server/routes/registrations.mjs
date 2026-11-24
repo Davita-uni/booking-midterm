@@ -6,13 +6,14 @@ import { badRequest } from "../utils/http.mjs";
 import { conflict, forbidden, notFound, parseId } from "../utils/http.mjs";
 import { nowLocal } from "../utils/time.mjs";
 import { notify } from "../utils/notify.mjs";
+import { ILIAUNI_ONLY_MESSAGE } from "../utils/iliauni.mjs";
 
 const router = express.Router();
 
 const findEvent = (id) =>
   db
     .prepare(`
-      SELECT e.id, e.title, e.starts_at, e.capacity, e.organizer_id,
+      SELECT e.id, e.title, e.starts_at, e.capacity, e.organizer_id, e.audience,
              (SELECT COALESCE(SUM(r.quantity), 0) FROM registrations r WHERE r.event_id = e.id) AS booked
       FROM events e WHERE e.id = ?
     `)
@@ -35,6 +36,7 @@ router.post("/events/:id/registrations", requireSession, requireRole(...BOOKERS)
   const registration = transaction(() => {
     const event = findEvent(eventId);
     if (!event) throw notFound("Event not found");
+    if (event.audience === "iliauni" && !req.user.is_iliauni) throw forbidden(ILIAUNI_ONLY_MESSAGE, "iliauni_only");
     if (event.organizer_id === req.user.id) throw forbidden("You organize this event, so you can't buy a ticket for it");
     if (event.starts_at <= nowLocal()) throw conflict("This event has already started");
 

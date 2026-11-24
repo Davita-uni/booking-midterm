@@ -17,9 +17,12 @@ const users = [
   { name: "Mariam Chikovani", email: "mariam.chikovani@doorlist.test", password: "Attendee123!", role: "attendee" },
   { name: "Saba Javakhishvili", email: "saba.javakhishvili@doorlist.test", password: "Attendee123!", role: "attendee" },
   { name: "Elene Abashidze", email: "elene.abashidze@doorlist.test", password: "Attendee123!", role: "attendee" },
+  // Ilia State University accounts (@iliauni.edu.ge): they also see the internal Iliauni meetings
+  { name: "Nana Gogua", email: "organizer@iliauni.edu.ge", password: "Organizer123!", role: "organizer", organization: "Ilia State University Student Union" },
+  { name: "Sandro Maisuradze", email: "student@iliauni.edu.ge", password: "Attendee123!", role: "attendee" },
 ];
 
-const categories = ["Music", "Tech talk", "Workshop", "Theatre", "Food & drink"];
+const categories = ["Music", "Tech talk", "Workshop", "Theatre", "Food & drink", "University"];
 
 const venues = [
   { name: "Fabrika Courtyard", address: "8 Egnate Ninoshvili St", capacity: 300 },
@@ -27,9 +30,11 @@ const venues = [
   { name: "Impact Hub Tbilisi", address: "8 Ivane Javakhishvili St", capacity: 80 },
   { name: "Wine Factory N1 Cellar", address: "1 Vasil Petriashvili St", capacity: 60 },
   { name: "Biblusi Reading Room", address: "36 Shota Rustaveli Ave", capacity: 50 },
+  { name: "Ilia State University, Main Building", address: "3/5 Kakutsa Cholokashvili Ave", capacity: 200 },
 ];
 
-// organizer: 1 = Nino (the main test organizer), 2 = Giorgi
+// organizer: 1 = Nino (the main test organizer), 2 = Giorgi, 3 = Nana (Ilia Uni)
+// audience "iliauni" = internal meeting, only visible to @iliauni.edu.ge accounts
 const events = [
   {
     title: "Late Jazz at the Courtyard",
@@ -128,6 +133,31 @@ const events = [
     starts_at: "2026-11-07T20:00", capacity: 250, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
     price: 25, face_control: null, age_limit: null, dress_code: null,
   },
+  // Ilia State University (organizer 3)
+  {
+    title: "Student Union Open Meeting",
+    description: "Plans for the spring semester: the new study rooms, the sports week and the student budget. Every student can bring a question.",
+    starts_at: "2026-12-03T17:00", capacity: 150, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
+  },
+  {
+    title: "Thesis Writing Clinic for MA Students",
+    description: "Supervisors from three faculties answer questions about structure, citations and the defence. Bring your draft outline.",
+    starts_at: "2026-12-10T15:00", capacity: 60, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
+  },
+  {
+    title: "Open Day at Ilia State University",
+    description: "Tours of the campus and labs, short talks by students and lecturers, and an info desk for the new BA programmes. Open to everyone.",
+    starts_at: "2026-12-14T11:00", capacity: 200, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Faculty Town Hall: Autumn Semester",
+    description: "The deans reported on the autumn semester and answered students' questions about exams and the new schedule.",
+    starts_at: "2026-11-12T16:00", capacity: 150, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
+  },
 ];
 
 // [event index, attendee emails]
@@ -150,6 +180,10 @@ const bookings = [
   [13, ["attendee@doorlist.test", "saba.javakhishvili@doorlist.test"]],
   [14, ["luka.tsiklauri@doorlist.test", "organizer@doorlist.test", "saba.javakhishvili@doorlist.test", "attendee@doorlist.test"]],
   [15, ["attendee@doorlist.test", "luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "elene.abashidze@doorlist.test", "saba.javakhishvili@doorlist.test"]],
+  // Ilia Uni: the student has a ticket for the open meeting and went to the town hall
+  [16, ["student@iliauni.edu.ge"]],
+  [18, ["student@iliauni.edu.ge", "attendee@doorlist.test"]],
+  [19, ["student@iliauni.edu.ge"]],
 ];
 
 // More attendees, so the seat counts look like a real city: every event is
@@ -166,9 +200,16 @@ const crowd = Array.from({ length: CROWD_SIZE }, (_, i) => {
   const last = LAST[(i * 7) % LAST.length];
   return { name: `${first} ${last}`, email: `${first}.${last}.${i + 1}@doorlist.test`.toLowerCase() };
 });
+// students with @iliauni.edu.ge emails: the only ones who can book internal meetings
+const STUDENTS = 120;
+const students = Array.from({ length: STUDENTS }, (_, i) => {
+  const first = FIRST[(i * 3 + 1) % FIRST.length];
+  const last = LAST[(i * 11 + 2) % LAST.length];
+  return { name: `${first} ${last}`, email: `${first}.${last}.${i + 1}@iliauni.edu.ge`.toLowerCase() };
+});
 
 // target number of booked seats per event (same order as `events`)
-const BOOKED = [96, 52, 50, 34, 47, 31, 241, 54, 62, 171, 48, 55, 88, 41, 57, 212];
+const BOOKED = [96, 52, 50, 34, 47, 31, 241, 54, 62, 171, 48, 55, 88, 41, 57, 212, 64, 22, 73, 118];
 
 transaction(() => {
   db.exec(`
@@ -193,7 +234,11 @@ transaction(() => {
     );
     userIds[u.email] = Number(lastInsertRowid);
   }
-  const organizerIds = { 1: userIds["organizer@doorlist.test"], 2: userIds["giorgi.lomidze@doorlist.test"] };
+  const organizerIds = {
+    1: userIds["organizer@doorlist.test"],
+    2: userIds["giorgi.lomidze@doorlist.test"],
+    3: userIds["organizer@iliauni.edu.ge"],
+  };
 
   const insertCategory = db.prepare("INSERT INTO categories (name) VALUES (?)");
   const categoryIds = {};
@@ -205,14 +250,14 @@ transaction(() => {
 
   const insertEvent = db.prepare(`
     INSERT INTO events (title, description, starts_at, capacity, price, face_control, age_limit, dress_code,
-                        venue_id, category_id, organizer_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        venue_id, category_id, organizer_id, audience)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const eventIds = events.map((e) =>
     Number(
       insertEvent.run(
         e.title, e.description, e.starts_at, e.capacity, e.price, e.face_control, e.age_limit, e.dress_code,
-        venueIds[e.venue], categoryIds[e.category], organizerIds[e.organizer]
+        venueIds[e.venue], categoryIds[e.category], organizerIds[e.organizer], e.audience ?? "public"
       ).lastInsertRowid
     )
   );
@@ -227,12 +272,21 @@ transaction(() => {
   const crowdIds = crowd.map(
     (c) => Number(insertUser.run(c.name, c.email, crowdHash, "attendee", "active", null).lastInsertRowid)
   );
+  const studentIds = students.map(
+    (c) => Number(insertUser.run(c.name, c.email, crowdHash, "attendee", "active", null).lastInsertRowid)
+  );
   const bookedCount = db.prepare("SELECT COALESCE(SUM(quantity), 0) AS n FROM registrations WHERE event_id = ?");
+  const hasTicket = db.prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?");
   eventIds.forEach((eventId, index) => {
     let need = BOOKED[index] - bookedCount.get(eventId).n;
-    // start at a different place in the crowd for each event, so lists differ
-    for (let k = 0; need > 0 && k < crowdIds.length; k++) {
-      insertBooking.run(eventId, crowdIds[(index * 37 + k) % crowdIds.length]);
+    // internal meetings are booked by students only; Ilia Uni's public events by both
+    const pool =
+      events[index].audience === "iliauni" ? studentIds : events[index].organizer === 3 ? [...studentIds, ...crowdIds] : crowdIds;
+    // start at a different place in the pool for each event, so lists differ
+    for (let k = 0; need > 0 && k < pool.length; k++) {
+      const userId = pool[(index * 37 + k) % pool.length];
+      if (hasTicket.get(eventId, userId)) continue;
+      insertBooking.run(eventId, userId);
       need--;
     }
   });
