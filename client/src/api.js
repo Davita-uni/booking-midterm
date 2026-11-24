@@ -11,10 +11,11 @@ export const tokenStore = {
 };
 
 export class ApiError extends Error {
-  constructor(status, message, errors = {}) {
+  constructor(status, message, errors = {}, code) {
     super(message);
     this.status = status;
     this.errors = errors || {};
+    this.code = code;
   }
 }
 
@@ -44,7 +45,7 @@ export async function api(path, { method = "GET", body } = {}) {
 
   if (!res.ok) {
     if (res.status === 401 && token) onUnauthorized();
-    throw new ApiError(res.status, data.message || `Request failed (${res.status})`, data.errors);
+    throw new ApiError(res.status, data.message || `Request failed (${res.status})`, data.errors, data.code);
   }
   return data;
 }

@@ -11,12 +11,28 @@ venue and category lists.
 | Role      | Can do |
 | --------- | ------ |
 | Attendee  | Browse and search events, book a seat, cancel a booking, see "My tickets" |
-| Organizer | Create events, edit and delete **only their own** events, see who booked their events |
-| Admin     | Manage venues and categories, edit or delete any event, see any attendee list |
+| Organizer | After admin approval: create events, edit and delete **only their own** events, see who booked their events |
+| Admin     | Approve, reject, suspend and reactivate organizers; manage venues and categories; edit or delete any event; see any attendee list |
 
 Roles are checked on the server for every request (`requireAuth` +
 `requireRole` middleware and an ownership check for events). The React app
 only hides buttons; it is not what protects the data.
+
+## Signing up
+
+Sign-up has three steps: **1. Account type → 2. Your details → 3. Done**.
+
+- **Attendee** ("Book events"): name, email, password. The account works right away.
+- **Organizer** ("Run events"): name, organization or project, email, password.
+  The account is created as **pending** and can't log in yet. The last step
+  explains that an admin has to approve it, and gives the help center number
+  (+995 555 XX XX XX) to call in case of delay.
+
+The admin opens **Organizers** in the menu. New sign-ups are listed under
+"Waiting for approval", where the admin can **Approve** or **Reject** them.
+Active organizers can be **Suspended**, which logs them out at once and blocks
+login. Suspended organizers can be **Reactivated**. Pending and suspended
+organizers get a clear message on the login page instead of a generic error.
 
 ## Stack
 
@@ -44,7 +60,7 @@ Open two terminals.
 cd server
 npm install
 copy .env.example .env   # macOS/Linux: cp .env.example .env
-npm run seed             # creates server/data/doorlist.db with test data
+npm run seed             # creates (or resets) server/data/doorlist.db with test data
 npm run dev
 ```
 
@@ -90,7 +106,12 @@ Created by `npm run seed`:
 | Organizer | `organizer@doorlist.test` | `Organizer123!` |
 | Attendee  | `attendee@doorlist.test`  | `Attendee123!`  |
 
-A second organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
+Two organizer sign-ups are waiting for approval, so the approval screen isn't
+empty: `levan.kiknadze@doorlist.test` and `keti.mamaladze@doorlist.test`
+(both `Organizer123!`). Logging in as one of them shows the "waiting for
+approval" message until the admin approves it.
+
+A second active organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
 some of the events. It is useful for showing that one organizer can't change
 another organizer's event.
 
@@ -103,6 +124,8 @@ another organizer's event.
 - Logout increases the user's `token_version`, so the old token stops working
   on the server too, not only in the browser.
 - Sign-up allows the attendee and organizer roles. Admin accounts come only from the seed.
+- Organizer accounts have a `status`: `pending` → `active` (approved) ⇄ `suspended`.
+  Only `active` accounts get a token, and every request checks the status again.
 
 ## Database
 
@@ -112,7 +135,7 @@ server starts. `npm run seed` resets the data.
 
 | Table           | Key columns                                                       |
 | --------------- | ----------------------------------------------------------------- |
-| `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee)   |
+| `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee), `status` (pending / active / suspended), `organization` |
 | `categories`    | `id` PK, `name` unique                                            |
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users |
@@ -152,6 +175,9 @@ All responses are JSON. Validation errors return `400` with
 | DELETE | `/api/events/:id/registrations/me` | attendee | Cancel own booking |
 | GET    | `/api/events/:id/registrations`    | owner organizer, admin | Attendee list |
 | GET    | `/api/registrations/mine`          | attendee | Own bookings |
+| GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
+| PATCH  | `/api/admin/organizers/:id`        | admin | Approve, suspend or reactivate (`{ status }`) |
+| DELETE | `/api/admin/organizers/:id`        | admin | Reject a pending sign-up |
 
 ## Validation and UX
 
@@ -175,3 +201,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.4.0 | Bookings, capacity limit, attendee list |
 | 0.5.0 | Forbidden-action demo, README, polish |
 | 0.5.1 | Dropdown arrow spacing |
+| 0.6.0 | 3-step sign-up, organizer approval by admin |

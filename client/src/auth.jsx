@@ -35,7 +35,14 @@ export function AuthProvider({ children }) {
   const login = async (email, password) =>
     startSession(await api("/auth/login", { method: "POST", body: { email, password } }));
 
-  const register = async (form) => startSession(await api("/auth/register", { method: "POST", body: form }));
+  // Organizer sign-ups come back as { pending: true } without a token:
+  // they can't use the platform until an admin approves them.
+  const register = async (form) => {
+    const data = await api("/auth/register", { method: "POST", body: form });
+    if (data.pending) return data;
+    startSession(data);
+    return data;
+  };
 
   const logout = async () => {
     try {

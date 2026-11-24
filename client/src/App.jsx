@@ -10,6 +10,7 @@ import MyEvents from "./pages/MyEvents.jsx";
 import MyTickets from "./pages/MyTickets.jsx";
 import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
+import AdminOrganizers from "./pages/AdminOrganizers.jsx";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -28,6 +29,7 @@ function Header() {
           {user?.role === "organizer" && <NavLink to="/my/events">My events</NavLink>}
           {user?.role === "admin" && (
             <>
+              <NavLink to="/admin/organizers">Organizers</NavLink>
               <NavLink to="/admin/venues">Venues</NavLink>
               <NavLink to="/admin/categories">Categories</NavLink>
             </>
@@ -88,6 +90,7 @@ const routes = [
   ["/my/tickets", MyTickets, ["attendee"]],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
+  ["/admin/organizers", AdminOrganizers, ["admin"]],
   ["/admin/venues", AdminVenues, ["admin"]],
   ["/admin/categories", AdminCategories, ["admin"]],
 ];

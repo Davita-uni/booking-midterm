@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 — Organizer approval
+
+- Sign-up is now 3 steps: account type, details, done. Organizers also give an organization or project name.
+- New organizer accounts are `pending`: no token, and login returns `403` with a "waiting for approval" message and the help center number (+995 555 XX XX XX).
+- Admin "Organizers" page: approve or reject sign-ups, suspend and reactivate organizers (tabs with counts, confirmation before reject/suspend).
+- Suspending logs the organizer out immediately (`token_version` + 1); `requireAuth` only accepts active accounts.
+- `users.status` and `users.organization` columns; older databases are upgraded automatically on start.
+- Seed adds two pending organizers for the demo.
+
 ## 0.5.1 — Select arrow
 
 - Dropdown arrow now sits 12px from the right edge, the same distance as the text from the left (custom arrow instead of the browser default).

@@ -13,6 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash  TEXT    NOT NULL,
   role           TEXT    NOT NULL DEFAULT 'attendee'
                          CHECK (role IN ('admin', 'organizer', 'attendee')),
+  -- organizers start as 'pending' until an admin approves them
+  status         TEXT    NOT NULL DEFAULT 'active'
+                         CHECK (status IN ('pending', 'active', 'suspended')),
+  organization   TEXT,                           -- organizers only
   token_version  INTEGER NOT NULL DEFAULT 0,
   created_at     TEXT    NOT NULL DEFAULT (datetime('now'))
 );

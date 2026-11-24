@@ -7,6 +7,7 @@ import venueRoutes from "./routes/venues.mjs";
 import categoryRoutes from "./routes/categories.mjs";
 import eventRoutes from "./routes/events.mjs";
 import registrationRoutes from "./routes/registrations.mjs";
+import organizerRoutes from "./routes/organizers.mjs";
 
 if (!process.env.JWT_SECRET) {
   console.error("JWT_SECRET is missing. Copy server/.env.example to server/.env.");
@@ -24,6 +25,7 @@ app.use("/api/venues", venueRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api", registrationRoutes);
+app.use("/api/admin/organizers", organizerRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ message: "Route not found" });
@@ -36,7 +38,7 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ message: "Request body is not valid JSON" });
   }
   if (err.status && err.status < 500) {
-    return res.status(err.status).json({ message: err.message, errors: err.errors });
+    return res.status(err.status).json({ message: err.message, errors: err.errors, code: err.code });
   }
   console.error(err);
   res.status(500).json({ message: "Something went wrong on the server" });

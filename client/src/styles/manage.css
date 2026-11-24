@@ -171,3 +171,85 @@
     padding-top: var(--space-2) !important;
   }
 }
+
+/* ---------- organizer approval ---------- */
+
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-4);
+  overflow-x: auto;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: 500 15px var(--font-ui);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.is-active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.tab__count {
+  font-size: 12px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.spaced {
+  margin-bottom: var(--space-4);
+}
+
+.status {
+  font: 500 12px var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: currentColor;
+}
+
+.status--pending {
+  color: var(--accent);
+}
+
+.status--active {
+  color: var(--success);
+}
+
+.status--suspended {
+  color: var(--error);
+}
+
+.btn--success {
+  background: transparent;
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.btn--success:hover {
+  background: rgba(76, 175, 122, 0.12);
+}
