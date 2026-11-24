@@ -32,7 +32,7 @@ Sign-up has three steps: **1. Account type → 2. Your details → 3. Done**.
   while still pending opens the same page.
 
 The admin opens **Organizers** in the menu. The tabs are Active, Suspended and
-All on the left, and **Waiting for approval** on its own on the right, with the
+All (active + suspended) on the left, and **Waiting for approval** on its own on the right, with the
 number of waiting sign-ups in red. New sign-ups are listed there, where the admin can **Approve** or **Reject** them.
 Once approved, the status page switches to "You're approved" and the organizer
 can create events. Active organizers can be **Suspended**, which logs them out
@@ -212,3 +212,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.6.1 | Pending organizers stay logged in with an account status page |
 | 0.6.2 | Organizers page: "Waiting for approval" tab on the right with a red count |
 | 0.6.3 | Role label in the header is green for every role |
+| 0.6.4 | "All" tab no longer includes sign-ups waiting for approval |

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.4 — "All" tab
+
+- The "All" tab on the Organizers page lists active and suspended organizers only. Sign-ups waiting for approval appear only under "Waiting for approval".
+
 ## 0.6.3 — Role label colour
 
 - The role label next to Log out is green for every role (Admin was red, which read like a warning). The "Pending" label for organizers awaiting approval stays amber.
