@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0 — My profile and organizer bookings
+
+- My account menu: "Account details" removed; "My profile" opens the overview page.
+- My profile page shows the account facts and two lists: **Events organized** (organizers) and **Events attended** (bookings). "Edit profile" opens the edit form at `/account/profile/edit`.
+- Organizers can book seats at other organizers' events; booking their own event is refused (`403`). Organizing an event never adds it to Events attended.
+- Admin accounts can't book seats; organizers waiting for approval can't either.
+- `GET /api/account` returns `organized` and `attended` lists. Seed: Nino has booked Giorgi's Postgres clinic.
+- The My events / My tickets buttons were removed from the profile page.
+
 ## 0.7.2 — My events in the account menu
 
 - For approved organizers, "My events" moved from the top navigation into the My account dropdown (above My profile).

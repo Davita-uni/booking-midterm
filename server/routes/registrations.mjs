@@ -15,14 +15,18 @@ const findEvent = (id) =>
     `)
     .get(id);
 
-// Attendee books a seat. The check and the insert run in one transaction,
-// so two people can't take the last seat at the same time.
-router.post("/events/:id/registrations", requireAuth, requireRole("attendee"), (req, res) => {
+// Attendees and organizers book seats (organizers only at other organizers'
+// events). The check and the insert run in one transaction, so two people
+// can't take the last seat at the same time.
+const BOOKERS = ["attendee", "organizer"];
+
+router.post("/events/:id/registrations", requireAuth, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
 
   const registration = transaction(() => {
     const event = findEvent(eventId);
     if (!event) throw notFound("Event not found");
+    if (event.organizer_id === req.user.id) throw forbidden("You organize this event, so you can't book a seat at it");
     if (event.starts_at <= nowLocal()) throw conflict("This event has already started");
 
     const already = db
@@ -40,8 +44,8 @@ router.post("/events/:id/registrations", requireAuth, requireRole("attendee"), (
   res.status(201).json(registration);
 });
 
-// Attendee cancels their own booking.
-router.delete("/events/:id/registrations/me", requireAuth, requireRole("attendee"), (req, res) => {
+// Cancel your own booking.
+router.delete("/events/:id/registrations/me", requireAuth, requireRole(...BOOKERS), (req, res) => {
   const eventId = parseId(req.params.id);
   const { changes } = db
     .prepare("DELETE FROM registrations WHERE event_id = ? AND user_id = ?")
@@ -70,8 +74,8 @@ router.get("/events/:id/registrations", requireAuth, requireRole("organizer", "a
   res.json(attendees);
 });
 
-// The logged-in attendee's bookings.
-router.get("/registrations/mine", requireAuth, requireRole("attendee"), (req, res) => {
+// The logged-in user's own bookings.
+router.get("/registrations/mine", requireAuth, requireRole(...BOOKERS), (req, res) => {
   const rows = db
     .prepare(`
       SELECT r.id, r.created_at AS booked_at,

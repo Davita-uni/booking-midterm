@@ -12,8 +12,8 @@ import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
 import AdminOrganizers from "./pages/AdminOrganizers.jsx";
 import AccountStatus from "./pages/AccountStatus.jsx";
-import AccountDetails from "./pages/AccountDetails.jsx";
 import Profile from "./pages/Profile.jsx";
+import ProfileEdit from "./pages/ProfileEdit.jsx";
 import AccountMenu from "./components/AccountMenu.jsx";
 
 function Header() {
@@ -88,8 +88,9 @@ const routes = [
   ["/my/events", MyEvents, ["organizer"]],
   ["/my/tickets", MyTickets, ["attendee"]],
   ["/account/status", AccountStatus, ["organizer"]],
-  ["/account", AccountDetails, "user"],
+  ["/account", () => <Redirect to="/account/profile" />, "user"],
   ["/account/profile", Profile, "user"],
+  ["/account/profile/edit", ProfileEdit, "user"],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/organizers", AdminOrganizers, ["admin"]],

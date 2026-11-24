@@ -4,6 +4,7 @@ import { db } from "../db/index.mjs";
 import { requireSession } from "../middlewares/auth.mjs";
 import { badRequest } from "../utils/http.mjs";
 import * as v from "../utils/validate.mjs";
+import { nowLocal } from "../utils/time.mjs";
 
 // The logged-in user's own account. Organizers waiting for approval may use
 // these too (requireSession), so they can fix a typo in their details.
@@ -14,11 +15,33 @@ function accountOf(id) {
   const user = db
     .prepare("SELECT id, name, email, role, status, organization, created_at FROM users WHERE id = ?")
     .get(id);
-  const stats = {
-    bookings: db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE user_id = ?").get(id).n,
-    events: db.prepare("SELECT COUNT(*) AS n FROM events WHERE organizer_id = ?").get(id).n,
-  };
-  return { ...user, stats };
+  // Events this user organizes (organizers only)
+  const organized =
+    user.role === "organizer"
+      ? db
+          .prepare(`
+            SELECT e.id, e.title, e.starts_at, e.capacity, ve.name AS venue_name,
+                   (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) AS booked
+            FROM events e JOIN venues ve ON ve.id = e.venue_id
+            WHERE e.organizer_id = ?
+            ORDER BY e.starts_at
+          `)
+          .all(id)
+      : [];
+  // Events this user booked a seat at. Organizing an event never adds it here.
+  const attended = db
+    .prepare(`
+      SELECT e.id, e.title, e.starts_at, ve.name AS venue_name, r.created_at AS booked_at
+      FROM registrations r
+      JOIN events e ON e.id = r.event_id
+      JOIN venues ve ON ve.id = e.venue_id
+      WHERE r.user_id = ?
+      ORDER BY e.starts_at
+    `)
+    .all(id);
+  const now = nowLocal();
+  const mark = (list) => list.map((e) => ({ ...e, past: e.starts_at < now }));
+  return { ...user, organized: mark(organized), attended: mark(attended) };
 }
 
 router.get("/", (req, res) => {
