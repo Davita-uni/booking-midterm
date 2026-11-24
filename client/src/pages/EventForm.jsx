@@ -224,7 +224,13 @@ export default function EventForm({ id }) {
             value={form.venue_id}
             onChange={update}
             error={errors.venue_id}
-            hint={internal ? "Iliauni meetings take place in A, B, C or D Block" : undefined}
+            hint={
+              internal
+                ? blockVenues.length
+                  ? "Iliauni meetings take place in A, B, C or D Block"
+                  : "No Ilia State University venues yet. Ask an admin to add one under Venues"
+                : undefined
+            }
           >
             <option value="">Choose…</option>
             {internal ? (
