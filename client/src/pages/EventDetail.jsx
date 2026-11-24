@@ -6,6 +6,7 @@ import { longDate, seatsLabel } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
 import AttendeeList from "../components/AttendeeList.jsx";
+import EventBadges from "../components/EventBadges.jsx";
 import { Loading, ErrorState } from "../components/States.jsx";
 
 export default function EventDetail({ id }) {
@@ -31,7 +32,10 @@ export default function EventDetail({ id }) {
       <div className="detail">
         <article className="detail__main">
           <p className="eyebrow">{event.category_name}</p>
-          <h1>{event.title}</h1>
+          <h1>
+            {event.title}
+            <EventBadges event={event} />
+          </h1>
           <p className="detail__when mono">
             {longDate(event.starts_at)}
             {event.is_past && <span className="past-tag">Past event · read-only</span>}
