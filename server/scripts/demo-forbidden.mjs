@@ -59,6 +59,10 @@ try {
     "10. Organizer Giorgi (not @iliauni.edu.ge) tries to create an Ilia Uni only event",
     await call("POST", "/events", giorgi, { ...ninosEvent, title: "Fake university meeting", audience: "iliauni" })
   );
+  show(
+    "11. Organizer Giorgi tries to hold a public event in A Block (an Ilia Uni venue)",
+    await call("POST", "/events", giorgi, { ...ninosEvent, title: "Party in A Block", venue_id: meeting.venue_id })
+  );
   console.log();
 } catch (err) {
   console.error(err.cause?.code === "ECONNREFUSED" ? `Can't reach ${API}. Start the server first (npm run dev).` : err.message);

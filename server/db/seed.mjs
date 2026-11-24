@@ -30,7 +30,11 @@ const venues = [
   { name: "Impact Hub Tbilisi", address: "8 Ivane Javakhishvili St", capacity: 80 },
   { name: "Wine Factory N1 Cellar", address: "1 Vasil Petriashvili St", capacity: 60 },
   { name: "Biblusi Reading Room", address: "36 Shota Rustaveli Ave", capacity: 50 },
-  { name: "Ilia State University, Main Building", address: "3/5 Kakutsa Cholokashvili Ave", capacity: 200 },
+  // Ilia State University's own venues: only Ilia Uni organizers can use them
+  { name: "A Block", address: "Ilia State University, 3/5 Kakutsa Cholokashvili Ave", capacity: 300, iliauni: 1 },
+  { name: "B Block", address: "Ilia State University, 3/5 Kakutsa Cholokashvili Ave", capacity: 200, iliauni: 1 },
+  { name: "C Block", address: "Ilia State University, 3/5 Kakutsa Cholokashvili Ave", capacity: 120, iliauni: 1 },
+  { name: "D Block", address: "Ilia State University, 3/5 Kakutsa Cholokashvili Ave", capacity: 80, iliauni: 1 },
 ];
 
 // organizer: 1 = Nino (the main test organizer), 2 = Giorgi, 3 = Nana (Ilia Uni)
@@ -137,25 +141,25 @@ const events = [
   {
     title: "Student Union Open Meeting",
     description: "Plans for the spring semester: the new study rooms, the sports week and the student budget. Every student can bring a question.",
-    starts_at: "2026-12-03T17:00", capacity: 150, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    starts_at: "2026-12-03T17:00", capacity: 150, venue: "A Block", category: "University", organizer: 3,
     price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
   },
   {
     title: "Thesis Writing Clinic for MA Students",
     description: "Supervisors from three faculties answer questions about structure, citations and the defence. Bring your draft outline.",
-    starts_at: "2026-12-10T15:00", capacity: 60, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    starts_at: "2026-12-10T15:00", capacity: 60, venue: "C Block", category: "University", organizer: 3,
     price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
   },
   {
     title: "Open Day at Ilia State University",
     description: "Tours of the campus and labs, short talks by students and lecturers, and an info desk for the new BA programmes. Open to everyone.",
-    starts_at: "2026-12-14T11:00", capacity: 200, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    starts_at: "2026-12-14T11:00", capacity: 200, venue: "A Block", category: "University", organizer: 3,
     price: 0, face_control: null, age_limit: null, dress_code: null,
   },
   {
     title: "Faculty Town Hall: Autumn Semester",
     description: "The deans reported on the autumn semester and answered students' questions about exams and the new schedule.",
-    starts_at: "2026-11-12T16:00", capacity: 150, venue: "Ilia State University, Main Building", category: "University", organizer: 3,
+    starts_at: "2026-11-12T16:00", capacity: 150, venue: "B Block", category: "University", organizer: 3,
     price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
   },
 ];
@@ -244,9 +248,11 @@ transaction(() => {
   const categoryIds = {};
   for (const name of categories) categoryIds[name] = Number(insertCategory.run(name).lastInsertRowid);
 
-  const insertVenue = db.prepare("INSERT INTO venues (name, address, capacity) VALUES (?, ?, ?)");
+  const insertVenue = db.prepare("INSERT INTO venues (name, address, capacity, iliauni) VALUES (?, ?, ?, ?)");
   const venueIds = {};
-  for (const v of venues) venueIds[v.name] = Number(insertVenue.run(v.name, v.address, v.capacity).lastInsertRowid);
+  for (const v of venues) {
+    venueIds[v.name] = Number(insertVenue.run(v.name, v.address, v.capacity, v.iliauni ?? 0).lastInsertRowid);
+  }
 
   const insertEvent = db.prepare(`
     INSERT INTO events (title, description, starts_at, capacity, price, face_control, age_limit, dress_code,

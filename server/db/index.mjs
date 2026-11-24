@@ -37,6 +37,11 @@ if (!registrationColumns.includes("quantity")) {
            CHECK (quantity BETWEEN 1 AND 10)`);
 }
 
+// Databases created before v0.17.2 have no Ilia Uni venues.
+if (!db.prepare("PRAGMA table_info(venues)").all().some((c) => c.name === "iliauni")) {
+  db.exec("ALTER TABLE venues ADD COLUMN iliauni INTEGER NOT NULL DEFAULT 0 CHECK (iliauni IN (0, 1))");
+}
+
 // Databases created before v0.17.0 have no audience (all events are public).
 if (!db.prepare("PRAGMA table_info(events)").all().some((c) => c.name === "audience")) {
   db.exec(`ALTER TABLE events ADD COLUMN audience TEXT NOT NULL DEFAULT 'public'

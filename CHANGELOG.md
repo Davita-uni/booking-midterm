@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.17.2 — Ilia Uni venues
+
+- New Ilia State University venues: **A Block** (300 seats), **B Block** (200), **C Block** (120) and **D Block** (80). They replace "Ilia State University, Main Building" in the seed.
+- Iliauni meetings can only take place in A–D Block: on the event form, "Iliauni only" lists just the blocks (and clears another venue that was chosen); the server answers "Iliauni meetings take place in A, B, C or D Block" otherwise.
+- Only Ilia Uni organizers (and admins) can use the blocks, also for public events: they see "Tbilisi venues" and "Ilia State University" as two groups in the venue list. Other accounts don't get the blocks from `GET /api/venues`, and creating an event there returns `403` (new check 11 in `npm run demo:forbidden`).
+- Admin → Venues: "Ilia State University venue" checkbox and an "Ilia Uni" label in the list. A block that still has Iliauni meetings can't be unticked.
+- New `venues.iliauni` column (migration for older databases).
+- Iliauni colours: only the orange accent turns red now; the background no longer changes.
+
 ## 0.17.1 — Iliauni colours
 
 - On Iliauni pages the accent colour fades (0.6 s) from Doorlist orange to the university's red, taken from its seal: `#8f181b` in light mode, a lighter `#e3646a` in dark mode for readable text. The background gets a faint warm tint. Leaving the section fades back.

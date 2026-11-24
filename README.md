@@ -93,7 +93,14 @@ seconds). Clicking one opens the related page and marks it read.
 - Iliauni pages (the meetings list, an internal meeting's page, and the event
   form while "Iliauni only" is chosen) **fade into the university's red**
   (`#8f181b`, from its seal) instead of the orange accent, and fade back when
-  you leave. Light and dark mode both have their own red.
+  you leave. Only the accent changes, not the background. Light and dark mode
+  both have their own red.
+- Ilia Uni has its **own venues: A Block, B Block, C Block and D Block**.
+  Iliauni meetings can only take place there, and only Ilia Uni organizers can
+  use them (also for a public event such as the Open Day). Other accounts
+  don't see the blocks in the venue list, and the server refuses them with
+  `403`. Admins mark a venue as an Ilia State University venue with a checkbox
+  on the Venues page.
 - **Organizers** with an iliauni email see a **Who can see this event** choice
   on the event form: **Everyone** (normal public event) or **Iliauni only**.
   Attendees can't create meetings, like any other event.
@@ -182,7 +189,7 @@ delete or read the attendee list of Nino's event, `403` when Ana tries to
 create an event or a venue, and `401` without a token. It also shows the
 Iliauni rules: Ana (not `@iliauni.edu.ge`) gets `403` when she lists, opens
 or books an internal meeting, and Giorgi gets `403` when he tries to create
-an "Iliauni only" event (10 checks in total).
+an "Iliauni only" event or to use A Block (11 checks in total).
 
 In the browser: log in as `giorgi.lomidze@doorlist.test` and open
 "Late Jazz at the Courtyard". There are no Edit/Delete buttons, and opening
@@ -248,7 +255,7 @@ server starts. `npm run seed` resets the data.
 | --------------- | ----------------------------------------------------------------- |
 | `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee), `status` (pending / active / suspended), `organization`, `currency` |
 | `categories`    | `id` PK, `name` unique                                            |
-| `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
+| `venues`        | `id` PK, `name` unique, `address`, `capacity`, `iliauni` (1 = A–D Block) |
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users, `price`, `face_control`, `age_limit`, `dress_code`, `audience` (`public` / `iliauni`) |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, `quantity` (1–10), unique (`event_id`, `user_id`) |
 | `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
@@ -374,3 +381,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.16.3 | Monospace font only for labels, event dates and categories |
 | 0.17.0 | Iliauni section: internal meetings for `@iliauni.edu.ge` accounts |
 | 0.17.1 | Iliauni pages fade into the university's red |
+| 0.17.2 | Ilia Uni venues A–D Block; Iliauni colours change only the accent |
