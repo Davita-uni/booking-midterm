@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1 — Event icons and more past events
+
+- Seed now has eight past events (September–November 2026) across all venues and categories, with realistic attendee lists, like the upcoming ones.
+- Next to an event's title (in the lists and on the event page): a green check with the tooltip "You have booked this event", and a green organizer icon with the tooltip "You are organizer of this event".
+- `GET /api/events` returns `is_registered` and `is_organizer` for the logged-in user; the event detail returns `is_organizer`.
+
 ## 0.9.0 — Past events
 
 - Events page title is now a switch: "Upcoming events / Past events". The selected one is the big title, the other is smaller after the slash. The choice is kept in the address (`/?when=past`), so reload and Back keep it.

@@ -1,5 +1,6 @@
 import { Link } from "../router.jsx";
 import { parts, seatsLabel } from "../format.js";
+import EventBadges from "./EventBadges.jsx";
 
 // One line in the event list: date block, title and venue, seats.
 export default function EventRow({ event }) {
@@ -17,7 +18,10 @@ export default function EventRow({ event }) {
           <span className="event-row__meta mono">
             {d.time} · {event.category_name}
           </span>
-          <span className="event-row__title">{event.title}</span>
+          <span className="event-row__title">
+            {event.title}
+            <EventBadges event={event} />
+          </span>
           <span className="event-row__venue">{event.venue_name}</span>
         </span>
         {event.is_past ? (

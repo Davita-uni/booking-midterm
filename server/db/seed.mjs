@@ -87,6 +87,31 @@ const events = [
     description: "Screen readers, focus management and colour contrast, shown on real Georgian websites.",
     starts_at: "2026-11-11T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 1,
   },
+  {
+    title: "Rtveli Harvest Supper",
+    description: "A long-table dinner after the grape harvest: chacha tasting, mtsvadi from the grill and supra toasts led by a tamada.",
+    starts_at: "2026-09-19T19:30", capacity: 36, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+  },
+  {
+    title: "Hamlet (rehearsed reading)",
+    description: "Six actors read the play in a new Georgian translation, followed by a talk with the translator.",
+    starts_at: "2026-10-03T19:00", capacity: 110, venue: "Rustaveli Theatre, Small Stage", category: "Theatre", organizer: 2,
+  },
+  {
+    title: "Zine-Making Afternoon",
+    description: "Cut, paste, photocopy: everyone left with a stapled eight-page zine about their own street.",
+    starts_at: "2026-10-17T14:00", capacity: 18, venue: "Biblusi Reading Room", category: "Workshop", organizer: 1,
+  },
+  {
+    title: "Node.js Performance Night",
+    description: "Profiling a slow Express API live on stage, plus a short talk on worker threads.",
+    starts_at: "2026-10-28T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+  },
+  {
+    title: "Polyphony Evening: Georgian Folk Choir",
+    description: "A twelve-voice choir sang traditional songs from Guria and Svaneti, with a short introduction to each region's style.",
+    starts_at: "2026-11-07T20:00", capacity: 250, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+  },
 ];
 
 // [event index, attendee emails]
@@ -104,6 +129,11 @@ const bookings = [
   [8, ["luka.tsiklauri@doorlist.test", "elene.abashidze@doorlist.test", "organizer@doorlist.test"]],
   [9, ["attendee@doorlist.test", "mariam.chikovani@doorlist.test", "saba.javakhishvili@doorlist.test", "luka.tsiklauri@doorlist.test"]],
   [10, ["attendee@doorlist.test", "elene.abashidze@doorlist.test"]],
+  [11, ["attendee@doorlist.test", "luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "saba.javakhishvili@doorlist.test", "elene.abashidze@doorlist.test"]],
+  [12, ["mariam.chikovani@doorlist.test", "organizer@doorlist.test", "elene.abashidze@doorlist.test"]],
+  [13, ["attendee@doorlist.test", "saba.javakhishvili@doorlist.test"]],
+  [14, ["luka.tsiklauri@doorlist.test", "organizer@doorlist.test", "saba.javakhishvili@doorlist.test", "attendee@doorlist.test"]],
+  [15, ["attendee@doorlist.test", "luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "elene.abashidze@doorlist.test", "saba.javakhishvili@doorlist.test"]],
 ];
 
 transaction(() => {

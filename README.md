@@ -215,6 +215,9 @@ All responses are JSON. Validation errors return `400` with
 - The events page switches between **Upcoming events / Past events**. Past
   events are read-only: no booking, cancelling, editing or deleting (the server
   answers `409`), but organizers still see who attended.
+- In event lists and on the event page, a green check means "You have booked
+  this event" and a green person-with-star icon means "You are organizer of
+  this event" (tooltips on hover).
 - The attendee list can be sorted by name, email or booking date; the # column always counts from 1.
 - Layout works from 360px phones to desktop (tables turn into cards on small screens).
 
@@ -243,3 +246,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.7.2 | "My events" moved into the My account menu |
 | 0.8.0 | One My profile page (events organized / attended); organizers can book other events |
 | 0.9.0 | Upcoming / Past events switch; past events read-only |
+| 0.9.1 | More past events in the seed; booked / organizer icons with tooltips |

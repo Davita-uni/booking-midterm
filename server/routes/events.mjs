@@ -65,7 +65,7 @@ function readEvent(body = {}, { existing } = {}) {
 // Public list of events. ?when=past lists events that already started
 // (newest first); anything else lists upcoming ones (soonest first).
 // Filters: ?q=text&category=id
-router.get("/", (req, res) => {
+router.get("/", optionalAuth, (req, res) => {
   const past = req.query.when === "past";
   const where = [past ? "e.starts_at < ?" : "e.starts_at >= ?"];
   const params = [nowLocal()];
@@ -83,7 +83,21 @@ router.get("/", (req, res) => {
 
   const order = past ? "e.starts_at DESC" : "e.starts_at";
   const rows = db.prepare(`${SELECT} WHERE ${where.join(" AND ")} ORDER BY ${order}`).all(...params);
-  res.json(rows.map((e) => ({ ...withSeats(e), is_past: past })));
+
+  // For a logged-in user: which of these events they booked or organize
+  const booked = new Set(
+    req.user
+      ? db.prepare("SELECT event_id FROM registrations WHERE user_id = ?").all(req.user.id).map((r) => r.event_id)
+      : []
+  );
+  res.json(
+    rows.map((e) => ({
+      ...withSeats(e),
+      is_past: past,
+      is_registered: booked.has(e.id),
+      is_organizer: Boolean(req.user && e.organizer_id === req.user.id),
+    }))
+  );
 });
 
 // Past events are read-only for everyone, admins included.
@@ -108,6 +122,7 @@ router.get("/:id", optionalAuth, (req, res) => {
   event.is_registered = Boolean(
     user && db.prepare("SELECT 1 FROM registrations WHERE event_id = ? AND user_id = ?").get(event.id, user.id)
   );
+  event.is_organizer = Boolean(user && user.id === event.organizer_id);
   event.is_past = event.starts_at <= nowLocal();
   // past events are read-only: the organizer still sees who came, but can't edit
   event.can_edit = event.can_manage && !event.is_past;
