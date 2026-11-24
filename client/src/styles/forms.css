@@ -204,23 +204,9 @@
   max-width: 40ch;
 }
 
-.ticket-stub {
+.auth__ticket {
   margin-top: var(--space-6);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--radius);
-  padding: var(--space-4);
-  max-width: 340px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--muted);
-  display: grid;
-  gap: 2px;
-}
-
-.ticket-stub b {
-  color: var(--text);
-  font-weight: 500;
+  max-width: 420px;
 }
 
 .panel {
@@ -247,7 +233,7 @@
     padding-top: 0;
   }
 
-  .ticket-stub {
+  .auth__ticket {
     display: none;
   }
 }

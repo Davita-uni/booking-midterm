@@ -65,10 +65,10 @@ function Header() {
           ) : (
             <>
               <Link to="/login" className="btn btn--ghost btn--small">
-                Log in
+                Log In
               </Link>
               <Link to="/register" className="btn btn--primary btn--small">
-                Sign up
+                Sign Up
               </Link>
             </>
           )}

@@ -387,6 +387,7 @@
 /* ---------- upcoming / past switch ---------- */
 
 .when-switch {
+  font-size: clamp(24px, 3vw, 32px);
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -681,4 +682,88 @@ h1 .badge svg {
   min-width: 24px;
   text-align: center;
   font-weight: 600;
+}
+
+/* ---------- "Your Name on the Door" hero on the events page ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 400px);
+  gap: var(--space-7);
+  align-items: center;
+  padding: var(--space-6) 0 var(--space-7);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.tagline {
+  font-size: clamp(36px, 6vw, 60px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* "on the Door" in the purple → light-blue gradient */
+.tagline__glow {
+  display: block; /* "Your Name" / "on the Door" on two lines */
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__lead {
+  margin-top: var(--space-4);
+  max-width: 46ch;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* the next event as a ticket */
+.next-ticket {
+  grid-template-columns: 92px 1fr;
+  height: auto;
+  min-height: 180px;
+  box-shadow: var(--shadow);
+}
+
+.next-ticket .ticket__body {
+  align-content: center;
+}
+
+.next-ticket .ticket__stub strong {
+  font-size: 34px;
+}
+
+.next-ticket__label {
+  font: 500 12px var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.next-ticket__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: var(--space-3);
+  font-weight: 700;
+}
+
+.next-ticket__go {
+  font-size: 14px;
+  color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    padding-top: var(--space-3);
+  }
 }
