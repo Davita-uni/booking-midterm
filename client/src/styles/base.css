@@ -324,3 +324,44 @@ a:hover {
     padding-top: var(--space-5);
   }
 }
+
+/* ---------- role chip ---------- */
+
+.session__name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted);
+}
+
+.chip {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.chip--admin {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.chip--organizer {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chip--attendee {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+@media (max-width: 480px) {
+  .session__name {
+    display: none;
+  }
+}
