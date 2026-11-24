@@ -213,3 +213,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.6.2 | Organizers page: "Waiting for approval" tab on the right with a red count |
 | 0.6.3 | Role label in the header is green for every role |
 | 0.6.4 | "All" tab no longer includes sign-ups waiting for approval |
+| 0.6.5 | No role label in the header for attendees |

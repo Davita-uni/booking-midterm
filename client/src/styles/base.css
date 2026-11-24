@@ -347,8 +347,7 @@ a:hover {
 
 /* the role is information, not a warning: one calm green for every role */
 .chip--admin,
-.chip--organizer,
-.chip--attendee {
+.chip--organizer {
   border-color: var(--success);
   color: var(--success);
 }
