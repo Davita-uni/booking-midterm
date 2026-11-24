@@ -14,7 +14,7 @@ const SELECT = `
   SELECT e.id, e.title, e.description, e.starts_at, e.capacity, e.created_at,
          e.venue_id, ve.name AS venue_name, ve.address AS venue_address, ve.city AS venue_city,
          e.category_id, c.name AS category_name,
-         e.organizer_id, u.name AS organizer_name,
+         e.organizer_id, u.name AS organizer_name, u.organization AS organizer_organization,
          (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id) AS booked
   FROM events e
   JOIN venues ve ON ve.id = e.venue_id
@@ -163,15 +163,15 @@ router.put("/:id", requireAuth, requireRole("organizer", "admin"), (req, res) =>
     WHERE id = ?
   `).run(event.title, event.description, event.starts_at, event.capacity, event.venue_id, event.category_id, id);
 
-  // tell everyone with a seat what changed
-  const changes = [];
-  if (event.starts_at !== existing.starts_at) changes.push("new date or time");
-  if (event.venue_id !== existing.venue_id) changes.push("new venue");
-  if (event.title !== existing.title) changes.push("new title");
-  if (event.description !== existing.description) changes.push("updated description");
-  if (event.category_id !== existing.category_id) changes.push("new category");
-  if (changes.length) {
-    notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was updated: ${changes.join(", ")}.`, `/events/${id}`);
+  // tell everyone with a seat that the details changed
+  const changed =
+    event.starts_at !== existing.starts_at ||
+    event.venue_id !== existing.venue_id ||
+    event.title !== existing.title ||
+    event.description !== existing.description ||
+    event.category_id !== existing.category_id;
+  if (changed) {
+    notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was updated. Click to view new details.`, `/events/${id}`);
   }
 
   res.json(findEvent(id));
@@ -184,8 +184,15 @@ router.delete("/:id", requireAuth, requireRole("organizer", "admin"), (req, res)
   assertCanManage(req.user, event);
   assertNotPast(event);
 
-  // tell people with a seat before their bookings disappear with it
-  notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was cancelled by the organizer.`, "/");
+  // Tell people with a seat before their bookings disappear with it. The link
+  // carries the title, time and venue, so the page can still show what was
+  // cancelled after the event is gone from the database.
+  const details = new URLSearchParams({ cancelled: "1", title: event.title, when: event.starts_at, venue: event.venue_name });
+  notify(
+    bookersOf(id, req.user.id),
+    `“${event.title}”, which you booked, was cancelled by the organizer.`,
+    `/events/${id}?${details}`
+  );
 
   // registrations are removed with it (ON DELETE CASCADE)
   db.prepare("DELETE FROM events WHERE id = ?").run(id);

@@ -4,6 +4,7 @@ import { db } from "../db/index.mjs";
 import { requireSession, signToken } from "../middlewares/auth.mjs";
 import { badRequest, conflict, forbidden, unauthorized } from "../utils/http.mjs";
 import { SUSPENDED_MESSAGE } from "../config/app.mjs";
+import { notifyAdmins } from "../utils/notify.mjs";
 import * as v from "../utils/validate.mjs";
 
 const router = express.Router();
@@ -42,6 +43,9 @@ router.post("/register", async (req, res) => {
     .run(name, email, hash, role, status, organization);
 
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(lastInsertRowid);
+  if (status === "pending") {
+    notifyAdmins(`New organizer sign-up: ${name} (${organization}) is waiting for approval.`, "/admin/organizers");
+  }
   res.status(201).json({ token: signToken(user), user: publicUser(user) });
 });
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../api.js";
 import { navigate, usePath } from "../router.jsx";
 
-const POLL_MS = 30000;
+const POLL_MS = 10000;
 
 // "5 min ago", "3 h ago", "2 d ago". created_at is UTC from SQLite.
 function ago(value) {
@@ -14,7 +14,7 @@ function ago(value) {
 }
 
 // Bell in the header with the number of unread notifications and a dropdown.
-// It checks for new ones every 30 seconds and whenever the page changes.
+// It checks for new ones every 10 seconds and whenever the page changes.
 export default function NotificationBell() {
   const [data, setData] = useState({ unread: 0, items: [] });
   const [open, setOpen] = useState(false);
