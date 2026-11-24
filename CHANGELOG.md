@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.3 — Calmer typography
+
+- The monospace font (IBM Plex Mono) is now used only for the orange labels above page titles, event dates, and the time and category line of an event.
+- Everything else uses Archivo, the normal UI font: form inputs (incl. the date picker, time list, tickets and price), the ticket counter, tables, chips, statuses, tab counts, notification times and the sign-up steps.
+- Numbers keep equal-width digits (`tabular-nums`), so table columns still line up.
+
 ## 0.16.2 — Breadcrumbs, Edit Profile names, schema fix
 
 - The "← back" link on an event page now goes back to where the event was opened from: All events, Past events, My Tickets, My events or My profile. It still works after a reload. An event opened directly or from a notification goes back to All events (or Past events for a past event).

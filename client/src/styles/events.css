@@ -185,7 +185,7 @@
 }
 
 .facts dt {
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);

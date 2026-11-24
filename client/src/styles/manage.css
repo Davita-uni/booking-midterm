@@ -37,7 +37,7 @@
 
 .table th {
   text-align: left;
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -217,7 +217,7 @@
 }
 
 .status {
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -281,7 +281,7 @@
 }
 
 .status-card__rows dt {
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -384,7 +384,7 @@
 }
 
 .details dt {
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -616,7 +616,7 @@
 
 .req-status {
   flex: none;
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-ui);
   padding: 3px 10px;
   border-radius: 999px;
   border: 1px solid currentColor;
@@ -686,7 +686,7 @@
 .mail__label {
   width: 56px;
   flex: none;
-  font: 500 12px/1.9 var(--font-mono);
+  font: 500 12px/1.9 var(--font-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);

@@ -103,7 +103,20 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Numbers (counts, prices, times in tables) use the normal UI font with
+   equal-width digits, so columns still line up. */
 .mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The monospace face is kept for three things only: the orange labels above
+   page titles, the time and category line of an event, and event dates. */
+.eyebrow,
+.date-block,
+.event-row__meta,
+.ticket__stub,
+.detail__when,
+.mini-event__date {
   font-family: var(--font-mono);
 }
 
@@ -307,7 +320,7 @@ a:hover {
   gap: var(--space-3);
   color: var(--muted);
   padding: var(--space-6) 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 14px;
 }
 
@@ -365,7 +378,7 @@ a:hover {
   padding: 4px 8px 3px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  font: 500 11px var(--font-mono);
+  font: 500 11px var(--font-ui);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text);
