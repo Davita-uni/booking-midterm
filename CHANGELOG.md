@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.5 — Notification tweaks
+
+- The bell checks for new notifications every 10 seconds (was 30).
+- New wording when a booked event changes: “Event name”, which you booked, was updated. Click to view new details.
+- A "was cancelled" notification now opens a greyed-out page with the event's title, date and venue and a "cancelled by the organizer" banner (the notification link carries those details, since the event itself is deleted).
+- Admins are notified when a new organizer signs up and waits for approval.
+- The event page shows the organizer's organization instead of the person's name.
+
 ## 0.12.4 — 24-hour time
 
 - The event form's date and time is now a date picker plus a 24-hour time list (00:00 … 23:45 in 15-minute steps). The browser's combined date-and-time input showed AM/PM on English systems.

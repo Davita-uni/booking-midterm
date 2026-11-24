@@ -14,6 +14,9 @@ export default function EventDetail({ id }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   if (loading && !event) return <Loading label="Loading event…" />;
+  // opened from a "was cancelled" notification: the event no longer exists
+  const cancelled = new URLSearchParams(window.location.search);
+  if (error?.status === 404 && cancelled.get("cancelled")) return <CancelledEvent info={cancelled} />;
   if (error) return <ErrorState error={error} onRetry={reload} />;
 
   const percent = Math.round((event.booked / event.capacity) * 100);
@@ -71,7 +74,8 @@ export default function EventDetail({ id }) {
             </div>
             <div>
               <dt>Organizer</dt>
-              <dd>{event.organizer_name}</dd>
+              {/* the organization runs the event; the person is just its account */}
+              <dd>{event.organizer_organization || event.organizer_name}</dd>
             </div>
             <div>
               <dt>Seats</dt>
@@ -109,6 +113,34 @@ export default function EventDetail({ id }) {
           <strong>{event.title}</strong> and its {event.booked} booking(s) will be removed. This can't be undone.
         </p>
       </ConfirmDialog>
+    </>
+  );
+}
+
+// Greyed-out page for an event that was cancelled (deleted) by its organizer.
+function CancelledEvent({ info }) {
+  const title = info.get("title") || "This event";
+  const when = info.get("when");
+  const venue = info.get("venue");
+  return (
+    <>
+      <Link to="/" className="back">
+        ← All events
+      </Link>
+      <div className="cancelled">
+        <p className="cancelled__banner" role="status">
+          This event was cancelled by the organizer. Your booking was removed.
+        </p>
+        <div className="cancelled__body" aria-disabled="true">
+          <p className="eyebrow">Cancelled</p>
+          <h1>{title}</h1>
+          {when && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(when) && <p className="detail__when mono">{longDate(when)}</p>}
+          {venue && <p className="muted">{venue}</p>}
+        </div>
+        <Link to="/" className="btn">
+          Browse other events
+        </Link>
+      </div>
     </>
   );
 }

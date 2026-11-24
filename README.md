@@ -64,14 +64,14 @@ their name (with an Admin, Organizer or Pending tag) and:
 
 ## Notifications
 
-The bell next to My account shows unread notifications (checked every 30
+The bell next to My account shows unread notifications (checked every 10
 seconds). Clicking one opens the related page and marks it read.
 
 | Who | Gets a notification when |
 | --- | --- |
-| Attendee (anyone with a seat) | an event they booked is edited (date/time, venue, title, description or category) or cancelled |
+| Attendee (anyone with a seat) | an event they booked is edited (date/time, venue, title, description or category): “…, which you booked, was updated. Click to view new details.” Or the event is cancelled: the link opens a greyed-out page saying it was cancelled |
 | Organizer | the admin replies to or changes the status of their request; one of their events becomes fully booked |
-| Admin | an organizer sends a new request |
+| Admin | an organizer sends a new request; a new organizer signs up and waits for approval |
 | Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!" |
 
 ## Stack
@@ -287,3 +287,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.12.2 | Event times in 15-minute steps |
 | 0.12.3 | Messages restyled so they don't look like input fields |
 | 0.12.4 | 24-hour time list on the event form |
+| 0.12.5 | Notification tweaks, cancelled-event page, organization on events |
