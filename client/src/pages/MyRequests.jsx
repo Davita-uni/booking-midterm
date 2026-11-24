@@ -14,7 +14,7 @@ export default function MyRequests() {
     <>
       <div className="page-head">
         <div>
-          <p className="eyebrow">My account</p>
+          <p className="eyebrow">Account</p>
           <h1>My requests</h1>
         </div>
         <Link to="/my/requests/new" className="btn btn--primary">
