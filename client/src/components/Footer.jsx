@@ -38,6 +38,7 @@ export default function Footer() {
             Doorlist
           </Link>
           <p>Tickets for concerts, talks and workshops around Tbilisi.</p>
+          <p className="site-footer__bottom">© {new Date().getFullYear()} Doorlist · Made in Tbilisi</p>
         </div>
 
         <nav className="site-footer__col" aria-label="Policies">
@@ -76,7 +77,6 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <p className="site-footer__bottom">© {new Date().getFullYear()} Doorlist · Made in Tbilisi</p>
     </footer>
   );
 }

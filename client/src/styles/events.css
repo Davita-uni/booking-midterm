@@ -761,3 +761,68 @@ h1 .badge svg {
     padding-top: var(--space-3);
   }
 }
+
+/* ---------- page links under the event list ---------- */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.pagination__info {
+  font-size: 14px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.pagination__page,
+.pagination__step {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 14px var(--font-ui);
+  cursor: pointer;
+}
+
+.pagination__page:hover,
+.pagination__step:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pagination__page.is-current {
+  background: var(--button-gradient);
+  border-color: transparent;
+  color: var(--accent-ink);
+  cursor: default;
+}
+
+.pagination__step:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pagination__gap {
+  padding: 0 var(--space-1);
+  color: var(--muted);
+}
+
+@media (max-width: 560px) {
+  .pagination {
+    justify-content: center;
+  }
+}

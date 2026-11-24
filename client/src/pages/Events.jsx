@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useApi } from "../hooks.js";
 import { useAuth } from "../auth.jsx";
 import { Link, FROM } from "../router.jsx";
 import { useBrand } from "../brand.js";
 import EventRow from "../components/EventRow.jsx";
+import Pagination from "../components/Pagination.jsx";
 import NextEventTicket from "../components/NextEventTicket.jsx";
 import { TAGLINE } from "./Login.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
-// Read ?when=past from the address so the choice survives a reload or Back.
-const initialWhen = () => (new URLSearchParams(window.location.search).get("when") === "past" ? "past" : "upcoming");
+// Read ?when=past and ?page=N from the address, so the list survives a reload or Back.
+const query = () => new URLSearchParams(window.location.search);
+const initialWhen = () => (query().get("when") === "past" ? "past" : "upcoming");
+const initialPage = () => Math.max(1, Number.parseInt(query().get("page"), 10) || 1);
 
 // The public list ("/") and the internal Ilia Uni list ("/iliauni", audience="iliauni")
 // share this page; the server only returns internal meetings to @iliauni.edu.ge accounts.
@@ -39,6 +42,8 @@ export default function Events({ audience = "public" }) {
   useBrand(audience === "iliauni");
   const categories = useApi("/categories");
   const [when, setWhen] = useState(initialWhen);
+  const [page, setPage] = useState(initialPage);
+  const listTop = useRef(null);
   const [q, setQ] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -49,17 +54,54 @@ export default function Events({ audience = "public" }) {
     return () => clearTimeout(t);
   }, [q]);
 
-  const choose = (next) => {
-    setWhen(next);
-    window.history.replaceState(null, "", next === "past" ? `${text.base}?when=past` : text.base);
+  // the address of this list as it is now, e.g. "/?when=past&page=2"
+  const urlFor = (w, p) => {
+    const qs = new URLSearchParams();
+    if (w === "past") qs.set("when", "past");
+    if (p > 1) qs.set("page", String(p));
+    return qs.size ? `${text.base}?${qs}` : text.base;
   };
+  const show = (w, p) => {
+    setWhen(w);
+    setPage(p);
+    window.history.replaceState(null, "", urlFor(w, p));
+  };
+  const choose = (next) => show(next, 1);
+  const goToPage = (p) => {
+    show(when, p);
+    listTop.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // a new search or category starts again at page 1. Compared with the last
+  // values (not "skip the first render"), so ?page=2 in the address is kept on
+  // load, also when React runs effects twice in development.
+  const lastFilters = useRef({ search, category });
+  useEffect(() => {
+    const last = lastFilters.current;
+    if (last.search === search && last.category === category) return;
+    lastFilters.current = { search, category };
+    show(when, 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, category]);
 
   const params = new URLSearchParams();
   if (audience === "iliauni") params.set("audience", "iliauni");
   if (when === "past") params.set("when", "past");
   if (search) params.set("q", search);
   if (category) params.set("category", category);
-  const events = useApi(`/events${params.size ? `?${params}` : ""}`);
+  params.set("page", String(page));
+  const result = useApi(`/events?${params}`);
+  // the server answers { events, page, pages, total } and may correct a page that is out of range
+  const events = { ...result, data: result.data?.events };
+  const paging = result.data;
+  // ?page=99 in the address: show (and write) the last page the server returned
+  useEffect(() => {
+    if (paging?.page && paging.page !== page) show(when, paging.page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paging?.page]);
+
+  // the breadcrumb on an event page leads back to this exact list and page
+  const from = { to: urlFor(when, paging?.page ?? page), label: text.from[when].label };
   const filtered = Boolean(search || category);
 
   return (
@@ -77,7 +119,7 @@ export default function Events({ audience = "public" }) {
         </section>
       )}
 
-      <div className="page-head">
+      <div className="page-head" ref={listTop}>
         <div>
           <p className="eyebrow">{text.eyebrow}</p>
           {/* the chosen list is the big title; the other one is the small link after the slash */}
@@ -171,9 +213,19 @@ export default function Events({ audience = "public" }) {
       ) : (
         <ul className="event-list" aria-busy={events.loading}>
           {events.data.map((event) => (
-            <EventRow key={event.id} event={event} from={text.from[when]} />
+            <EventRow key={event.id} event={event} from={from} />
           ))}
         </ul>
+      )}
+      {paging && !events.error && (
+        <Pagination
+          page={paging.page}
+          pages={paging.pages}
+          total={paging.total}
+          pageSize={paging.page_size}
+          onChange={goToPage}
+          noun={audience === "iliauni" ? "meetings" : "events"}
+        />
       )}
     </>
   );

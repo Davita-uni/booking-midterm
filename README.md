@@ -221,8 +221,9 @@ empty: `levan.kiknadze@doorlist.test` and `keti.mamaladze@doorlist.test`
 page until the admin approves it.
 
 The seed also adds 260 more attendee accounts (password `Attendee123!`) and
-about 1,300 bookings, so events look like they would in a real city: one is
-sold out, some have only a few seats left.
+about 2,600 bookings across 32 events (17 upcoming and 12 past public ones, plus
+the Iliauni meetings), so the lists have more than one page and events look like
+they would in a real city: some are sold out, some have only a few tickets left.
 
 A second active organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
 some of the events. It is useful for showing that one organizer can't change
@@ -296,7 +297,7 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/categories`    | admin     | Create a category       |
 | PUT    | `/api/categories/:id`| admin     | Rename a category       |
 | DELETE | `/api/categories/:id`| admin     | Delete an unused category |
-| GET    | `/api/events`        | public    | Upcoming events, or past ones with `?when=past` (`?q=`, `?category=`) |
+| GET    | `/api/events`        | public    | Upcoming events, or past ones with `?when=past` (`?q=`, `?category=`). With `?page=N`: 10 per page, answer `{ events, page, pages, total, page_size }` |
 | GET    | `/api/events?audience=iliauni` | `@iliauni.edu.ge` accounts | Internal Ilia Uni meetings (also `?when=past`) |
 | GET    | `/api/events/mine`   | organizer | Own events with booking counts |
 | GET    | `/api/events/:id`    | public    | One event                |
@@ -397,3 +398,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.18.1 | "Your Name on the Door" header on the events page with the next real event |
 | 0.18.2 | No ticket on the login and sign-up pages |
 | 0.19.0 | Footer with policy pages and contact details |
+| 0.20.0 | Event lists in pages of 10; thinner footer |

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.20.0 — Pages of 10
+
+- Event lists show **10 events per page** (fixed on the server, not a setting): upcoming and past events, and the Iliauni meetings. Below the list: "11–17 of 17 events" and ← Previous · 1 2 3 · Next → links (with … when there are many pages). The current page uses the purple → light-blue gradient.
+- Server: `GET /api/events?page=N` returns `{ events, page, pages, total, page_size }`; a page out of range gives the last page. Without `page` the plain list is returned as before.
+- The page is kept in the address (`/?page=2`, `/?when=past&page=2`), so reload, Back and the "← All Events" breadcrumb on an event page return to the same page. Switching Upcoming/Past, searching or choosing a category starts again at page 1. Changing page scrolls to the top of the list.
+- Seed: 12 more public events (8 upcoming, 4 past), so both lists have two pages.
+- Thinner footer: less padding, the © line moved under the tagline, tighter link lists.
+
 ## 0.19.0 — Footer and policies
 
 - New footer on every page, always at the bottom of the window even on short pages: Doorlist logo and tagline, **Legal** links and **Contact** with email and phone icons (inline SVG). A thin purple → light-blue line on top.
