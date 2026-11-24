@@ -45,6 +45,7 @@ function readEvent(body = {}, { existing } = {}) {
   };
 
   if (!event.starts_at) errors.starts_at = "Date and time are required";
+  else if (/^\d{4}-\d{2}-\d{2}T$/.test(event.starts_at)) errors.starts_at = "Choose a time";
   else if (!isValidLocal(event.starts_at)) errors.starts_at = "Enter a valid date and time";
   else if (Number(event.starts_at.slice(14, 16)) % 15 !== 0)
     errors.starts_at = "Choose a time in 15-minute steps (:00, :15, :30 or :45)";

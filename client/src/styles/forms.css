@@ -9,6 +9,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+  align-items: start;
 }
 
 .field {
@@ -71,6 +72,18 @@
 .field__hint {
   color: var(--muted);
   font-size: 13px;
+}
+
+/* date + 24-hour time, side by side */
+.datetime {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  gap: var(--space-2);
+}
+
+.datetime input,
+.datetime select {
+  font-family: var(--font-mono);
 }
 
 /* Messages: a coloured bar on the left, an icon and no full border, so they
