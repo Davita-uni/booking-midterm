@@ -345,16 +345,9 @@ a:hover {
   color: var(--text);
 }
 
-.chip--admin {
-  border-color: var(--error);
-  color: var(--error);
-}
-
-.chip--organizer {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
+/* the role is information, not a warning: one calm green for every role */
+.chip--admin,
+.chip--organizer,
 .chip--attendee {
   border-color: var(--success);
   color: var(--success);
