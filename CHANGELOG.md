@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.0 — Iliauni internal meetings
+
+- Accounts whose email ends with `@iliauni.edu.ge` (any capitalisation) are Ilia State University members. The server works this out (`is_iliauni` on the session and in login/`/me` responses).
+- New **Iliauni** item with the university seal next to Events in the top menu, only for members. `/iliauni` lists the internal meetings with the same Upcoming / Past switch, search and category filter as the events page.
+- Event form: organizers with an iliauni email choose **Who can see this event**: Everyone or Iliauni only. "New meeting" on the Iliauni page preselects Iliauni only.
+- Internal meetings show an "Iliauni only" label on the event page and an "Iliauni" label in My events; the breadcrumb goes back to "Iliauni meetings".
+- Server: new `events.audience` column (`public` / `iliauni`, migration for older databases). Internal meetings are left out of the public list. Listing, opening or booking them without an iliauni account, and creating one as a non-iliauni organizer, return `403`.
+- `npm run demo:forbidden` has 4 new checks (10 in total).
+- Seed: organizer `organizer@iliauni.edu.ge`, student `student@iliauni.edu.ge`, a "University" category, the Ilia State University Main Building venue, 3 internal meetings + 1 public open day, and 120 student accounts.
+- The option buttons (Yes/No, 16+…) keep their size outside the Entry rules box too.
+
 ## 0.16.3 — Calmer typography
 
 - The monospace font (IBM Plex Mono) is now used only for the orange labels above page titles, event dates, and the time and category line of an event.

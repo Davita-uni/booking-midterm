@@ -5,6 +5,7 @@ import { badRequest, conflict, forbidden, notFound, parseId } from "../utils/htt
 import { nowLocal, isValidLocal } from "../utils/time.mjs";
 import * as v from "../utils/validate.mjs";
 import { notify, bookersOf } from "../utils/notify.mjs";
+import { AUDIENCES, ILIAUNI_ONLY_MESSAGE, ILIAUNI_CREATE_MESSAGE } from "../utils/iliauni.mjs";
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 // category, organizer and how many seats are booked.
 const SELECT = `
   SELECT e.id, e.title, e.description, e.starts_at, e.capacity, e.created_at,
-         e.price, e.face_control, e.age_limit, e.dress_code,
+         e.price, e.face_control, e.age_limit, e.dress_code, e.audience,
          e.venue_id, ve.name AS venue_name, ve.address AS venue_address, ve.city AS venue_city,
          e.category_id, c.name AS category_name,
          e.organizer_id, u.name AS organizer_name, u.organization AS organizer_organization,
@@ -27,6 +28,11 @@ const withSeats = (event) => event && { ...event, seats_left: Math.max(event.cap
 
 const findEvent = (id) => withSeats(db.prepare(`${SELECT} WHERE e.id = ?`).get(id));
 
+// Internal Ilia Uni meetings: only @iliauni.edu.ge accounts may see or book them.
+function assertCanSee(user, event) {
+  if (event.audience === "iliauni" && !user?.is_iliauni) throw forbidden(ILIAUNI_ONLY_MESSAGE, "iliauni_only");
+}
+
 // Organizers may change only their own events; admins may change any event.
 function assertCanManage(user, event) {
   if (user.role === "admin") return;
@@ -34,8 +40,12 @@ function assertCanManage(user, event) {
   throw forbidden("You can only change events that you organize");
 }
 
-function readEvent(body = {}, { existing } = {}) {
+function readEvent(body = {}, { existing, user } = {}) {
   const errors = {};
+  const audience = body.audience ?? existing?.audience ?? "public";
+  if (!AUDIENCES.includes(audience)) errors.audience = "Choose Everyone or Iliauni only";
+  // only Ilia Uni organizers may make (or keep) an event Ilia Uni only
+  else if (audience === "iliauni" && !user?.is_iliauni) throw forbidden(ILIAUNI_CREATE_MESSAGE, "iliauni_only");
   const event = {
     title: v.text(errors, body, "title", "Title", { min: 3, max: 120 }),
     description: v.text(errors, body, "description", "Description", { max: 2000, required: false }),
@@ -48,6 +58,7 @@ function readEvent(body = {}, { existing } = {}) {
     dress_code: null,
     venue_id: Number(body.venue_id),
     category_id: Number(body.category_id),
+    audience,
   };
 
   // price in GEL: 0 means free, at most 2 decimals
@@ -86,11 +97,14 @@ function readEvent(body = {}, { existing } = {}) {
 
 // Public list of events. ?when=past lists events that already started
 // (newest first); anything else lists upcoming ones (soonest first).
+// ?audience=iliauni lists the internal Ilia Uni meetings instead (Ilia Uni accounts only).
 // Filters: ?q=text&category=id
 router.get("/", optionalAuth, (req, res) => {
   const past = req.query.when === "past";
-  const where = [past ? "e.starts_at < ?" : "e.starts_at >= ?"];
-  const params = [nowLocal()];
+  const audience = req.query.audience === "iliauni" ? "iliauni" : "public";
+  if (audience === "iliauni" && !req.user?.is_iliauni) throw forbidden(ILIAUNI_ONLY_MESSAGE, "iliauni_only");
+  const where = [past ? "e.starts_at < ?" : "e.starts_at >= ?", "e.audience = ?"];
+  const params = [nowLocal(), audience];
 
   const q = String(req.query.q ?? "").trim();
   if (q) {
@@ -136,6 +150,7 @@ router.get("/mine", requireAuth, requireRole("organizer"), (req, res) => {
 router.get("/:id", optionalAuth, (req, res) => {
   const event = findEvent(parseId(req.params.id));
   if (!event) throw notFound("Event not found");
+  assertCanSee(req.user, event);
 
   const user = req.user;
   event.can_manage = Boolean(
@@ -152,18 +167,18 @@ router.get("/:id", optionalAuth, (req, res) => {
 });
 
 router.post("/", requireAuth, requireRole("organizer"), (req, res) => {
-  const { event, errors } = readEvent(req.body);
+  const { event, errors } = readEvent(req.body, { user: req.user });
   if (v.hasErrors(errors)) throw badRequest(errors);
 
   const { lastInsertRowid } = db
     .prepare(`
       INSERT INTO events (title, description, starts_at, capacity, price, face_control, age_limit, dress_code,
-                          venue_id, category_id, organizer_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                          venue_id, category_id, organizer_id, audience)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .run(
       event.title, event.description, event.starts_at, event.capacity, event.price, event.face_control,
-      event.age_limit, event.dress_code, event.venue_id, event.category_id, req.user.id
+      event.age_limit, event.dress_code, event.venue_id, event.category_id, req.user.id, event.audience
     );
 
   res.status(201).json(findEvent(lastInsertRowid));
@@ -176,17 +191,17 @@ router.put("/:id", requireAuth, requireRole("organizer", "admin"), (req, res) =>
   assertCanManage(req.user, existing);
   assertNotPast(existing);
 
-  const { event, errors } = readEvent(req.body, { existing });
+  const { event, errors } = readEvent(req.body, { existing, user: req.user });
   if (v.hasErrors(errors)) throw badRequest(errors);
 
   db.prepare(`
     UPDATE events
     SET title = ?, description = ?, starts_at = ?, capacity = ?, price = ?, face_control = ?, age_limit = ?,
-        dress_code = ?, venue_id = ?, category_id = ?
+        dress_code = ?, venue_id = ?, category_id = ?, audience = ?
     WHERE id = ?
   `).run(
     event.title, event.description, event.starts_at, event.capacity, event.price, event.face_control,
-    event.age_limit, event.dress_code, event.venue_id, event.category_id, id
+    event.age_limit, event.dress_code, event.venue_id, event.category_id, event.audience, id
   );
 
   // tell everyone with a ticket that the details changed

@@ -194,6 +194,42 @@ a:hover {
   border-bottom-color: var(--accent);
 }
 
+/* "Iliauni" menu item: the university seal before the word */
+.nav__iliauni {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav__iliauni img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff; /* the seal is dark red on transparent: keep it readable in dark mode */
+}
+
+/* "Iliauni only" label on internal meetings */
+.iliauni-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: var(--space-2);
+  padding: 2px 8px 2px 3px;
+  border: 1px solid #8f1d22;
+  border-radius: 999px;
+  font: 600 11px var(--font-ui);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #8f1d22;
+  background: #fff;
+  vertical-align: 1px;
+}
+
+.iliauni-tag img {
+  width: 16px;
+  height: 16px;
+}
+
 .session {
   display: flex;
   align-items: center;

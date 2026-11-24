@@ -8,8 +8,30 @@ import { Loading, ErrorState, Empty } from "../components/States.jsx";
 // Read ?when=past from the address so the choice survives a reload or Back.
 const initialWhen = () => (new URLSearchParams(window.location.search).get("when") === "past" ? "past" : "upcoming");
 
-export default function Events() {
+// The public list ("/") and the internal Ilia Uni list ("/iliauni", audience="iliauni")
+// share this page; the server only returns internal meetings to @iliauni.edu.ge accounts.
+const TEXT = {
+  public: {
+    base: "/",
+    eyebrow: "Tbilisi · what's on",
+    upcoming: "Upcoming events",
+    past: "Past events",
+    from: { upcoming: FROM.upcoming, past: FROM.past },
+    newEvent: "/events/new",
+  },
+  iliauni: {
+    base: "/iliauni",
+    eyebrow: "Ilia State University · internal",
+    upcoming: "Upcoming meetings",
+    past: "Past meetings",
+    from: { upcoming: FROM.iliauni, past: FROM.iliauniPast },
+    newEvent: "/events/new?audience=iliauni",
+  },
+};
+
+export default function Events({ audience = "public" }) {
   const { user } = useAuth();
+  const text = TEXT[audience];
   const categories = useApi("/categories");
   const [when, setWhen] = useState(initialWhen);
   const [q, setQ] = useState("");
@@ -24,10 +46,11 @@ export default function Events() {
 
   const choose = (next) => {
     setWhen(next);
-    window.history.replaceState(null, "", next === "past" ? "/?when=past" : "/");
+    window.history.replaceState(null, "", next === "past" ? `${text.base}?when=past` : text.base);
   };
 
   const params = new URLSearchParams();
+  if (audience === "iliauni") params.set("audience", "iliauni");
   if (when === "past") params.set("when", "past");
   if (search) params.set("q", search);
   if (category) params.set("category", category);
@@ -38,7 +61,7 @@ export default function Events() {
     <>
       <div className="page-head">
         <div>
-          <p className="eyebrow">Tbilisi · what's on</p>
+          <p className="eyebrow">{text.eyebrow}</p>
           {/* the chosen list is the big title; the other one is the small link after the slash */}
           <h1 className="when-switch">
             <button
@@ -47,7 +70,7 @@ export default function Events() {
               aria-pressed={when === "upcoming"}
               onClick={() => choose("upcoming")}
             >
-              Upcoming events
+              {text.upcoming}
             </button>
             <span className="when-switch__slash" aria-hidden="true">
               /
@@ -58,13 +81,13 @@ export default function Events() {
               aria-pressed={when === "past"}
               onClick={() => choose("past")}
             >
-              Past events
+              {text.past}
             </button>
           </h1>
         </div>
         {user?.role === "organizer" && user.status === "active" && when === "upcoming" && (
-          <Link to="/events/new" from={when === "past" ? FROM.past : FROM.upcoming} className="btn btn--primary">
-            New event
+          <Link to={text.newEvent} from={text.from.upcoming} className="btn btn--primary">
+            {audience === "iliauni" ? "New meeting" : "New event"}
           </Link>
         )}
       </div>
@@ -117,15 +140,19 @@ export default function Events() {
           </Empty>
         ) : (
           when === "past" ? (
-            <Empty title="No past events yet">Events move here once they have taken place.</Empty>
+            <Empty title={audience === "iliauni" ? "No past meetings yet" : "No past events yet"}>
+              {audience === "iliauni" ? "Meetings" : "Events"} move here once they have taken place.
+            </Empty>
           ) : (
-            <Empty title="Nothing scheduled yet">New events will show up here.</Empty>
+            <Empty title="Nothing scheduled yet">
+              New {audience === "iliauni" ? "meetings" : "events"} will show up here.
+            </Empty>
           )
         )
       ) : (
         <ul className="event-list" aria-busy={events.loading}>
           {events.data.map((event) => (
-            <EventRow key={event.id} event={event} from={when === "past" ? FROM.past : FROM.upcoming} />
+            <EventRow key={event.id} event={event} from={text.from[when]} />
           ))}
         </ul>
       )}

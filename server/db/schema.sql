@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS events (
   venue_id      INTEGER NOT NULL REFERENCES venues(id) ON DELETE RESTRICT,
   category_id   INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   organizer_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  -- 'public' = everyone; 'iliauni' = internal Ilia Uni meeting, only for @iliauni.edu.ge accounts
+  audience      TEXT    NOT NULL DEFAULT 'public' CHECK (audience IN ('public', 'iliauni')),
   created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 

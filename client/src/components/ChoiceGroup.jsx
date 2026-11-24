@@ -1,7 +1,8 @@
 // A row of radio buttons that can also be unselected: clicking the selected
-// option again clears it (value becomes null).
-export default function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
-  const pick = (optionValue) => onChange(value === optionValue ? null : optionValue);
+// option again clears it (value becomes null). With `required`, one option
+// always stays selected.
+export default function ChoiceGroup({ label, name, options, value, onChange, error, hint, required = false }) {
+  const pick = (optionValue) => onChange(value === optionValue && !required ? null : optionValue);
   return (
     <fieldset className={`field choice-row${error ? " field--invalid" : ""}`}>
       <legend>{label}</legend>

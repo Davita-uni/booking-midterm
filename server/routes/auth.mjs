@@ -6,6 +6,7 @@ import { badRequest, conflict, forbidden, unauthorized } from "../utils/http.mjs
 import { SUSPENDED_MESSAGE } from "../config/app.mjs";
 import { notifyAdmins } from "../utils/notify.mjs";
 import * as v from "../utils/validate.mjs";
+import { isIliauni } from "../utils/iliauni.mjs";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const SIGNUP_ROLES = ["attendee", "organizer"];
 
 const publicUser = (u) => ({
   id: u.id, name: u.name, email: u.email, role: u.role, status: u.status, organization: u.organization,
-  currency: u.currency,
+  currency: u.currency, is_iliauni: isIliauni(u.email),
 });
 
 router.post("/register", async (req, res) => {

@@ -37,6 +37,12 @@ if (!registrationColumns.includes("quantity")) {
            CHECK (quantity BETWEEN 1 AND 10)`);
 }
 
+// Databases created before v0.17.0 have no audience (all events are public).
+if (!db.prepare("PRAGMA table_info(events)").all().some((c) => c.name === "audience")) {
+  db.exec(`ALTER TABLE events ADD COLUMN audience TEXT NOT NULL DEFAULT 'public'
+           CHECK (audience IN ('public', 'iliauni'))`);
+}
+
 // Databases created before v0.15.0 have no ticket price or entry rules yet.
 const eventColumns = db.prepare("PRAGMA table_info(events)").all().map((c) => c.name);
 if (!eventColumns.includes("price")) {

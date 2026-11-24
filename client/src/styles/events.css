@@ -614,6 +614,7 @@ h1 .badge svg {
   background: var(--bg);
   cursor: pointer;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 .choice-row__options label.is-checked {
@@ -625,6 +626,14 @@ h1 .badge svg {
 .choice-row__options input {
   accent-color: var(--accent);
   margin: 0;
+  /* undo the text-input styles of .field input, wherever the row is used */
+  flex: none;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
 }
 
 /* ---------- ticket counter + buy button ---------- */
