@@ -2,14 +2,42 @@ import { useState } from "react";
 import { useAuth } from "../auth.jsx";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
+import PendingNotice from "../components/PendingNotice.jsx";
 import { AuthIntro } from "./Login.jsx";
+
+// Sign-up in three steps:
+//   1. account type (attendee or organizer)
+//   2. details (organizers also give an organization name)
+//   3. done — attendees go straight in, organizers wait for admin approval
+const STEPS = ["Account type", "Your details", "Done"];
+
+function Steps({ current }) {
+  return (
+    <ol className="steps" aria-label="Sign-up progress">
+      {STEPS.map((label, i) => (
+        <li
+          key={label}
+          className={i === current ? "is-current" : i < current ? "is-done" : undefined}
+          aria-current={i === current ? "step" : undefined}
+        >
+          <span className="steps__no mono">{i + 1}</span>
+          {label}
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 export default function Register() {
   const { register } = useAuth();
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "attendee" });
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState({ role: "attendee", name: "", email: "", password: "", organization: "" });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pendingName, setPendingName] = useState("");
+
+  const isOrganizer = form.role === "organizer";
 
   const update = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,10 +49,19 @@ export default function Register() {
     setBusy(true);
     setMessage("");
     try {
-      await register(form);
-      navigate("/");
+      const body = { ...form };
+      if (!isOrganizer) delete body.organization;
+      const data = await register(body);
+      if (data.pending) {
+        setPendingName(data.user.name);
+        setStep(2);
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setErrors(err.errors);
+      // a wrong role is a step-1 problem
+      if (err.errors.role) setStep(0);
       setMessage(Object.keys(err.errors).length ? "" : err.message);
     } finally {
       setBusy(false);
@@ -36,63 +73,114 @@ export default function Register() {
       <AuthIntro />
       <section className="panel">
         <h2>Create an account</h2>
-        <form className="form" onSubmit={submit} noValidate>
-          {message && (
-            <p className="alert" role="alert">
-              {message}
+        <Steps current={step} />
+
+        {step === 0 && (
+          <form
+            className="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setStep(1);
+            }}
+          >
+            <fieldset className="choice choice--stacked">
+              <legend>What do you want to do on Doorlist?</legend>
+              <label>
+                <input type="radio" name="role" value="attendee" checked={form.role === "attendee"} onChange={update} />
+                <strong>Book events</strong>
+                <span>Attendee account — browse events and book seats. Ready to use right away.</span>
+              </label>
+              <label>
+                <input type="radio" name="role" value="organizer" checked={isOrganizer} onChange={update} />
+                <strong>Run events</strong>
+                <span>Organizer account — publish events and see who booked. An admin approves it first.</span>
+              </label>
+            </fieldset>
+            {errors.role && <p className="field__error">{errors.role}</p>}
+            <button className="btn btn--primary">Continue</button>
+          </form>
+        )}
+
+        {step === 1 && (
+          <form className="form" onSubmit={submit} noValidate>
+            {message && (
+              <p className="alert" role="alert">
+                {message}
+              </p>
+            )}
+            <p className="step-note">
+              Signing up as <strong>{isOrganizer ? "an organizer" : "an attendee"}</strong>.{" "}
+              <button type="button" className="link-btn" onClick={() => setStep(0)}>
+                Change
+              </button>
             </p>
-          )}
-          <Field
-            label="Full name"
-            name="name"
-            autoComplete="name"
-            placeholder="Nino Beridze"
-            value={form.name}
-            onChange={update}
-            error={errors.name}
-          />
-          <Field
-            label="Email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={form.email}
-            onChange={update}
-            error={errors.email}
-          />
-          <Field
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            placeholder="At least 8 characters"
-            hint="At least 8 characters, with a letter and a number."
-            value={form.password}
-            onChange={update}
-            error={errors.password}
-          />
-          <fieldset className="choice">
-            <legend>I want to</legend>
-            <label>
-              <input type="radio" name="role" value="attendee" checked={form.role === "attendee"} onChange={update} />
-              <strong>Book events</strong>
-              <span>Attendee account</span>
-            </label>
-            <label>
-              <input type="radio" name="role" value="organizer" checked={form.role === "organizer"} onChange={update} />
-              <strong>Run events</strong>
-              <span>Organizer account</span>
-            </label>
-          </fieldset>
-          {errors.role && <p className="field__error">{errors.role}</p>}
-          <button className="btn btn--primary" disabled={busy}>
-            {busy ? "Creating account…" : "Create account"}
-          </button>
-        </form>
-        <p className="panel__foot">
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
+            <Field
+              label="Full name"
+              name="name"
+              autoComplete="name"
+              placeholder="Nino Beridze"
+              value={form.name}
+              onChange={update}
+              error={errors.name}
+            />
+            {isOrganizer && (
+              <Field
+                label="Organization or project"
+                name="organization"
+                autoComplete="organization"
+                placeholder="Courtyard Sessions"
+                hint="Helps the admin recognise you when approving the account."
+                value={form.organization}
+                onChange={update}
+                error={errors.organization}
+              />
+            )}
+            <Field
+              label="Email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={update}
+              error={errors.email}
+            />
+            <Field
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="At least 8 characters"
+              hint="At least 8 characters, with a letter and a number."
+              value={form.password}
+              onChange={update}
+              error={errors.password}
+            />
+            <div className="form__actions">
+              <button className="btn btn--primary" disabled={busy}>
+                {busy ? "Creating account…" : isOrganizer ? "Send for approval" : "Create account"}
+              </button>
+              <button type="button" className="btn btn--ghost" onClick={() => setStep(0)}>
+                Back
+              </button>
+            </div>
+          </form>
+        )}
+
+        {step === 2 && (
+          <div className="form">
+            <PendingNotice name={pendingName} />
+            <Link to="/" className="btn">
+              Browse events meanwhile
+            </Link>
+          </div>
+        )}
+
+        {step < 2 && (
+          <p className="panel__foot">
+            Already have an account? <Link to="/login">Log in</Link>
+          </p>
+        )}
       </section>
     </div>
   );

@@ -220,3 +220,106 @@
     padding: var(--space-4);
   }
 }
+
+/* ---------- sign-up steps ---------- */
+
+.steps {
+  list-style: none;
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--muted);
+  padding-top: var(--space-2);
+  border-top: 2px solid var(--line);
+}
+
+.steps li.is-current {
+  color: var(--text);
+  border-top-color: var(--accent);
+  font-weight: 600;
+}
+
+.steps li.is-done {
+  border-top-color: var(--accent);
+}
+
+.steps__no {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 11px;
+  flex: none;
+}
+
+.steps li.is-current .steps__no {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.choice--stacked {
+  grid-template-columns: 1fr;
+}
+
+.step-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.step-note strong {
+  color: var(--text);
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* approval notice */
+.notice {
+  border: 1px solid var(--accent);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: rgba(242, 163, 58, 0.07);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  font-size: 15px;
+}
+
+.notice__title {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--accent);
+}
+
+.notice strong {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.notice--error {
+  border-color: var(--error);
+  background: rgba(229, 83, 75, 0.07);
+}
+
+.notice--error .notice__title {
+  color: var(--error);
+}

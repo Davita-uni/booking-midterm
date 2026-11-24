@@ -6,10 +6,13 @@ import { db, transaction, DB_FILE } from "./index.mjs";
 const users = [
   // one test account per role (see README)
   { name: "Tamar Gelashvili", email: "admin@doorlist.test", password: "Admin123!", role: "admin" },
-  { name: "Nino Beridze", email: "organizer@doorlist.test", password: "Organizer123!", role: "organizer" },
+  { name: "Nino Beridze", email: "organizer@doorlist.test", password: "Organizer123!", role: "organizer", organization: "Courtyard Sessions" },
   { name: "Ana Kapanadze", email: "attendee@doorlist.test", password: "Attendee123!", role: "attendee" },
   // extra people so lists are not empty
-  { name: "Giorgi Lomidze", email: "giorgi.lomidze@doorlist.test", password: "Organizer123!", role: "organizer" },
+  { name: "Giorgi Lomidze", email: "giorgi.lomidze@doorlist.test", password: "Organizer123!", role: "organizer", organization: "Tbilisi Dev Community" },
+  // organizer sign-ups waiting for admin approval
+  { name: "Levan Kiknadze", email: "levan.kiknadze@doorlist.test", password: "Organizer123!", role: "organizer", organization: "Board Game Club Vake", status: "pending" },
+  { name: "Keti Mamaladze", email: "keti.mamaladze@doorlist.test", password: "Organizer123!", role: "organizer", organization: "Sololaki Photo Walks", status: "pending" },
   { name: "Luka Tsiklauri", email: "luka.tsiklauri@doorlist.test", password: "Attendee123!", role: "attendee" },
   { name: "Mariam Chikovani", email: "mariam.chikovani@doorlist.test", password: "Attendee123!", role: "attendee" },
   { name: "Saba Javakhishvili", email: "saba.javakhishvili@doorlist.test", password: "Attendee123!", role: "attendee" },
@@ -92,11 +95,13 @@ transaction(() => {
   `);
 
   const insertUser = db.prepare(
-    "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)"
+    "INSERT INTO users (name, email, password_hash, role, status, organization) VALUES (?, ?, ?, ?, ?, ?)"
   );
   const userIds = {};
   for (const u of users) {
-    const { lastInsertRowid } = insertUser.run(u.name, u.email, bcrypt.hashSync(u.password, 10), u.role);
+    const { lastInsertRowid } = insertUser.run(
+      u.name, u.email, bcrypt.hashSync(u.password, 10), u.role, u.status ?? "active", u.organization ?? null
+    );
     userIds[u.email] = Number(lastInsertRowid);
   }
   const organizerIds = { 1: userIds["organizer@doorlist.test"], 2: userIds["giorgi.lomidze@doorlist.test"] };

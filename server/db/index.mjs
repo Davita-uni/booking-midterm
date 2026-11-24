@@ -16,6 +16,16 @@ export const db = new DatabaseSync(DB_FILE);
 db.exec("PRAGMA foreign_keys = ON;");
 db.exec(fs.readFileSync(path.join(here, "schema.sql"), "utf8"));
 
+// Databases created before v0.6.0 have no status/organization columns yet.
+const userColumns = db.prepare("PRAGMA table_info(users)").all().map((c) => c.name);
+if (!userColumns.includes("status")) {
+  db.exec(`ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'active'
+           CHECK (status IN ('pending', 'active', 'suspended'))`);
+}
+if (!userColumns.includes("organization")) {
+  db.exec("ALTER TABLE users ADD COLUMN organization TEXT");
+}
+
 // Runs fn inside one transaction: everything is saved, or nothing is.
 export function transaction(fn) {
   db.exec("BEGIN IMMEDIATE");
