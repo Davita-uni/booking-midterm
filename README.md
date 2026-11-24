@@ -385,3 +385,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.17.3 | A–D Block added to existing databases without re-seeding |
 | 0.18.0 | "Vice City" colours (purple → light blue); Title Case page headers |
 | 0.18.1 | "Your Name on the Door" header on the events page with the next real event |
+| 0.18.2 | No ticket on the login and sign-up pages |
