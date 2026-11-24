@@ -31,8 +31,9 @@ Sign-up has three steps: **1. Account type → 2. Your details → 3. Done**.
   "Check status now"), so there's no need to log in again. Logging in later
   while still pending opens the same page.
 
-The admin opens **Organizers** in the menu. New sign-ups are listed under
-"Waiting for approval", where the admin can **Approve** or **Reject** them.
+The admin opens **Organizers** in the menu. The tabs are Active, Suspended and
+All on the left, and **Waiting for approval** on its own on the right, with the
+number of waiting sign-ups in red. New sign-ups are listed there, where the admin can **Approve** or **Reject** them.
 Once approved, the status page switches to "You're approved" and the organizer
 can create events. Active organizers can be **Suspended**, which logs them out
 at once and blocks login (the login page explains why). Suspended organizers
@@ -209,3 +210,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.5.1 | Dropdown arrow spacing |
 | 0.6.0 | 3-step sign-up, organizer approval by admin |
 | 0.6.1 | Pending organizers stay logged in with an account status page |
+| 0.6.2 | Organizers page: "Waiting for approval" tab on the right with a red count |

@@ -5,8 +5,8 @@ import { bookedOn } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
+// Left side: the regular lists. "Waiting for approval" sits on its own on the right.
 const FILTERS = [
-  ["pending", "Waiting for approval"],
   ["active", "Active"],
   ["suspended", "Suspended"],
   ["all", "All"],
@@ -89,6 +89,21 @@ export default function AdminOrganizers() {
             <span className="tab__count mono">{key === "all" ? all.length : count(key)}</span>
           </button>
         ))}
+        <button
+          role="tab"
+          aria-selected={filter === "pending"}
+          className={`tab tab--pending${filter === "pending" ? " is-active" : ""}`}
+          onClick={() => setFilter("pending")}
+        >
+          Waiting for approval
+          {/* red while someone is waiting: it needs action */}
+          <span
+            className={`tab__count mono${count("pending") > 0 ? " tab__count--urgent" : ""}`}
+            aria-label={`${count("pending")} waiting`}
+          >
+            {count("pending")}
+          </span>
+        </button>
       </div>
 
       {message && (
