@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.18.0 — Vice City
+
+- New colour palette, "Vice City": purple fading into light blue instead of orange. Buttons, the logo dot, the active menu underline, ticket stubs, the sign-up step number and the tickets bar use a purple → light-blue gradient; links, labels and dates are purple. Dark mode has a deep night-purple background.
+- Light mode buttons end in a deeper blue (`#0284c7`) so the white text stays readable; dark mode buttons use dark text on the light gradient.
+- "Only a few left" keeps its own amber colour (`--warn`), so it still reads as a warning.
+- Iliauni pages still turn the accent (and the gradients) into the university's red.
+- Page headers in Title Case: My Tickets, My Events, My Requests, New Request, Plan an Event, Upcoming Events / Past Events, Upcoming Meetings / Past Meetings, Waiting for Approval, You're Approved, Application Denied, Log In, Create an Account, Organizer Account, Your Name on the Door. Breadcrumbs and the account menu match (All Events, My Profile, Back to Event, Log Out…).
+- Checked automatically: 70 headers and breadcrumbs on every page, for every role, in light and dark mode.
+
 ## 0.17.3 — Blocks without re-seeding
 
 - Fix: a database from before 0.17.2 that was not re-seeded had no A–D Block, so the venue list for an Iliauni meeting was empty. The server now adds A, B, C and D Block once on start (`PRAGMA user_version` remembers it) and keeps all other data.

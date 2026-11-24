@@ -67,7 +67,7 @@ export default function EventDetail({ id }) {
             <div className="detail__owner">
               <Link
                 to={`/events/${event.id}/edit`}
-                from={{ to: `/events/${event.id}`, label: "Back to event" }}
+                from={{ to: `/events/${event.id}`, label: "Back to Event" }}
                 state={{ eventFrom: back }}
                 className="btn"
               >

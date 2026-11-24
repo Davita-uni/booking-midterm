@@ -8,7 +8,7 @@ export function AuthIntro() {
   return (
     <div className="auth__intro">
       <p className="eyebrow">Doorlist</p>
-      <h1>Your name on the door.</h1>
+      <h1>Your Name on the Door</h1>
       <p>Get tickets for concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.</p>
       <div className="ticket-stub" aria-hidden="true">
         <span>ADMIT ONE</span>
@@ -60,7 +60,7 @@ export default function Login() {
     <div className="auth">
       <AuthIntro />
       <section className="panel">
-        <h2>Log in</h2>
+        <h2>Log In</h2>
         <form className="form" onSubmit={submit} noValidate>
           {passwordChanged && !message && (
             <p className="alert alert--success">Password changed. Please log in with your new password.</p>

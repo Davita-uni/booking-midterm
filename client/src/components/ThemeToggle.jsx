@@ -15,7 +15,7 @@ function readSaved() {
 
 function apply(theme) {
   document.documentElement.dataset.theme = theme;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#17181b" : "#f6f4ef");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#120f1f" : "#f6f5fb");
 }
 
 // Light / dark switch. The first choice follows the system; once the user

@@ -306,8 +306,8 @@
 }
 
 .steps li.is-current .steps__no {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--button-gradient);
+  border-color: transparent;
   color: var(--accent-ink);
 }
 

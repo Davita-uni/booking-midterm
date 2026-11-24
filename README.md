@@ -92,7 +92,7 @@ seconds). Clicking one opens the related page and marks it read.
   in the top menu. It lists the internal meetings, upcoming and past.
 - Iliauni pages (the meetings list, an internal meeting's page, and the event
   form while "Iliauni only" is chosen) **fade into the university's red**
-  (`#8f181b`, from its seal) instead of the orange accent, and fade back when
+  (`#8f181b`, from its seal) instead of the purple → light-blue accent, and fade back when
   you leave. Only the accent changes, not the background. Light and dark mode
   both have their own red.
 - Ilia Uni has its **own venues: A Block, B Block, C Block and D Block**.
@@ -383,3 +383,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.17.1 | Iliauni pages fade into the university's red |
 | 0.17.2 | Ilia Uni venues A–D Block; Iliauni colours change only the accent |
 | 0.17.3 | A–D Block added to existing databases without re-seeding |
+| 0.18.0 | "Vice City" colours (purple → light blue); Title Case page headers |

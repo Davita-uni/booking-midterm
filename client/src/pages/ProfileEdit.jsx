@@ -30,7 +30,7 @@ export default function ProfileEdit() {
   return (
     <>
       <Link to="/account/profile" className="back">
-        ← My profile
+        ← My Profile
       </Link>
       <div className="page-head">
         <div>

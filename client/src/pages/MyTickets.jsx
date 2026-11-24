@@ -18,7 +18,7 @@ export default function MyTickets() {
       <div className="page-head">
         <div>
           <p className="eyebrow">Attendee</p>
-          <h1>My tickets</h1>
+          <h1>My Tickets</h1>
         </div>
       </div>
 
