@@ -36,19 +36,19 @@ export default function MyEvents() {
             </Link>
           }
         >
-          Pick a venue, a date and how many seats you have.
+          Pick a venue, a date, a price and how many tickets you have.
         </Empty>
       ) : (
         <>
           <p className="summary mono">
-            {list.length} event(s) · {upcoming} upcoming · {totalBooked} seat(s) booked
+            {list.length} event(s) · {upcoming} upcoming · {totalBooked} ticket(s) sold
           </p>
           <table className="table">
             <thead>
               <tr>
                 <th>Event</th>
                 <th>When</th>
-                <th className="num">Booked</th>
+                <th className="num">Sold</th>
                 <th>
                   <span className="sr-only">Actions</span>
                 </th>
@@ -66,7 +66,7 @@ export default function MyEvents() {
                   <td className="mono" title={longDate(event.starts_at)}>
                     {parts(event.starts_at).day} {parts(event.starts_at).month} {parts(event.starts_at).year}
                   </td>
-                  <td className="num mono" data-label="Booked">
+                  <td className="num mono" data-label="Sold">
                     {event.booked} / {event.capacity}
                   </td>
                   <td className="table__actions">

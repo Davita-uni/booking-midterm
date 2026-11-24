@@ -1,5 +1,5 @@
 // Small green icons after an event's title:
-//   check  = you booked a seat at this event
+//   check  = you have a ticket for this event
 //   badge  = you organize this event
 // The tooltip text is also the accessible name.
 export default function EventBadges({ event }) {
@@ -17,7 +17,7 @@ export default function EventBadges({ event }) {
         </span>
       )}
       {event.is_registered && (
-        <span className="badge" role="img" aria-label="You have booked this event" data-tip="You have booked this event">
+        <span className="badge" role="img" aria-label="You have a ticket for this event" data-tip="You have a ticket for this event">
           <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
             <circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" strokeWidth="1.7" />
             <path d="M6.2 10.3l2.5 2.5 5.1-5.3" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />

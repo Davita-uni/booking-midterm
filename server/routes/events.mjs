@@ -12,6 +12,7 @@ const router = express.Router();
 // category, organizer and how many seats are booked.
 const SELECT = `
   SELECT e.id, e.title, e.description, e.starts_at, e.capacity, e.created_at,
+         e.price, e.face_control, e.age_limit, e.dress_code,
          e.venue_id, ve.name AS venue_name, ve.address AS venue_address, ve.city AS venue_city,
          e.category_id, c.name AS category_name,
          e.organizer_id, u.name AS organizer_name, u.organization AS organizer_organization,
@@ -39,10 +40,27 @@ function readEvent(body = {}, { existing } = {}) {
     title: v.text(errors, body, "title", "Title", { min: 3, max: 120 }),
     description: v.text(errors, body, "description", "Description", { max: 2000, required: false }),
     starts_at: body.starts_at,
-    capacity: v.integer(errors, body, "capacity", "Seats", { min: 50, max: 50000 }),
+    capacity: v.integer(errors, body, "capacity", "Tickets", { min: 50, max: 50000 }),
+    price: Number(body.price),
+    // entry rules are optional: null means "not set"
+    face_control: body.face_control === true ? 1 : body.face_control === false ? 0 : null,
+    age_limit: body.age_limit == null || body.age_limit === "" ? null : Number(body.age_limit),
+    dress_code: null,
     venue_id: Number(body.venue_id),
     category_id: Number(body.category_id),
   };
+
+  // price in GEL: 0 means free, at most 2 decimals
+  if (body.price === undefined || body.price === null || body.price === "") errors.price = "Price is required (0 for free)";
+  else if (!Number.isFinite(event.price) || event.price < 0) errors.price = "Enter a price of 0 or more";
+  else if (event.price > 10000) errors.price = "Price must be at most 10,000 ₾";
+  else if (Math.round(event.price * 100) !== event.price * 100) errors.price = "Use at most 2 decimals";
+
+  if (body.face_control != null && typeof body.face_control !== "boolean") errors.face_control = "Choose Yes or No";
+  if (event.age_limit !== null && ![16, 18, 21, 25].includes(event.age_limit)) errors.age_limit = "Choose 16+, 18+, 21+ or 25+";
+  if (body.dress_code != null && body.dress_code !== "") {
+    event.dress_code = v.text(errors, body, "dress_code", "Dress code", { min: 2, max: 60 });
+  }
 
   if (!event.starts_at) errors.starts_at = "Date and time are required";
   else if (/^\d{4}-\d{2}-\d{2}T$/.test(event.starts_at)) errors.starts_at = "Choose a time";
@@ -55,13 +73,13 @@ function readEvent(body = {}, { existing } = {}) {
   const venue = db.prepare("SELECT id, capacity FROM venues WHERE id = ?").get(event.venue_id || 0);
   if (!venue) errors.venue_id = "Choose a venue";
   else if (!errors.capacity && event.capacity > venue.capacity)
-    errors.capacity = `This venue has ${venue.capacity} seats at most`;
+    errors.capacity = `This venue has room for ${venue.capacity} people at most`;
 
   if (!db.prepare("SELECT 1 FROM categories WHERE id = ?").get(event.category_id || 0))
     errors.category_id = "Choose a category";
 
   if (existing && !errors.capacity && event.capacity < existing.booked)
-    errors.capacity = `${existing.booked} seats are already booked`;
+    errors.capacity = `${existing.booked} tickets are already sold`;
 
   return { event, errors };
 }
@@ -139,10 +157,14 @@ router.post("/", requireAuth, requireRole("organizer"), (req, res) => {
 
   const { lastInsertRowid } = db
     .prepare(`
-      INSERT INTO events (title, description, starts_at, capacity, venue_id, category_id, organizer_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO events (title, description, starts_at, capacity, price, face_control, age_limit, dress_code,
+                          venue_id, category_id, organizer_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
-    .run(event.title, event.description, event.starts_at, event.capacity, event.venue_id, event.category_id, req.user.id);
+    .run(
+      event.title, event.description, event.starts_at, event.capacity, event.price, event.face_control,
+      event.age_limit, event.dress_code, event.venue_id, event.category_id, req.user.id
+    );
 
   res.status(201).json(findEvent(lastInsertRowid));
 });
@@ -159,19 +181,27 @@ router.put("/:id", requireAuth, requireRole("organizer", "admin"), (req, res) =>
 
   db.prepare(`
     UPDATE events
-    SET title = ?, description = ?, starts_at = ?, capacity = ?, venue_id = ?, category_id = ?
+    SET title = ?, description = ?, starts_at = ?, capacity = ?, price = ?, face_control = ?, age_limit = ?,
+        dress_code = ?, venue_id = ?, category_id = ?
     WHERE id = ?
-  `).run(event.title, event.description, event.starts_at, event.capacity, event.venue_id, event.category_id, id);
+  `).run(
+    event.title, event.description, event.starts_at, event.capacity, event.price, event.face_control,
+    event.age_limit, event.dress_code, event.venue_id, event.category_id, id
+  );
 
-  // tell everyone with a seat that the details changed
+  // tell everyone with a ticket that the details changed
   const changed =
+    event.price !== existing.price ||
+    event.face_control !== existing.face_control ||
+    event.age_limit !== existing.age_limit ||
+    event.dress_code !== existing.dress_code ||
     event.starts_at !== existing.starts_at ||
     event.venue_id !== existing.venue_id ||
     event.title !== existing.title ||
     event.description !== existing.description ||
     event.category_id !== existing.category_id;
   if (changed) {
-    notify(bookersOf(id, req.user.id), `“${event.title}”, which you booked, was updated. Click to view new details.`, `/events/${id}`);
+    notify(bookersOf(id, req.user.id), `“${event.title}”, which you have a ticket for, was updated. Click to view new details.`, `/events/${id}`);
   }
 
   res.json(findEvent(id));
@@ -190,7 +220,7 @@ router.delete("/:id", requireAuth, requireRole("organizer", "admin"), (req, res)
   const details = new URLSearchParams({ cancelled: "1", title: event.title, when: event.starts_at, venue: event.venue_name });
   notify(
     bookersOf(id, req.user.id),
-    `“${event.title}”, which you booked, was cancelled by the organizer.`,
+    `“${event.title}”, which you had a ticket for, was cancelled by the organizer, so your ticket is no longer valid.`,
     `/events/${id}?${details}`
   );
 

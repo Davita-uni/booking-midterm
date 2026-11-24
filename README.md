@@ -80,6 +80,21 @@ seconds). Clicking one opens the related page and marks it read.
 | Admin | an organizer sends a new request; a new organizer signs up and waits for approval |
 | Organizer waiting for approval | the admin approves them: "You have been accepted as Organizer. Welcome to DoorList!"; or rejects them: "Your organizer application was denied. Please contact the administrator." (the account becomes an attendee account) |
 
+## Tickets, prices and entry rules
+
+- Attendees **get tickets** (not "book seats"). Organizers set the number of
+  tickets (at least 50) and a **price in GEL** (₾; 0 = free).
+- Optional **entry rules** on the event form: face control (Yes / No), age
+  limit (16+, 18+, 21+, 25+) and dress code (Formal, or Other with your own
+  text). All of them are radio buttons that can be cleared by clicking the
+  selected option again.
+- Price and entry rules show on the event page; the list shows the price and
+  the age limit.
+- Each user picks a **currency** (GEL, USD or EUR) under My profile → Edit
+  profile. GEL is the main currency; with USD or EUR prices are also shown
+  converted at a fixed approximate rate, **rounded up** to a whole number
+  (15.02 → 16).
+
 ## Stack
 
 | Part     | Technology                                |
@@ -189,10 +204,10 @@ server starts. `npm run seed` resets the data.
 
 | Table           | Key columns                                                       |
 | --------------- | ----------------------------------------------------------------- |
-| `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee), `status` (pending / active / suspended), `organization` |
+| `users`         | `id` PK, `email` unique, `role` (admin / organizer / attendee), `status` (pending / active / suspended), `organization`, `currency` |
 | `categories`    | `id` PK, `name` unique                                            |
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
-| `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users |
+| `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users, `price`, `face_control`, `age_limit`, `dress_code` |
 | `registrations` | `id` PK, `event_id` FK, `user_id` FK, unique (`event_id`, `user_id`) |
 | `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
 | `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed / cancelled) |
@@ -307,3 +322,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.13.1 | Simple attendee sign-up; organizer sign-up behind a link, clickable steps |
 | 0.13.2 | Rejected organizer sign-ups become attendee accounts and are notified |
 | 0.14.0 | "N left" seat colours, 50-seat minimum, realistic crowd in the seed, Title Case navigation |
+| 0.15.0 | Tickets with prices in GEL, entry rules, user currency |

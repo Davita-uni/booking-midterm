@@ -5,6 +5,7 @@ import { useAuth } from "../auth.jsx";
 import Field from "../components/Field.jsx";
 import { Loading, ErrorState } from "../components/States.jsx";
 import { Link } from "../router.jsx";
+import { CURRENCIES } from "../config.js";
 
 // My profile > Edit profile: name (and organization for organizers), password.
 export default function ProfileEdit() {
@@ -41,11 +42,17 @@ function DetailsForm({ account, onSaved }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    setForm({ name: account.name, email: account.email, organization: account.organization ?? "" });
+    setForm({
+      name: account.name,
+      email: account.email,
+      organization: account.organization ?? "",
+      currency: account.currency,
+    });
   }, [account]);
 
   const changed =
     form.name !== account.name ||
+    form.currency !== account.currency ||
     (isOrganizer && form.organization !== (account.organization ?? ""));
 
   const update = (e) => {
@@ -59,7 +66,7 @@ function DetailsForm({ account, onSaved }) {
     setBusy(true);
     setMessage(null);
     try {
-      const body = { name: form.name };
+      const body = { name: form.name, currency: form.currency };
       if (isOrganizer) body.organization = form.organization;
       const saved = await api("/account/profile", { method: "PUT", body });
       onSaved(saved);
@@ -104,6 +111,21 @@ function DetailsForm({ account, onSaved }) {
           value={form.email}
           error={errors.email}
         />
+        <Field
+          as="select"
+          label="Currency"
+          name="currency"
+          hint="Ticket prices are set in GEL. With USD or EUR you also see them converted (rounded up)."
+          value={form.currency ?? "GEL"}
+          onChange={update}
+          error={errors.currency}
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </Field>
         <div className="form__actions">
           <button className="btn btn--primary" disabled={busy || !changed}>
             {busy ? "Saving…" : "Save changes"}
@@ -113,7 +135,12 @@ function DetailsForm({ account, onSaved }) {
               type="button"
               className="btn btn--ghost"
               onClick={() => {
-                setForm({ name: account.name, email: account.email, organization: account.organization ?? "" });
+                setForm({
+                  name: account.name,
+                  email: account.email,
+                  organization: account.organization ?? "",
+                  currency: account.currency,
+                });
                 setErrors({});
               }}
             >

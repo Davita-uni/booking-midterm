@@ -5,7 +5,7 @@ import { bookedOn, parts } from "../format.js";
 import { Loading, ErrorState } from "../components/States.jsx";
 
 // My profile: account overview plus the events the user organizes and the
-// events they booked a seat at. "Edit profile" opens the edit form.
+// events they have tickets for. "Edit profile" opens the edit form.
 export default function Profile() {
   const account = useApi("/account");
 
@@ -21,6 +21,7 @@ export default function Profile() {
     ["Account type", ROLE_LABEL[a.role]],
     ["Status", <span className={`status status--${a.status}`}>{STATUS_LABEL[a.status]}</span>],
     isOrganizer && ["Organization", a.organization || "—"],
+    ["Currency", a.currency],
     ["Member since", bookedOn(a.created_at)],
   ].filter(Boolean);
 
@@ -58,7 +59,7 @@ export default function Profile() {
             title="Events organized"
             events={a.organized}
             empty="You haven't created any events yet."
-            meta={(e) => `${e.booked} / ${e.capacity} booked`}
+            meta={(e) => `${e.booked} / ${e.capacity} tickets sold`}
           />
         )}
         {canBook && (
@@ -67,8 +68,8 @@ export default function Profile() {
             events={a.attended}
             empty={
               isOrganizer
-                ? "Seats you book at other organizers' events show up here. Your own events are not added."
-                : "Seats you book show up here."
+                ? "Tickets you get for other organizers' events show up here. Your own events are not added."
+                : "Tickets you get show up here."
             }
             meta={(e) => `Booked ${bookedOn(e.booked_at)}`}
           />

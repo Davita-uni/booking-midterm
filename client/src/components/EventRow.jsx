@@ -1,6 +1,7 @@
 import { Link } from "../router.jsx";
 import { parts, seatsLabel, seatsTone } from "../format.js";
 import EventBadges from "./EventBadges.jsx";
+import Price from "./Price.jsx";
 
 // One line in the event list: date block, title and venue, seats.
 export default function EventRow({ event }) {
@@ -16,6 +17,7 @@ export default function EventRow({ event }) {
         <span className="event-row__main">
           <span className="event-row__meta mono">
             {d.time} · {event.category_name}
+            {event.age_limit ? ` · ${event.age_limit}+` : ""}
           </span>
           <span className="event-row__title">
             {event.title}
@@ -23,11 +25,14 @@ export default function EventRow({ event }) {
           </span>
           <span className="event-row__venue">{event.venue_name}</span>
         </span>
-        {event.is_past ? (
-          <span className="seats seats--past mono">{event.booked} attended</span>
-        ) : (
-          <span className={`seats mono seats--${seatsTone(event)}`}>{seatsLabel(event)}</span>
-        )}
+        <span className="event-row__side">
+          <Price value={event.price} />
+          {event.is_past ? (
+            <span className="seats seats--past mono">{event.booked} attended</span>
+          ) : (
+            <span className={`seats mono seats--${seatsTone(event)}`}>{seatsLabel(event)}</span>
+          )}
+        </span>
       </Link>
     </li>
   );

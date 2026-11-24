@@ -530,3 +530,99 @@ h1 .badge svg {
   text-decoration-thickness: 2px;
   margin-bottom: var(--space-3);
 }
+
+/* ---------- prices ---------- */
+
+.event-row__side {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+
+.price {
+  display: inline-grid;
+  justify-items: inherit;
+  gap: 1px;
+}
+
+.price__gel {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.price__other {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.price--big .price__gel {
+  font-size: 20px;
+}
+
+@media (max-width: 560px) {
+  .event-row__side {
+    grid-column: 2;
+    justify-items: start;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: center;
+    gap: var(--space-3);
+  }
+}
+
+/* ---------- entry rules on the event form ---------- */
+
+.rules {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.rules__title {
+  font-weight: 700;
+}
+
+.choice-row {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.choice-row legend {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.choice-row__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.choice-row__options label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.choice-row__options label.is-checked {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  font-weight: 600;
+}
+
+.choice-row__options input {
+  accent-color: var(--accent);
+  margin: 0;
+}

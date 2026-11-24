@@ -7,6 +7,8 @@ import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
 import AttendeeList from "../components/AttendeeList.jsx";
 import EventBadges from "../components/EventBadges.jsx";
+import Price from "../components/Price.jsx";
+import { entryRules } from "../components/EntryRules.jsx";
 import { Loading, ErrorState } from "../components/States.jsx";
 
 export default function EventDetail({ id }) {
@@ -78,16 +80,28 @@ export default function EventDetail({ id }) {
               <dd>{event.organizer_organization || event.organizer_name}</dd>
             </div>
             <div>
-              <dt>Seats</dt>
+              <dt>Price</dt>
+              <dd>
+                <Price value={event.price} className="price--big" />
+              </dd>
+            </div>
+            {entryRules(event).map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+            <div>
+              <dt>Tickets</dt>
               <dd className="mono">
-                {event.booked} / {event.capacity} booked
+                {event.booked} / {event.capacity} sold
               </dd>
             </div>
           </dl>
           <div
             className="meter"
             role="meter"
-            aria-label="Seats booked"
+            aria-label="Tickets sold"
             aria-valuemin={0}
             aria-valuemax={event.capacity}
             aria-valuenow={event.booked}
@@ -110,7 +124,7 @@ export default function EventDetail({ id }) {
         onClose={() => setConfirmDelete(false)}
       >
         <p>
-          <strong>{event.title}</strong> and its {event.booked} booking(s) will be removed. This can't be undone.
+          <strong>{event.title}</strong> and its {event.booked} ticket(s) will be cancelled. This can't be undone.
         </p>
       </ConfirmDialog>
     </>
@@ -129,7 +143,7 @@ function CancelledEvent({ info }) {
       </Link>
       <div className="cancelled">
         <p className="cancelled__banner" role="status">
-          This event was cancelled by the organizer. Your booking was removed.
+          This event was cancelled by the organizer. Your ticket is no longer valid.
         </p>
         <div className="cancelled__body" aria-disabled="true">
           <p className="eyebrow">Cancelled</p>

@@ -61,3 +61,15 @@ export function dateTime(value) {
   const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
   return `${date}, ${time}`;
 }
+
+// "35 ₾", "12.50 ₾" or "Free"
+export function gel(price) {
+  if (!price) return "Free";
+  return `${Number.isInteger(price) ? price : price.toFixed(2)} ₾`;
+}
+
+// price in the user's currency, always rounded UP to a whole number:
+// 15.02 → "16 USD"
+export function converted(price, currency, rates) {
+  return `${Math.ceil(price * rates[currency] - 1e-9)} ${currency}`;
+}

@@ -9,7 +9,7 @@ export function AuthIntro() {
     <div className="auth__intro">
       <p className="eyebrow">Doorlist</p>
       <h1>Your name on the door.</h1>
-      <p>Book a seat at concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.</p>
+      <p>Get tickets for concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.</p>
       <div className="ticket-stub" aria-hidden="true">
         <span>ADMIT ONE</span>
         <b>Late Jazz at the Courtyard</b>

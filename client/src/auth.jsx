@@ -58,7 +58,13 @@ export function AuthProvider({ children }) {
 
   // After a profile edit: keep the header and menus in sync.
   const updateUser = (account) =>
-    setUser((u) => ({ ...u, name: account.name, email: account.email, organization: account.organization }));
+    setUser((u) => ({
+      ...u,
+      name: account.name,
+      email: account.email,
+      organization: account.organization,
+      currency: account.currency,
+    }));
 
   // The server ends every session when the password changes, so log in again.
   const passwordChanged = () => {

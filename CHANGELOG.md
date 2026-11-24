@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.15.0 — Tickets, prices and entry rules
+
+- Bookings are now **tickets** everywhere: "Buy ticket · 45 ₾" / "Get free ticket", "You have a ticket", "Cancel ticket", "Tickets: 241 / 280 sold", notifications and messages reworded.
+- Events have a **price in GEL** (₾, 0 = free), validated on the server (0–10,000, at most 2 decimals). Shown in the event list, on the event page and on the buy button.
+- Optional **entry rules**: face control (Yes/No), age limit (16+/18+/21+/25+), dress code (Formal or Other with own text). Radio buttons can be unselected by clicking again. Shown on the event page; the age limit also in the list.
+- Users have a **currency** setting (GEL, USD, EUR) in Edit profile. Prices stay in GEL and are also shown converted to USD/EUR at a fixed approximate rate, **rounded up** to a whole number.
+- Database: `events.price`, `face_control`, `age_limit`, `dress_code`; `users.currency`. Older databases get the columns automatically on start.
+- Seed: realistic prices and entry rules for all events.
+
 ## 0.14.0 — Seats left
 
 - Event lists and pages say "N left" instead of "N of M free". Colours: green; amber when fewer than 20 are left (fewer than 50 for events with 200+ seats); red text under 10; a solid red "SOLD OUT" badge when none are left, so it can't be confused with the red count.

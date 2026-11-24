@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
                          CHECK (status IN ('pending', 'active', 'suspended')),
   organization   TEXT,                           -- organizers only
   token_version  INTEGER NOT NULL DEFAULT 0,
+  currency       TEXT    NOT NULL DEFAULT 'GEL'   -- how prices are also shown to this user
+                         CHECK (currency IN ('GEL', 'USD', 'EUR')),
   created_at     TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -40,6 +42,10 @@ CREATE TABLE IF NOT EXISTS events (
   description   TEXT    NOT NULL DEFAULT '',
   starts_at     TEXT    NOT NULL,              -- local time, "YYYY-MM-DDTHH:MM"
   capacity      INTEGER NOT NULL CHECK (capacity > 0),
+  price         REAL    NOT NULL DEFAULT 0 CHECK (price >= 0),   -- ticket price in GEL, 0 = free
+  face_control  INTEGER CHECK (face_control IN (0, 1)),          -- NULL = not set
+  age_limit     INTEGER CHECK (age_limit IN (16, 18, 21, 25)),   -- NULL = no limit
+  dress_code    TEXT,                                            -- "Formal", own text, or NULL
   venue_id      INTEGER NOT NULL REFERENCES venues(id) ON DELETE RESTRICT,
   category_id   INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   organizer_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
