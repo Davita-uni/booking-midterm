@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.2 — Past event tag
+
+- The tag on a past event's page now reads "Past event" (the "· read-only" part was removed). Past events stay read-only.
+
 ## 0.9.1 — Event icons and more past events
 
 - Seed now has eight past events (September–November 2026) across all venues and categories, with realistic attendee lists, like the upcoming ones.
