@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.3 — Figma
+
+- README links the Figma file: wireframes (Log In, Events, Event page, Create event, My Tickets, Admin → Organizers), 4 screens in light and dark mode (Events, Event page, Create event, Admin → Organizers), extras (Log In, My Tickets, Iliauni meetings, Events on a phone) and the "Vice City" style guide in light and dark.
+
 ## 0.20.2 — Phones
 
 - Fix: on a phone-width screen the events list and some event pages scrolled sideways (390 px screen, 419–441 px page) for users with ✓ / organizer badges. The badges' hidden hover tooltips still took up space past the screen edge. They now only exist while hovered.

@@ -4,7 +4,7 @@ Interim MVP for Web Programming (Team 02). Organizers publish events at
 venues around Tbilisi, attendees book a seat, and admins look after the
 venue and category lists.
 
-**Design (Figma):** _link added once the Figma file is shared_
+**Design (Figma):** https://www.figma.com/design/3DsHiWq3fstfvmIbTFJ4qR/Untitled (wireframes, 4 screens in light and dark mode, style guide)
 
 ## What each role can do
 
@@ -401,3 +401,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.20.0 | Event lists in pages of 10; thinner footer |
 | 0.20.1 | Footer in the same colour as the header |
 | 0.20.2 | No sideways scrolling on phones |
+| 0.20.3 | Figma link in the README |
