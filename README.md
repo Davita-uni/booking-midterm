@@ -399,3 +399,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.18.2 | No ticket on the login and sign-up pages |
 | 0.19.0 | Footer with policy pages and contact details |
 | 0.20.0 | Event lists in pages of 10; thinner footer |
+| 0.20.1 | Footer in the same colour as the header |

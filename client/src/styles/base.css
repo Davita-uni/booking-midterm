@@ -742,7 +742,7 @@ a:hover {
 
 .site-footer {
   border-top: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--bg); /* the same as the header */
   position: relative;
 }
 
