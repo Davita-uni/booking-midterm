@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.2 — Past events on My events
+
+- On the organizer's My events page, past events are greyed out with a "Past" tag and only a "View" button (no Edit). The server already refuses changes to past events.
+
 ## 0.15.1 — Hint texts
 
 - Currency hint: "Ticket prices are set in GEL. By changing this setting you will get converted value shown on events page. Payment will also be completed in selected currency"

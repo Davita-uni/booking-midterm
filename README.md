@@ -324,3 +324,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.14.0 | "N left" seat colours, 50-seat minimum, realistic crowd in the seed, Title Case navigation |
 | 0.15.0 | Tickets with prices in GEL, entry rules, user currency |
 | 0.15.1 | Currency hint text; no full stops in field hints |
+| 0.15.2 | Past events greyed out and read-only on My events |
