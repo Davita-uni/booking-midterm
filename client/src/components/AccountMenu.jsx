@@ -4,7 +4,7 @@ import { Link, usePath } from "../router.jsx";
 
 // "My account" button in the header with a small dropdown:
 // name (+ Admin / Organizer / Pending tag), My events (approved organizers),
-// My profile, Account details, Log out.
+// My profile, Log out.
 export default function AccountMenu() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
@@ -63,9 +63,6 @@ export default function AccountMenu() {
           )}
           <Link to="/account/profile" className="account__item">
             My profile
-          </Link>
-          <Link to="/account" className="account__item">
-            Account details
           </Link>
           <button type="button" className="account__item account__item--danger" onClick={logout}>
             Log out

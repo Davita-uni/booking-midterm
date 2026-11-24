@@ -11,7 +11,7 @@ venue and category lists.
 | Role      | Can do |
 | --------- | ------ |
 | Attendee  | Browse and search events, book a seat, cancel a booking, see "My tickets" |
-| Organizer | After admin approval: create events, edit and delete **only their own** events, see who booked their events |
+| Organizer | After admin approval: create events, edit and delete **only their own** events, see who booked their events, book seats at **other organizers'** events |
 | Admin     | Approve, reject, suspend and reactivate organizers; manage venues and categories; edit or delete any event; see any attendee list |
 
 Roles are checked on the server for every request (`requireAuth` +
@@ -42,15 +42,18 @@ can be **Reactivated**.
 ## My account
 
 Logged-in users open **My account** in the top right corner. The menu shows
-their name (with an Admin, Organizer or Pending tag) and these entries:
+their name (with an Admin, Organizer or Pending tag) and:
 
 - **My events** (approved organizers only): the organizer dashboard.
-- **My profile**: edit name (and organization for organizers) and change the
-  password. The email is shown read-only: it is the login and can't be changed
-  (the API refuses it and a database trigger blocks any `UPDATE` of `users.email`). Changing the password logs the user out everywhere;
-  they log in again with the new one.
-- **Account details**: account type, status, member since, and the number of
-  bookings or events.
+- **My profile**: email, account type, status, organization, member since, and
+  two lists. Organizers see **Events organized** and **Events attended**.
+  Attendees see **Events attended**. Booking a seat adds the event to Events
+  attended. An organizer's own events are never added there, and the server
+  refuses a booking at your own event.
+  **Edit profile** opens the form for the name (and organization) and the
+  password. The email is read-only: it is the login and can't be changed (the
+  API refuses it and a database trigger blocks any `UPDATE` of `users.email`).
+  Changing the password logs the user out everywhere.
 - **Log out**.
 
 ## Stack
@@ -192,11 +195,11 @@ All responses are JSON. Validation errors return `400` with
 | POST   | `/api/events`        | organizer | Create an event          |
 | PUT    | `/api/events/:id`    | owner organizer, admin | Update an event |
 | DELETE | `/api/events/:id`    | owner organizer, admin | Delete an event |
-| POST   | `/api/events/:id/registrations`    | attendee | Book a seat |
-| DELETE | `/api/events/:id/registrations/me` | attendee | Cancel own booking |
+| POST   | `/api/events/:id/registrations`    | attendee, organizer (not own event) | Book a seat |
+| DELETE | `/api/events/:id/registrations/me` | attendee, organizer | Cancel own booking |
 | GET    | `/api/events/:id/registrations`    | owner organizer, admin | Attendee list |
-| GET    | `/api/registrations/mine`          | attendee | Own bookings |
-| GET    | `/api/account`                     | logged in | Own account with stats |
+| GET    | `/api/registrations/mine`          | attendee, organizer | Own bookings |
+| GET    | `/api/account`                     | logged in | Own account with events organized and attended |
 | PUT    | `/api/account/profile`             | logged in | Update name, organization (email is read-only) |
 | PUT    | `/api/account/password`            | logged in | Change password (needs the current one) |
 | GET    | `/api/admin/organizers`            | admin | Organizers with status and event count |
@@ -235,3 +238,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.7.0 | "My account" menu, profile editing, sortable attendee list |
 | 0.7.1 | Email is read-only; role label aligned with the name |
 | 0.7.2 | "My events" moved into the My account menu |
+| 0.8.0 | One My profile page (events organized / attended); organizers can book other events |

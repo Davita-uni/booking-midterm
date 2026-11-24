@@ -4,7 +4,8 @@ import { useAuth } from "../auth.jsx";
 import { Link } from "../router.jsx";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 
-// The booking action at the bottom of the event's side panel.
+// The booking action at the bottom of the event's side panel. Attendees and
+// organizers can book; organizers not at their own events.
 export default function BookingBox({ event, onChange }) {
   const { user } = useAuth();
   const [busy, setBusy] = useState(false);
@@ -41,8 +42,12 @@ export default function BookingBox({ event, onChange }) {
         Log in to book a seat
       </Link>
     );
-  } else if (user.role !== "attendee") {
-    action = <p className="muted">Only attendee accounts can book seats.</p>;
+  } else if (user.role === "admin") {
+    action = <p className="muted">Admin accounts can't book seats.</p>;
+  } else if (user.status === "pending") {
+    action = <p className="muted">You can book seats once an admin approves your organizer account.</p>;
+  } else if (event.organizer_id === user.id) {
+    action = <p className="muted">You organize this event, so you can't book a seat at it.</p>;
   } else if (event.is_registered) {
     action = (
       <>

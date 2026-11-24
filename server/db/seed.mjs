@@ -82,6 +82,8 @@ const bookings = [
   [3, ["attendee@doorlist.test", "elene.abashidze@doorlist.test"]],
   [4, ["mariam.chikovani@doorlist.test"]],
   [7, ["saba.javakhishvili@doorlist.test", "luka.tsiklauri@doorlist.test"]],
+  // organizers can book other organizers' events too: Nino goes to Giorgi's clinic
+  [5, ["organizer@doorlist.test"]],
 ];
 
 transaction(() => {
