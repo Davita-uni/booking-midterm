@@ -162,6 +162,79 @@ const events = [
     starts_at: "2026-11-12T16:00", capacity: 150, venue: "B Block", category: "University", organizer: 3,
     price: 0, face_control: null, age_limit: null, dress_code: null, audience: "iliauni",
   },
+  // more public events, so the event lists have more than one page (10 per page)
+  {
+    title: "Vinyl Night: Georgian Jazz Records",
+    description: "Two DJs play rare Georgian jazz and funk records from the 60s and 70s, with short stories about each album between the sets.",
+    starts_at: "2026-12-05T21:00", capacity: 200, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 20, face_control: null, age_limit: 18, dress_code: null,
+  },
+  {
+    title: "Intro to TypeScript Workshop",
+    description: "Three hours of hands-on practice: types, interfaces and moving a small JavaScript project to TypeScript. Bring a laptop with Node.js installed.",
+    starts_at: "2026-12-07T18:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Workshop", organizer: 2,
+    price: 15, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Stand-up Comedy Open Mic",
+    description: "Eight new comedians, five minutes each, in Georgian and English. The audience votes for the best set of the night.",
+    starts_at: "2026-12-11T20:30", capacity: 100, venue: "Rustaveli Theatre, Small Stage", category: "Theatre", organizer: 1,
+    price: 15, face_control: null, age_limit: 18, dress_code: null,
+  },
+  {
+    title: "Christmas Supper Club",
+    description: "A long table, five courses from a Kakhetian kitchen and wine pairings. Seats are shared, so come ready to meet new people.",
+    starts_at: "2026-12-18T19:00", capacity: 60, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    price: 55, face_control: null, age_limit: 18, dress_code: null,
+  },
+  {
+    title: "AI in Production: Tbilisi Tech Talk",
+    description: "Engineers from two local startups talk about running language models in real products: costs, testing and what went wrong.",
+    starts_at: "2026-12-21T19:00", capacity: 80, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "New Year's Eve Courtyard Party",
+    description: "Live band until midnight, fireworks over the courtyard, then DJs until 4am. A glass of sparkling wine at midnight is included.",
+    starts_at: "2026-12-31T22:00", capacity: 300, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 80, face_control: 1, age_limit: 21, dress_code: "Smart casual",
+  },
+  {
+    title: "Poetry Reading: New Georgian Voices",
+    description: "Six young poets read new work, followed by a short conversation with the audience. Books are on sale after the reading.",
+    starts_at: "2027-01-09T18:00", capacity: 50, venue: "Biblusi Reading Room", category: "Theatre", organizer: 2,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Sourdough Baking Class",
+    description: "Learn to feed a starter, shape a loaf and bake it in a home oven. Everyone takes home their own bread and some starter.",
+    starts_at: "2027-01-17T11:00", capacity: 50, venue: "Wine Factory N1 Cellar", category: "Workshop", organizer: 1,
+    price: 35, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Halloween Swing Dance Night",
+    description: "A beginners' swing lesson at 20:00, then social dancing to a live band. Costumes were welcome, and many people wore one.",
+    starts_at: "2026-10-31T20:00", capacity: 200, venue: "Fabrika Courtyard", category: "Music", organizer: 1,
+    price: 25, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Rust for Beginners Meetup",
+    description: "An introduction to Rust for web developers: ownership, the borrow checker and a small command-line tool built live.",
+    starts_at: "2026-10-21T19:00", capacity: 60, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    price: 0, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Watercolour Sketching Morning",
+    description: "A relaxed morning of sketching the reading room and the street outside. Paper and paints were provided.",
+    starts_at: "2026-11-15T10:30", capacity: 50, venue: "Biblusi Reading Room", category: "Workshop", organizer: 2,
+    price: 20, face_control: null, age_limit: null, dress_code: null,
+  },
+  {
+    title: "Hamlet: Student Production",
+    description: "Drama students from three Tbilisi universities staged a shortened Hamlet in modern dress, in Georgian.",
+    starts_at: "2026-09-26T19:30", capacity: 120, venue: "Rustaveli Theatre, Small Stage", category: "Theatre", organizer: 2,
+    price: 15, face_control: null, age_limit: null, dress_code: null,
+  },
 ];
 
 // [event index, attendee emails]
@@ -213,7 +286,8 @@ const students = Array.from({ length: STUDENTS }, (_, i) => {
 });
 
 // target number of booked seats per event (same order as `events`)
-const BOOKED = [96, 52, 50, 34, 47, 31, 241, 54, 62, 171, 48, 55, 88, 41, 57, 212, 64, 22, 73, 118];
+const BOOKED = [96, 52, 50, 34, 47, 31, 241, 54, 62, 171, 48, 55, 88, 41, 57, 212, 64, 22, 73, 118,
+  121, 41, 72, 57, 66, 251, 23, 50, 174, 55, 37, 98];
 
 transaction(() => {
   db.exec(`

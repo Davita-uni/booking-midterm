@@ -759,14 +759,14 @@ a:hover {
 .site-footer__inner {
   max-width: var(--page);
   margin: 0 auto;
-  padding: var(--space-7) var(--space-4) var(--space-5);
+  padding: var(--space-5) var(--space-4) var(--space-4);
   display: grid;
   grid-template-columns: 1.4fr 1fr 1.2fr;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
 .site-footer__brand p {
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   max-width: 30ch;
   color: var(--muted);
   font-size: 14px;
@@ -778,7 +778,7 @@ a:hover {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .site-footer__col ul {
@@ -786,7 +786,7 @@ a:hover {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: var(--space-2);
+  gap: 2px;
   font-size: 14px;
 }
 
@@ -812,10 +812,7 @@ a:hover {
 }
 
 .site-footer__bottom {
-  max-width: var(--page);
-  margin: 0 auto;
-  padding: var(--space-4);
-  border-top: 1px solid var(--line);
+  margin-top: var(--space-2);
   font-size: 13px;
   color: var(--muted);
 }

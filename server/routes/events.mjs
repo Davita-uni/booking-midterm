@@ -9,6 +9,9 @@ import { AUDIENCES, ILIAUNI_ONLY_MESSAGE, ILIAUNI_CREATE_MESSAGE, ILIAUNI_VENUE_
 
 const router = express.Router();
 
+// Event lists are shown 10 per page (fixed, not a setting).
+const PAGE_SIZE = 10;
+
 // One query shape for every event response: the event plus its venue,
 // category, organizer and how many seats are booked.
 const SELECT = `
@@ -101,7 +104,7 @@ function readEvent(body = {}, { existing, user } = {}) {
 // Public list of events. ?when=past lists events that already started
 // (newest first); anything else lists upcoming ones (soonest first).
 // ?audience=iliauni lists the internal Ilia Uni meetings instead (Ilia Uni accounts only).
-// Filters: ?q=text&category=id
+// Filters: ?q=text&category=id. Paging: ?page=N (10 per page).
 router.get("/", optionalAuth, (req, res) => {
   const past = req.query.when === "past";
   const audience = req.query.audience === "iliauni" ? "iliauni" : "public";
@@ -121,7 +124,22 @@ router.get("/", optionalAuth, (req, res) => {
   }
 
   const order = past ? "e.starts_at DESC" : "e.starts_at";
-  const rows = db.prepare(`${SELECT} WHERE ${where.join(" AND ")} ORDER BY ${order}`).all(...params);
+
+  // ?page=N: one page of PAGE_SIZE events, plus the page count. Without it the
+  // whole list is returned as a plain array (used by the "next event" ticket).
+  let paging = null;
+  let limit = "";
+  if (req.query.page !== undefined) {
+    const total = db
+      .prepare(`SELECT COUNT(*) AS n FROM events e JOIN venues ve ON ve.id = e.venue_id WHERE ${where.join(" AND ")}`)
+      .get(...params).n;
+    const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const requested = Number.parseInt(req.query.page, 10);
+    const page = Math.min(Math.max(Number.isInteger(requested) ? requested : 1, 1), pages);
+    paging = { page, pages, total, page_size: PAGE_SIZE };
+    limit = ` LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}`;
+  }
+  const rows = db.prepare(`${SELECT} WHERE ${where.join(" AND ")} ORDER BY ${order}${limit}`).all(...params);
 
   // For a logged-in user: which of these events they booked or organize
   const booked = new Set(
@@ -129,14 +147,13 @@ router.get("/", optionalAuth, (req, res) => {
       ? db.prepare("SELECT event_id FROM registrations WHERE user_id = ?").all(req.user.id).map((r) => r.event_id)
       : []
   );
-  res.json(
-    rows.map((e) => ({
-      ...withSeats(e),
-      is_past: past,
-      is_registered: booked.has(e.id),
-      is_organizer: Boolean(req.user && e.organizer_id === req.user.id),
-    }))
-  );
+  const events = rows.map((e) => ({
+    ...withSeats(e),
+    is_past: past,
+    is_registered: booked.has(e.id),
+    is_organizer: Boolean(req.user && e.organizer_id === req.user.id),
+  }));
+  res.json(paging ? { ...paging, events } : events);
 });
 
 // Past events are read-only for everyone, admins included.
