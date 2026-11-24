@@ -408,7 +408,9 @@ a:hover {
   right: 0;
   top: calc(100% + 8px);
   z-index: 20;
-  min-width: 240px;
+  width: max-content; /* as wide as the name row, same padding left and right */
+  min-width: 180px;
+  max-width: calc(100vw - 24px);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);

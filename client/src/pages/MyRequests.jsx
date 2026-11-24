@@ -1,6 +1,7 @@
 import { useApi } from "../hooks.js";
 import { Link } from "../router.jsx";
-import { bookedOn } from "../format.js";
+import { dateTime } from "../format.js";
+import ReplyThread from "../components/ReplyThread.jsx";
 import RequestStatus from "../components/RequestStatus.jsx";
 import { Loading, ErrorState, Empty } from "../components/States.jsx";
 
@@ -13,7 +14,7 @@ export default function MyRequests() {
     <>
       <div className="page-head">
         <div>
-          <p className="eyebrow">My account</p>
+          <p className="eyebrow">Account</p>
           <h1>My requests</h1>
         </div>
         <Link to="/my/requests/new" className="btn btn--primary">
@@ -46,18 +47,9 @@ export default function MyRequests() {
                 <h2 className="request__subject">{r.subject}</h2>
                 <RequestStatus status={r.status} />
               </div>
-              <p className="request__meta mono">Sent {bookedOn(r.created_at)}</p>
+              <p className="request__meta mono">Sent {dateTime(r.created_at)}</p>
               <p className="request__body">{r.body}</p>
-              {r.admin_reply ? (
-                <div className="request__reply">
-                  <p className="request__reply-head">
-                    Admin reply <span className="mono muted">· {bookedOn(r.replied_at)}</span>
-                  </p>
-                  <p className="request__body">{r.admin_reply}</p>
-                </div>
-              ) : (
-                <p className="request__waiting muted">No reply yet.</p>
-              )}
+              <ReplyThread replies={r.replies} />
             </li>
           ))}
         </ul>

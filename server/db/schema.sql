@@ -55,32 +55,29 @@ CREATE TABLE IF NOT EXISTS registrations (
 );
 
 -- Requests from organizers to the admins (e.g. "please add this venue").
--- users 1 ── * requests
+-- users 1 ── * requests 1 ── * request_replies
 CREATE TABLE IF NOT EXISTS requests (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   organizer_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   subject       TEXT    NOT NULL,
   body          TEXT    NOT NULL,
   status        TEXT    NOT NULL DEFAULT 'new'
-                        CHECK (status IN ('new', 'in_progress', 'completed')),
-  admin_reply   TEXT,
-  replied_at    TEXT,
+                        CHECK (status IN ('new', 'in_progress', 'completed', 'cancelled')),
   created_at    TEXT    NOT NULL DEFAULT (datetime('now')),
   updated_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
--- In-app notifications (bell in the header).
--- users 1 ── * notifications
-CREATE TABLE IF NOT EXISTS notifications (
+-- Admin replies; a request can get a new reply every time its status changes.
+CREATE TABLE IF NOT EXISTS request_replies (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  message     TEXT    NOT NULL,
-  link        TEXT,                              -- page to open, e.g. /events/3
-  read_at     TEXT,                              -- NULL = unread
+  request_id  INTEGER NOT NULL REFERENCES requests(id) ON DELETE CASCADE,
+  admin_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  body        TEXT    NOT NULL,
+  status      TEXT    NOT NULL,                  -- the request's status after this reply
   created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read_at);
+CREATE INDEX IF NOT EXISTS idx_request_replies_request ON request_replies(request_id);
 CREATE INDEX IF NOT EXISTS idx_requests_organizer ON requests(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_starts_at ON events(starts_at);
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
