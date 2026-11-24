@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.16.1 — First and last name
+
+- Sign-up asks for First name and Last name in two fields (2–30 characters each) instead of one Full name field. The server checks both and stores them together as the user's name.
+- The account button in the top right corner says "Hi, <first name>!" instead of "Account".
+
 ## 0.16.0 — Ticket counter and user currency
 
 - With USD or EUR chosen, prices are shown only in that currency (no GEL next to them) in the event list, the event page and on the buy button. Each ticket's price is rounded up to a whole number.

@@ -44,7 +44,7 @@ can be **Reactivated**.
 
 ## Account menu
 
-Logged-in users open **Account** in the top right corner. The menu shows
+Logged-in users open the **Hi, first name!** button in the top right corner. The menu shows
 their name (with an Admin, Organizer or Pending tag) and:
 
 - **My profile**: email, account type, status, organization, member since, and
@@ -330,3 +330,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.15.1 | Currency hint text; no full stops in field hints |
 | 0.15.2 | Past events greyed out and read-only on My events |
 | 0.16.0 | Prices only in the user's currency; ticket counter; "Buy Ticket" |
+| 0.16.1 | First and last name on sign-up; "Hi, name!" header |

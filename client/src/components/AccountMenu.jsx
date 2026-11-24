@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth, ROLE_LABEL } from "../auth.jsx";
 import { Link, usePath } from "../router.jsx";
 
-// "Account" button in the header with a small dropdown:
+// "Hi, Nino!" button in the header with a small dropdown:
 // name (+ Admin / Organizer / Pending tag), My profile, My events and
 // My requests (approved organizers) or Requests (admins), Log out.
 export default function AccountMenu() {
@@ -46,7 +46,7 @@ export default function AccountMenu() {
         aria-controls="account-menu"
         onClick={() => setOpen((o) => !o)}
       >
-        Account
+        Hi, {user.name.split(" ")[0]}!
         <span className={`account__caret${open ? " is-open" : ""}`} aria-hidden="true" />
       </button>
 
