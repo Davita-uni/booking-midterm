@@ -91,9 +91,13 @@ seconds). Clicking one opens the related page and marks it read.
 - Price and entry rules show on the event page; the list shows the price and
   the age limit.
 - Each user picks a **currency** (GEL, USD or EUR) under My profile → Edit
-  profile. GEL is the main currency; with USD or EUR prices are also shown
-  converted at a fixed approximate rate, **rounded up** to a whole number
-  (15.02 → 16).
+  profile. GEL is the main currency. With USD or EUR, prices everywhere
+  (event list, event page, buy button) are shown **only** in that currency,
+  converted at a fixed approximate rate and **rounded up** to a whole number
+  per ticket (15.02 → 16).
+- On the event page a **− / + counter** next to **Buy Ticket** picks 1–10
+  tickets (never more than are left); the button shows the total
+  ("Buy Ticket · 45 USD"), the price in the event details stays per ticket.
 
 ## Stack
 
@@ -208,7 +212,7 @@ server starts. `npm run seed` resets the data.
 | `categories`    | `id` PK, `name` unique                                            |
 | `venues`        | `id` PK, `name` unique, `address`, `capacity`                    |
 | `events`        | `id` PK, `venue_id` FK, `category_id` FK, `organizer_id` FK → users, `price`, `face_control`, `age_limit`, `dress_code` |
-| `registrations` | `id` PK, `event_id` FK, `user_id` FK, unique (`event_id`, `user_id`) |
+| `registrations` | `id` PK, `event_id` FK, `user_id` FK, `quantity` (1–10), unique (`event_id`, `user_id`) |
 | `notifications` | `id` PK, `user_id` FK → users, `message`, `link`, `read_at` |
 | `requests`      | `id` PK, `organizer_id` FK → users, `subject`, `body`, `status` (new / in_progress / completed / cancelled) |
 | `request_replies` | `id` PK, `request_id` FK → requests, `admin_id` FK → users, `body`, `status` |
@@ -325,3 +329,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.15.0 | Tickets with prices in GEL, entry rules, user currency |
 | 0.15.1 | Currency hint text; no full stops in field hints |
 | 0.15.2 | Past events greyed out and read-only on My events |
+| 0.16.0 | Prices only in the user's currency; ticket counter; "Buy Ticket" |

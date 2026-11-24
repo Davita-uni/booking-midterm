@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.16.0 — Ticket counter and user currency
+
+- With USD or EUR chosen, prices are shown only in that currency (no GEL next to them) in the event list, the event page and on the buy button. Each ticket's price is rounded up to a whole number.
+- "Buy Ticket" button (capitalised) with a − / + counter on its left: 1–10 tickets per purchase, never more than are left. The button shows the total; the price in the event details stays per ticket.
+- Database: `registrations.quantity` (1–10). Sold counts, "left" counts, sold-out checks and the sold-out notification count tickets, not purchases. Older databases get the column automatically.
+- Attendee list has a sortable "Tickets" column; My Tickets and My profile show how many tickets were bought.
+
 ## 0.15.2 — Past events on My events
 
 - On the organizer's My events page, past events are greyed out with a "Past" tag and only a "View" button (no Edit). The server already refuses changes to past events.

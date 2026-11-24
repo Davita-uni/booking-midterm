@@ -71,7 +71,7 @@ export default function Profile() {
                 ? "Tickets you get for other organizers' events show up here. Your own events are not added."
                 : "Tickets you get show up here."
             }
-            meta={(e) => `Booked ${bookedOn(e.booked_at)}`}
+            meta={(e) => `${e.quantity} ticket${e.quantity === 1 ? "" : "s"} · ${bookedOn(e.booked_at)}`}
           />
         )}
       </div>

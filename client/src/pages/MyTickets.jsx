@@ -71,7 +71,10 @@ function Ticket({ ticket }) {
           <span className="muted">
             {ticket.venue_name} · {ticket.category_name}
           </span>
-          <span className="ticket__no mono">No. {String(ticket.id).padStart(5, "0")}</span>
+          <span className="ticket__no mono">
+            No. {String(ticket.id).padStart(5, "0")}
+            {ticket.quantity > 1 && ` · ${ticket.quantity} tickets`}
+          </span>
         </span>
       </Link>
     </li>

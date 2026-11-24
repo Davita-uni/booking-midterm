@@ -30,6 +30,13 @@ if (!userColumns.includes("currency")) {
            CHECK (currency IN ('GEL', 'USD', 'EUR'))`);
 }
 
+// Databases created before v0.16.0 have one ticket per registration.
+const registrationColumns = db.prepare("PRAGMA table_info(registrations)").all().map((c) => c.name);
+if (!registrationColumns.includes("quantity")) {
+  db.exec(`ALTER TABLE registrations ADD COLUMN quantity INTEGER NOT NULL DEFAULT 1
+           CHECK (quantity BETWEEN 1 AND 10)`);
+}
+
 // Databases created before v0.15.0 have no ticket price or entry rules yet.
 const eventColumns = db.prepare("PRAGMA table_info(events)").all().map((c) => c.name);
 if (!eventColumns.includes("price")) {
