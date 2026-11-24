@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.0 — Seats left
+
+- Event lists and pages say "N left" instead of "N of M free". Colours: green; amber when fewer than 20 are left (fewer than 50 for events with 200+ seats); red text under 10; a solid red "SOLD OUT" badge when none are left, so it can't be confused with the red count.
+- Events and venues need at least 50 seats (checked on the server; the forms say so).
+- Seed: venue and event sizes adjusted to the 50-seat minimum, plus 260 more attendees and about 1,300 bookings so every colour appears (sold out, 6 left, 8 left, 16 left, 39 left of 280…).
+- Top navigation uses Title Case: "My Tickets", "Account Status".
+
 ## 0.13.2 — Rejecting an organizer sign-up
 
 - Rejecting a pending organizer no longer deletes the account: it becomes a regular attendee account (attendees never need approval).

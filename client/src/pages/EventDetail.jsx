@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../api.js";
 import { useApi } from "../hooks.js";
 import { Link, navigate } from "../router.jsx";
-import { longDate, seatsLabel } from "../format.js";
+import { longDate, seatsLabel, seatsTone } from "../format.js";
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import BookingBox from "../components/BookingBox.jsx";
 import AttendeeList from "../components/AttendeeList.jsx";
@@ -94,7 +94,7 @@ export default function EventDetail({ id }) {
           >
             <span style={{ width: `${percent}%` }} />
           </div>
-          <p className={`seats mono${event.seats_left === 0 ? " seats--out" : ""}`}>{seatsLabel(event)}</p>
+          <p className={`seats mono seats--${seatsTone(event)}`}>{seatsLabel(event)}</p>
           <BookingBox event={event} onChange={reload} />
         </aside>
       </div>

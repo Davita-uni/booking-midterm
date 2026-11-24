@@ -22,7 +22,7 @@ function readVenue(body = {}) {
     name: v.text(errors, body, "name", "Name", { min: 2, max: 80 }),
     address: v.text(errors, body, "address", "Address", { min: 3, max: 120 }),
     city: v.text(errors, body, "city", "City", { max: 60, required: false }) || "Tbilisi",
-    capacity: v.integer(errors, body, "capacity", "Capacity", { min: 1, max: 50000 }),
+    capacity: v.integer(errors, body, "capacity", "Capacity", { min: 50, max: 50000 }),
   };
   return { venue, errors };
 }

@@ -157,6 +157,10 @@ empty: `levan.kiknadze@doorlist.test` and `keti.mamaladze@doorlist.test`
 (both `Organizer123!`). Logging in as one of them opens the account status
 page until the admin approves it.
 
+The seed also adds 260 more attendee accounts (password `Attendee123!`) and
+about 1,300 bookings, so events look like they would in a real city: one is
+sold out, some have only a few seats left.
+
 A second active organizer, `giorgi.lomidze@doorlist.test` (`Organizer123!`), owns
 some of the events. It is useful for showing that one organizer can't change
 another organizer's event.
@@ -247,6 +251,10 @@ All responses are JSON. Validation errors return `400` with
   shows each message under its field with a red border.
 - Deleting a venue, category or event and cancelling a booking ask for confirmation first.
 - Every list has a loading, empty and error state.
+- Events show how many seats are left: green normally; amber when fewer than
+  20 are left (fewer than 50 for events with 200+ seats); red text when fewer
+  than 10 are left; a solid red "Sold out" badge when none are left. Events
+  and venues have at least 50 seats.
 - The events page switches between **Upcoming events / Past events**. Past
   events are read-only: no booking, cancelling, editing or deleting (the server
   answers `409`), but organizers still see who attended.
@@ -298,3 +306,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.13.0 | Request reply history, Cancelled status, timestamps; account menu order |
 | 0.13.1 | Simple attendee sign-up; organizer sign-up behind a link, clickable steps |
 | 0.13.2 | Rejected organizer sign-ups become attendee accounts and are notified |
+| 0.14.0 | "N left" seat colours, 50-seat minimum, realistic crowd in the seed, Title Case navigation |

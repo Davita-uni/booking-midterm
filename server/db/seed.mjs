@@ -25,8 +25,8 @@ const venues = [
   { name: "Fabrika Courtyard", address: "8 Egnate Ninoshvili St", capacity: 300 },
   { name: "Rustaveli Theatre, Small Stage", address: "17 Shota Rustaveli Ave", capacity: 120 },
   { name: "Impact Hub Tbilisi", address: "8 Ivane Javakhishvili St", capacity: 80 },
-  { name: "Wine Factory N1 Cellar", address: "1 Vasil Petriashvili St", capacity: 40 },
-  { name: "Biblusi Reading Room", address: "36 Shota Rustaveli Ave", capacity: 25 },
+  { name: "Wine Factory N1 Cellar", address: "1 Vasil Petriashvili St", capacity: 60 },
+  { name: "Biblusi Reading Room", address: "36 Shota Rustaveli Ave", capacity: 50 },
 ];
 
 // organizer: 1 = Nino (the main test organizer), 2 = Giorgi
@@ -44,12 +44,12 @@ const events = [
   {
     title: "Natural Wine Tasting: Kakheti Qvevri",
     description: "Six qvevri wines from small Kakheti producers, introduced by the winemakers. Cheese and bread included.",
-    starts_at: "2026-12-12T18:30", capacity: 4, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    starts_at: "2026-12-12T18:30", capacity: 50, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
   },
   {
     title: "Writing Short Fiction — Saturday Workshop",
     description: "A three-hour workshop on openings and endings. Short exercises, feedback in small groups. Notebook required, laptops optional.",
-    starts_at: "2026-12-19T12:00", capacity: 12, venue: "Biblusi Reading Room", category: "Workshop", organizer: 2,
+    starts_at: "2026-12-19T12:00", capacity: 50, venue: "Biblusi Reading Room", category: "Workshop", organizer: 2,
   },
   {
     title: "The Cherry Orchard (in Georgian, English surtitles)",
@@ -59,7 +59,7 @@ const events = [
   {
     title: "Postgres Performance Clinic",
     description: "Bring a slow query and we will look at it together on the projector. Covers EXPLAIN, indexes and connection pooling.",
-    starts_at: "2027-01-14T18:30", capacity: 40, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
+    starts_at: "2027-01-14T18:30", capacity: 80, venue: "Impact Hub Tbilisi", category: "Tech talk", organizer: 2,
   },
   {
     title: "Winter Electronic Night",
@@ -69,7 +69,7 @@ const events = [
   {
     title: "Khinkali Folding Class",
     description: "Learn to fold khinkali with a chef from Racha, then eat what you made. All ingredients and aprons provided.",
-    starts_at: "2027-02-06T13:00", capacity: 16, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    starts_at: "2027-02-06T13:00", capacity: 60, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
   },
   // already happened, shown under "Past events" (read-only)
   {
@@ -90,7 +90,7 @@ const events = [
   {
     title: "Rtveli Harvest Supper",
     description: "A long-table dinner after the grape harvest: chacha tasting, mtsvadi from the grill and supra toasts led by a tamada.",
-    starts_at: "2026-09-19T19:30", capacity: 36, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
+    starts_at: "2026-09-19T19:30", capacity: 60, venue: "Wine Factory N1 Cellar", category: "Food & drink", organizer: 1,
   },
   {
     title: "Hamlet (rehearsed reading)",
@@ -100,7 +100,7 @@ const events = [
   {
     title: "Zine-Making Afternoon",
     description: "Cut, paste, photocopy: everyone left with a stapled eight-page zine about their own street.",
-    starts_at: "2026-10-17T14:00", capacity: 18, venue: "Biblusi Reading Room", category: "Workshop", organizer: 1,
+    starts_at: "2026-10-17T14:00", capacity: 50, venue: "Biblusi Reading Room", category: "Workshop", organizer: 1,
   },
   {
     title: "Node.js Performance Night",
@@ -118,7 +118,7 @@ const events = [
 const bookings = [
   [0, ["attendee@doorlist.test", "luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "saba.javakhishvili@doorlist.test"]],
   [1, ["luka.tsiklauri@doorlist.test", "elene.abashidze@doorlist.test", "saba.javakhishvili@doorlist.test"]],
-  // the wine tasting is full: 4 of 4 seats
+  // the wine tasting fills up completely (see crowd below)
   [2, ["luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "saba.javakhishvili@doorlist.test", "elene.abashidze@doorlist.test"]],
   [3, ["attendee@doorlist.test", "elene.abashidze@doorlist.test"]],
   [4, ["mariam.chikovani@doorlist.test"]],
@@ -135,6 +135,24 @@ const bookings = [
   [14, ["luka.tsiklauri@doorlist.test", "organizer@doorlist.test", "saba.javakhishvili@doorlist.test", "attendee@doorlist.test"]],
   [15, ["attendee@doorlist.test", "luka.tsiklauri@doorlist.test", "mariam.chikovani@doorlist.test", "elene.abashidze@doorlist.test", "saba.javakhishvili@doorlist.test"]],
 ];
+
+// More attendees, so the seat counts look like a real city: every event is
+// filled up to this many bookings (named bookings above count too).
+const FIRST = ["Nino", "Giorgi", "Mariam", "Luka", "Ana", "Davit", "Elene", "Saba", "Tamar", "Nika", "Salome", "Irakli",
+  "Ketevan", "Levan", "Natia", "Sandro", "Tekla", "Zura", "Lizi", "Beka", "Anano", "Dachi", "Mariami", "Tornike",
+  "Nutsa", "Gela", "Sopho", "Lasha", "Eka", "Otar"];
+const LAST = ["Beridze", "Kapanadze", "Gelashvili", "Lomidze", "Tsiklauri", "Chikovani", "Javakhishvili", "Abashidze",
+  "Maisuradze", "Mamaladze", "Kiknadze", "Gogua", "Charaia", "Jgharkava", "Nozadze", "Bakradze", "Kvaratskhelia",
+  "Shengelia", "Gvasalia", "Dolidze", "Tsereteli", "Khurtsidze", "Mchedlishvili", "Vachnadze", "Kurtanidze"];
+const CROWD_SIZE = 260;
+const crowd = Array.from({ length: CROWD_SIZE }, (_, i) => {
+  const first = FIRST[i % FIRST.length];
+  const last = LAST[(i * 7) % LAST.length];
+  return { name: `${first} ${last}`, email: `${first}.${last}.${i + 1}@doorlist.test`.toLowerCase() };
+});
+
+// target number of booked seats per event (same order as `events`)
+const BOOKED = [96, 52, 50, 34, 47, 31, 241, 54, 62, 171, 48, 55, 88, 41, 57, 212];
 
 transaction(() => {
   db.exec(`
@@ -186,6 +204,21 @@ transaction(() => {
   for (const [index, emails] of bookings) {
     for (const email of emails) insertBooking.run(eventIds[index], userIds[email]);
   }
+
+  // the crowd: one shared password hash keeps the seed fast
+  const crowdHash = bcrypt.hashSync("Attendee123!", 10);
+  const crowdIds = crowd.map(
+    (c) => Number(insertUser.run(c.name, c.email, crowdHash, "attendee", "active", null).lastInsertRowid)
+  );
+  const bookedCount = db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ?");
+  eventIds.forEach((eventId, index) => {
+    let need = BOOKED[index] - bookedCount.get(eventId).n;
+    // start at a different place in the crowd for each event, so lists differ
+    for (let k = 0; need > 0 && k < crowdIds.length; k++) {
+      insertBooking.run(eventId, crowdIds[(index * 37 + k) % crowdIds.length]);
+      need--;
+    }
+  });
 });
 
 // Requests from organizers to the admins, with the admin's replies over time
@@ -251,7 +284,7 @@ transaction(() => {
   const wine = eventId("Natural Wine Tasting: Kakheti Qvevri");
   const jazz = eventId("Late Jazz at the Courtyard");
   insert.run(userId("attendee@doorlist.test"), "“Late Jazz at the Courtyard”, which you booked, was updated. Click to view new details.", `/events/${jazz}`, null, "2026-11-23 18:20:00");
-  insert.run(userId("organizer@doorlist.test"), "“Natural Wine Tasting: Kakheti Qvevri” is fully booked: all 4 seats are taken.", `/events/${wine}`, null, "2026-11-22 12:05:00");
+  insert.run(userId("organizer@doorlist.test"), "“Natural Wine Tasting: Kakheti Qvevri” is fully booked: all 50 seats are taken.", `/events/${wine}`, null, "2026-11-22 12:05:00");
   insert.run(userId("organizer@doorlist.test"), "Your request “Wine Factory cellar seats”: the admin replied and status is now Work in progress.", "/my/requests", "2026-11-19 10:00:00", "2026-11-19 09:30:00");
   insert.run(userId("admin@doorlist.test"), "New request from Giorgi Lomidze: “New category: Film screenings”", "/admin/requests", null, "2026-11-23 09:05:00");
   insert.run(userId("admin@doorlist.test"), "New organizer sign-up: Keti Mamaladze (Sololaki Photo Walks) is waiting for approval.", "/admin/organizers", null, "2026-11-22 15:40:00");

@@ -128,7 +128,7 @@ export default function AdminVenues() {
             <Field label="Address" name="address" placeholder="8 Egnate Ninoshvili St" value={form.address} onChange={update} error={errors.address} />
             <div className="form-row">
               <Field label="City" name="city" value={form.city} onChange={update} error={errors.city} />
-              <Field label="Seats" name="capacity" type="number" min="1" placeholder="120" value={form.capacity} onChange={update} error={errors.capacity} />
+              <Field label="Seats" name="capacity" type="number" min="50" placeholder="At least 50" value={form.capacity} onChange={update} error={errors.capacity} />
             </div>
             <div className="form__actions">
               <button className="btn btn--primary" disabled={busy}>

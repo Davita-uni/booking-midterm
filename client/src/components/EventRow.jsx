@@ -1,11 +1,10 @@
 import { Link } from "../router.jsx";
-import { parts, seatsLabel } from "../format.js";
+import { parts, seatsLabel, seatsTone } from "../format.js";
 import EventBadges from "./EventBadges.jsx";
 
 // One line in the event list: date block, title and venue, seats.
 export default function EventRow({ event }) {
   const d = parts(event.starts_at);
-  const soldOut = event.seats_left === 0;
   return (
     <li>
       <Link to={`/events/${event.id}`} className={`event-row${event.is_past ? " event-row--past" : ""}`}>
@@ -27,7 +26,7 @@ export default function EventRow({ event }) {
         {event.is_past ? (
           <span className="seats seats--past mono">{event.booked} attended</span>
         ) : (
-          <span className={`seats mono${soldOut ? " seats--out" : ""}`}>{seatsLabel(event)}</span>
+          <span className={`seats mono seats--${seatsTone(event)}`}>{seatsLabel(event)}</span>
         )}
       </Link>
     </li>
