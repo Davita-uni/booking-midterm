@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.2 — Clean login page
+
+- The login and sign-up pages no longer show a ticket next to the "Your Name on the Door" intro. The next-event ticket stays on the events page only.
+
 ## 0.18.1 — Your Name on the Door
 
 - The events page opens with a header: "Your Name **on the Door**" (the second line in the purple → light-blue gradient), the Doorlist tagline, and for visitors "Create an Account" / "Log In" buttons.

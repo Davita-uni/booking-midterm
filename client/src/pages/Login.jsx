@@ -3,7 +3,6 @@ import { useAuth, homeFor } from "../auth.jsx";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
 import PendingNotice from "../components/PendingNotice.jsx";
-import NextEventTicket from "../components/NextEventTicket.jsx";
 
 export const TAGLINE =
   "Get tickets for concerts, talks and workshops around Tbilisi, or run your own events and see who is coming.";
@@ -16,10 +15,6 @@ export function AuthIntro() {
         Your Name <span className="tagline__glow">on the Door</span>
       </h1>
       <p>{TAGLINE}</p>
-      {/* the next real event, not a made-up ticket */}
-      <div className="auth__ticket">
-        <NextEventTicket />
-      </div>
     </div>
   );
 }
