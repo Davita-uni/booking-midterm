@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Link, NavLink, navigate, usePath, matchPath } from "./router.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import AdminVenues from "./pages/AdminVenues.jsx";
+import AdminCategories from "./pages/AdminCategories.jsx";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -17,6 +19,12 @@ function Header() {
           <NavLink to="/" exact>
             Events
           </NavLink>
+          {user?.role === "admin" && (
+            <>
+              <NavLink to="/admin/venues">Venues</NavLink>
+              <NavLink to="/admin/categories">Categories</NavLink>
+            </>
+          )}
         </nav>
         <div className="session">
           {user ? (
@@ -79,6 +87,8 @@ const routes = [
   ["/", Home],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
+  ["/admin/venues", AdminVenues, ["admin"]],
+  ["/admin/categories", AdminCategories, ["admin"]],
 ];
 
 function Routes() {

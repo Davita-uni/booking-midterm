@@ -3,6 +3,8 @@ import cors from "cors";
 import "./config/env.mjs";
 import "./db/index.mjs";
 import authRoutes from "./routes/auth.mjs";
+import venueRoutes from "./routes/venues.mjs";
+import categoryRoutes from "./routes/categories.mjs";
 
 if (!process.env.JWT_SECRET) {
   console.error("JWT_SECRET is missing. Copy server/.env.example to server/.env.");
@@ -16,6 +18,8 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/venues", venueRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ message: "Route not found" });
