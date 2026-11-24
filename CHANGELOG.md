@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.3 — Blocks without re-seeding
+
+- Fix: a database from before 0.17.2 that was not re-seeded had no A–D Block, so the venue list for an Iliauni meeting was empty. The server now adds A, B, C and D Block once on start (`PRAGMA user_version` remembers it) and keeps all other data.
+- The event form says "No Ilia State University venues yet. Ask an admin to add one under Venues" instead of showing an empty list.
+
 ## 0.17.2 — Ilia Uni venues
 
 - New Ilia State University venues: **A Block** (300 seats), **B Block** (200), **C Block** (120) and **D Block** (80). They replace "Ilia State University, Main Building" in the seed.

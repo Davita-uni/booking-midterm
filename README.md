@@ -382,3 +382,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.17.0 | Iliauni section: internal meetings for `@iliauni.edu.ge` accounts |
 | 0.17.1 | Iliauni pages fade into the university's red |
 | 0.17.2 | Ilia Uni venues A–D Block; Iliauni colours change only the accent |
+| 0.17.3 | A–D Block added to existing databases without re-seeding |

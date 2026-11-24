@@ -42,6 +42,20 @@ if (!db.prepare("PRAGMA table_info(venues)").all().some((c) => c.name === "iliau
   db.exec("ALTER TABLE venues ADD COLUMN iliauni INTEGER NOT NULL DEFAULT 0 CHECK (iliauni IN (0, 1))");
 }
 
+// Databases from before v0.17.3 that were not re-seeded have no A–D Block yet:
+// add them once (user_version remembers it), keeping all other data. If an
+// admin later deletes or renames them, they are not added again.
+const BLOCKS_ADDED = 1703;
+if (db.prepare("PRAGMA user_version").get().user_version < BLOCKS_ADDED) {
+  const addBlock = db.prepare(
+    "INSERT OR IGNORE INTO venues (name, address, capacity, iliauni) VALUES (?, 'Ilia State University, 3/5 Kakutsa Cholokashvili Ave', ?, 1)"
+  );
+  for (const [name, capacity] of [["A Block", 300], ["B Block", 200], ["C Block", 120], ["D Block", 80]]) {
+    addBlock.run(name, capacity);
+  }
+  db.exec(`PRAGMA user_version = ${BLOCKS_ADDED}`);
+}
+
 // Databases created before v0.17.0 have no audience (all events are public).
 if (!db.prepare("PRAGMA table_info(events)").all().some((c) => c.name === "audience")) {
   db.exec(`ALTER TABLE events ADD COLUMN audience TEXT NOT NULL DEFAULT 'public'
