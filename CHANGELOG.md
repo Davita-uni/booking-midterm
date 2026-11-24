@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.1 — Account status page for pending organizers
+
+- Pending organizers are logged in after signing up or logging in, instead of being turned away.
+- New "Account status" page: shows the approval status, the help center number, and checks for approval every 30 seconds or on "Check status now". After approval it links to creating the first event.
+- While pending, any other organizer page redirects to the status page; public event pages stay browsable.
+- Server: `requireSession` (any non-suspended account) for `/auth/me` and `/auth/logout`; `requireAuth` answers `403 account_pending` for pending accounts.
+
 ## 0.6.0 — Organizer approval
 
 - Sign-up is now 3 steps: account type, details, done. Organizers also give an organization or project name.

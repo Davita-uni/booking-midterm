@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { db } from "../db/index.mjs";
 import { unauthorized, forbidden } from "../utils/http.mjs";
+import { PENDING_MESSAGE } from "../config/app.mjs";
 
 const SECRET = () => process.env.JWT_SECRET;
 
@@ -12,7 +13,9 @@ export function signToken(user) {
 
 // Reads "Authorization: Bearer <token>", checks it and loads the user
 // from the database, so a deleted user or a changed role is seen at once.
-export function requireAuth(req, res, next) {
+// Checks the token and loads the user. Pending organizers get a session too,
+// but only routes that use requireSession accept them (status page, logout).
+function loadSession(req) {
   const header = req.get("authorization") || "";
   const [scheme, token] = header.split(" ");
   if (scheme !== "Bearer" || !token) throw unauthorized();
@@ -29,13 +32,25 @@ export function requireAuth(req, res, next) {
   if (!user || user.token_version !== payload.ver) {
     throw unauthorized("Your session has expired, please log in again");
   }
-  // a suspended (or not yet approved) account can't do anything
-  if (user.status !== "active") throw unauthorized("Your account is not active");
+  // suspended accounts can't do anything (their token was also revoked)
+  if (user.status === "suspended") throw unauthorized("Your account is suspended");
 
   req.user = {
     id: user.id, name: user.name, email: user.email, role: user.role,
     status: user.status, organization: user.organization,
   };
+}
+
+// Any logged-in account, including organizers still waiting for approval.
+export function requireSession(req, res, next) {
+  loadSession(req);
+  next();
+}
+
+// Active accounts only. A pending organizer gets 403 "account_pending".
+export function requireAuth(req, res, next) {
+  loadSession(req);
+  if (req.user.status !== "active") throw forbidden(PENDING_MESSAGE, "account_pending");
   next();
 }
 

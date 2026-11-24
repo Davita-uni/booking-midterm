@@ -1,4 +1,4 @@
-import { AuthProvider, useAuth, ROLE_LABEL } from "./auth.jsx";
+import { AuthProvider, useAuth, ROLE_LABEL, homeFor } from "./auth.jsx";
 import { useEffect } from "react";
 import { Link, NavLink, navigate, usePath, matchPath } from "./router.jsx";
 import Login from "./pages/Login.jsx";
@@ -11,6 +11,7 @@ import MyTickets from "./pages/MyTickets.jsx";
 import AdminVenues from "./pages/AdminVenues.jsx";
 import AdminCategories from "./pages/AdminCategories.jsx";
 import AdminOrganizers from "./pages/AdminOrganizers.jsx";
+import AccountStatus from "./pages/AccountStatus.jsx";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -26,7 +27,10 @@ function Header() {
             Events
           </NavLink>
           {user?.role === "attendee" && <NavLink to="/my/tickets">My tickets</NavLink>}
-          {user?.role === "organizer" && <NavLink to="/my/events">My events</NavLink>}
+          {user?.role === "organizer" && user.status === "pending" && (
+            <NavLink to="/account/status">Account status</NavLink>
+          )}
+          {user?.role === "organizer" && user.status === "active" && <NavLink to="/my/events">My events</NavLink>}
           {user?.role === "admin" && (
             <>
               <NavLink to="/admin/organizers">Organizers</NavLink>
@@ -39,7 +43,12 @@ function Header() {
           {user ? (
             <>
               <span className="session__name">
-                {user.name} <span className={`chip chip--${user.role}`}>{ROLE_LABEL[user.role]}</span>
+                {user.name}{" "}
+                {user.status === "pending" ? (
+                  <span className="chip chip--pending">Pending</span>
+                ) : (
+                  <span className={`chip chip--${user.role}`}>{ROLE_LABEL[user.role]}</span>
+                )}
               </span>
               <button className="btn btn--danger btn--small" onClick={logout}>
                 Log out
@@ -88,6 +97,7 @@ const routes = [
   ["/events/:id/edit", EventForm, ["organizer", "admin"]],
   ["/my/events", MyEvents, ["organizer"]],
   ["/my/tickets", MyTickets, ["attendee"]],
+  ["/account/status", AccountStatus, ["organizer"]],
   ["/login", Login, "guest"],
   ["/register", Register, "guest"],
   ["/admin/organizers", AdminOrganizers, ["admin"]],
@@ -105,8 +115,12 @@ function Routes() {
     const params = matchPath(pattern, path);
     if (!params) continue;
 
-    if (access === "guest" && user) return <Redirect to="/" />;
+    if (access === "guest" && user) return <Redirect to={homeFor(user)} />;
     if (access && access !== "guest" && !user) return <Redirect to="/login" />;
+    // organizers waiting for approval can browse public pages and see their status, nothing else
+    if (access && access !== "guest" && user.status === "pending" && pattern !== "/account/status") {
+      return <Redirect to="/account/status" />;
+    }
     if (Array.isArray(access) && !access.includes(user.role)) {
       return (
         <div className="state state--error">

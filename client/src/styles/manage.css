@@ -253,3 +253,57 @@
 .btn--success:hover {
   background: rgba(76, 175, 122, 0.12);
 }
+
+/* ---------- organizer account status ---------- */
+
+.status-page {
+  max-width: 640px;
+}
+
+.status-page h1 {
+  margin-bottom: var(--space-5);
+}
+
+.status-card {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.status-card--ok {
+  border-color: var(--success);
+}
+
+.status-card__rows {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.status-card__rows dt {
+  font: 500 12px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.status-card__rows dd {
+  margin: 2px 0 0;
+}
+
+.status-card__checked {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chip--pending {
+  border-color: var(--accent);
+  color: var(--accent);
+  border-style: dashed;
+}
+
+@media (max-width: 560px) {
+  .status-card__rows {
+    grid-template-columns: 1fr;
+  }
+}

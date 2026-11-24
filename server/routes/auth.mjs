@@ -1,16 +1,17 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import { db } from "../db/index.mjs";
-import { requireAuth, signToken } from "../middlewares/auth.mjs";
+import { requireSession, signToken } from "../middlewares/auth.mjs";
 import { badRequest, conflict, forbidden, unauthorized } from "../utils/http.mjs";
-import { PENDING_MESSAGE, SUSPENDED_MESSAGE } from "../config/app.mjs";
+import { SUSPENDED_MESSAGE } from "../config/app.mjs";
 import * as v from "../utils/validate.mjs";
 
 const router = express.Router();
 
 // People can sign up as attendees or organizers. Admin accounts are only
-// created by the seed script. Organizers start as "pending" and can't log in
-// until an admin approves them.
+// created by the seed script. Organizers start as "pending": they can log in
+// and see their account status, but can't do anything else until an admin
+// approves them.
 const SIGNUP_ROLES = ["attendee", "organizer"];
 
 const publicUser = (u) => ({
@@ -41,10 +42,6 @@ router.post("/register", async (req, res) => {
     .run(name, email, hash, role, status, organization);
 
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(lastInsertRowid);
-  if (status === "pending") {
-    // no token: the account can't be used until it is approved
-    return res.status(201).json({ pending: true, message: PENDING_MESSAGE, user: publicUser(user) });
-  }
   res.status(201).json({ token: signToken(user), user: publicUser(user) });
 });
 
@@ -59,18 +56,17 @@ router.post("/login", async (req, res) => {
   const ok = user && (await bcrypt.compare(String(body.password), user.password_hash));
   // same message for both cases, so nobody can probe which emails exist
   if (!ok) throw unauthorized("Email or password is incorrect");
-  if (user.status === "pending") throw forbidden(PENDING_MESSAGE, "account_pending");
   if (user.status === "suspended") throw forbidden(SUSPENDED_MESSAGE, "account_suspended");
 
   res.json({ token: signToken(user), user: publicUser(user) });
 });
 
-router.get("/me", requireAuth, (req, res) => {
+router.get("/me", requireSession, (req, res) => {
   res.json({ user: req.user });
 });
 
 // Logging out bumps token_version, so the old token stops working on the server too.
-router.post("/logout", requireAuth, (req, res) => {
+router.post("/logout", requireSession, (req, res) => {
   db.prepare("UPDATE users SET token_version = token_version + 1 WHERE id = ?").run(req.user.id);
   res.status(204).end();
 });

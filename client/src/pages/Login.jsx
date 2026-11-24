@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../auth.jsx";
+import { useAuth, homeFor } from "../auth.jsx";
 import { Link, navigate } from "../router.jsx";
 import Field from "../components/Field.jsx";
 import PendingNotice from "../components/PendingNotice.jsx";
@@ -26,7 +26,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [account, setAccount] = useState(null); // "pending" | "suspended"
+  const [suspended, setSuspended] = useState(false);
   const expired = new URLSearchParams(window.location.search).has("expired");
 
   const update = (e) => {
@@ -38,13 +38,13 @@ export default function Login() {
     e.preventDefault();
     setBusy(true);
     setMessage("");
-    setAccount(null);
+    setSuspended(false);
     try {
-      await login(form.email, form.password);
-      navigate("/");
+      const user = await login(form.email, form.password);
+      navigate(homeFor(user));
     } catch (err) {
-      if (err.code === "account_pending" || err.code === "account_suspended") {
-        setAccount(err.code === "account_pending" ? "pending" : "suspended");
+      if (err.code === "account_suspended") {
+        setSuspended(true);
         return;
       }
       setErrors(err.errors);
@@ -66,7 +66,7 @@ export default function Login() {
               {message}
             </p>
           )}
-          {account && <PendingNotice suspended={account === "suspended"} />}
+          {suspended && <PendingNotice suspended />}
           <Field
             label="Email"
             name="email"
