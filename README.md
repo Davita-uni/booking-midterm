@@ -31,7 +31,7 @@ form (or `/register?as=organizer`). It has three steps: **1. Organization →
 2. Your details → 3. Done**. The step headers are clickable to go back. The
 account is created as **pending**: the organizer is logged in and lands on an
 **Account status** page that says an admin has to approve the account, asks
-them to wait, and gives the help center number (+995 555 XX XX XX). The page
+them to wait, and gives the help center number (+995 597 XX XX XX). The page
 checks the status every 30 seconds (or with "Check status now"). While
 waiting they can book events like an attendee.
 
@@ -110,6 +110,16 @@ seconds). Clicking one opens the related page and marks it read.
 - Known limitation: the app doesn't send confirmation emails, so it can't
   prove that a person really owns the `@iliauni.edu.ge` address they signed
   up with. A real deployment would verify the email first.
+
+## Footer and policies
+
+Every page ends with a footer: the Doorlist logo, links to the **Terms &
+Conditions**, **Privacy Policy**, **Cookie Policy** and **Refund Policy**
+pages (`/terms`, `/privacy`, `/cookies`, `/refunds`, open to everyone), and
+the contact details with email and phone icons. The policy texts are sample
+content for this project, written to match how Doorlist works (for example,
+the cookie policy explains that the app keeps the login token and the theme
+in local storage and uses no tracking cookies).
 
 ## Tickets, prices and entry rules
 
@@ -386,3 +396,4 @@ See [CHANGELOG.md](CHANGELOG.md). Each version was added as its own pull request
 | 0.18.0 | "Vice City" colours (purple → light blue); Title Case page headers |
 | 0.18.1 | "Your Name on the Door" header on the events page with the next real event |
 | 0.18.2 | No ticket on the login and sign-up pages |
+| 0.19.0 | Footer with policy pages and contact details |

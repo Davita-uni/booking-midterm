@@ -1,5 +1,5 @@
 // Shown to organizers who are waiting for approval.
-export const HELP_PHONE = "+995 555 XX XX XX";
+export const HELP_PHONE = "+995 597 XX XX XX";
 
 export const PENDING_MESSAGE =
   `Your organizer account is waiting for approval by an admin. Please wait. ` +

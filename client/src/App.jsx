@@ -4,6 +4,8 @@ import { Link, NavLink, navigate, usePath, matchPath } from "./router.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Events from "./pages/Events.jsx";
+import Legal, { LEGAL_PAGES } from "./pages/Legal.jsx";
+import Footer from "./components/Footer.jsx";
 import EventDetail from "./pages/EventDetail.jsx";
 import EventForm from "./pages/EventForm.jsx";
 import MyEvents from "./pages/MyEvents.jsx";
@@ -101,6 +103,8 @@ function NotFound() {
 const routes = [
   ["/", Events],
   ["/iliauni", () => <Events audience="iliauni" />, "iliauni"],
+  // Terms & Conditions, Privacy, Cookie and Refund policy (open to everyone)
+  ...LEGAL_PAGES.map((page) => [page.path, () => <Legal path={page.path} />]),
   ["/events/new", EventForm, ["organizer"]],
   ["/events/:id", EventDetail],
   ["/events/:id/edit", EventForm, ["organizer", "admin"]],
@@ -172,6 +176,7 @@ export default function App() {
       <main className="page">
         <Routes />
       </main>
+      <Footer />
     </AuthProvider>
   );
 }
